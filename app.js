@@ -15,7 +15,7 @@ app.use(express.urlencoded({
     extended:true
 }));
 
-app.use(express.static('static'))
+app.use(express.static(__dirname+'/static'))
 
 app.set('views',__dirname+'/views/pages')
 app.set('view engine','ejs')
