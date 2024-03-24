@@ -53,3 +53,5 @@ app.listen('3000','localhost',(err)=>{
     if(err)
         console.log(err);
 })
+
+module.exports=app
