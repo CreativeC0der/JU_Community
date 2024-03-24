@@ -1,4 +1,4 @@
-<%-include ('../partials/header')%>
+<%-include ('./header')%>
     <div class="container ">
         <h2 class="text-center mb-4 header" style="max-width:none">Group Dashboard for <%=group.groupName%></h2>
    
@@ -113,7 +113,7 @@
         </div>
     </div>
 
-<%-include ('../partials/footer')%>
+<%-include ('./footer')%>
 
 <script>
     async function sendInvites(groupId,adminId) {
