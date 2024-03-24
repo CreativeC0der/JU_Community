@@ -6,6 +6,7 @@ const profileRouter=require('./routes/profile');
 const landingRouter=require('./routes/landing');
 const groupRouter=require('./routes/group');
 const postRouter=require('./routes/posts');
+const path=require('path')
 
 app.use(getSession());
 
@@ -15,9 +16,9 @@ app.use(express.urlencoded({
     extended:true
 }));
 
-app.use(express.static(__dirname+'/static'))
+app.use(express.static(path.join(process.cwd(), '/static')))
 
-app.set('views',__dirname+'/views/pages')
+app.set('views',path.join(process.cwd(), '/views/pages'))
 app.set('view engine','ejs')
 
 app.get('/',(req,res)=>{
