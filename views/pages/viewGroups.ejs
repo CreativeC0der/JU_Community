@@ -1,0 +1,28 @@
+<%-include ('../partials/header')%>
+    <div class="container">
+        <div class="row">
+            <div class="col-9 "><h2 class="text-justify mt-4 header">View Groups</h2></div>
+            <div class="col-3">
+                <% if (admins.includes(user.userId)) { %>
+                   <a href="/group/create"> 
+                        <button class="btn btn-primary btn-block" style="margin-block: 40px;">Create Group</button>
+                    </a>
+                <% } %>
+            </div>
+        </div>
+        
+        <% for(const group of groups) { %>
+            <div class="card">
+                <div class="card-header">
+                    <%= group.groupName %>
+                </div>
+                <div class="card-body">
+                    <div class="group-info">Group ID: <%= group.groupId %></div>
+                    <div class="group-info">Project:<%= group.project %></div>
+                    <div class="group-info">Admin: <%= group.adminId %></div>
+                    <a href="/group/dashboard?groupId=<%= group.groupId %>"><button class="btn btn-view-details">View Details</button></a>
+                </div>
+            </div>
+        <% } %>
+    </div>
+<%-include ('../partials/footer')%>

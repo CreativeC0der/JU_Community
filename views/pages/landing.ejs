@@ -1,0 +1,22 @@
+<%-include ('../partials/header')%>
+    <div class="container welcome-header"><h2 style="margin:inherit">Welcome <%= user %></h2></div>
+    <div class="container">
+        <h2 class="mt-4 header">Recent Activities</h2>
+        <div class="activity-card">
+            <h5>Group A - New post</h5>
+            <p>User X posted a new update in Group A.</p>
+        </div>
+        <div class="activity-card">
+            <h5>Group B - Discussion</h5>
+            <p>Discussion on Topic Y started in Group B.</p>
+        </div>
+        <h2 class="header">Newly Joined Members</h2>
+        <div class="new-members-card">
+            <ul>
+                <li>John Doe (john@example.com)</li>
+                <li>Jane Smith (jane@example.com)</li>
+                <li>Michael Johnson (michael@example.com)</li>
+            </ul>
+        </div>
+    </div>    
+<%-include ('../partials/footer')%>
