@@ -7,6 +7,7 @@ const landingRouter=require('./routes/landing');
 const groupRouter=require('./routes/group');
 const postRouter=require('./routes/posts');
 const path=require('path')
+require('dotenv').config()
 
 app.use(getSession());
 
@@ -49,7 +50,7 @@ app.use('/group',groupRouter);
 app.use('/posts',postRouter);
 
 
-app.listen('3000','localhost',(err)=>{
+app.listen(process.env.PORT,process.env.HOST,(err)=>{
     console.log('listening on 3000');
     if(err)
         console.log(err);

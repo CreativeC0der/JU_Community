@@ -1,11 +1,12 @@
 const mysql=require('mysql2/promise')
+require('dotenv').config()
 
 const dbOptions={
-    host: 'mysql-shrijon-ju-community.a.aivencloud.com',
-    port: 10552,
-    user: 'avnadmin',
-    password: 'AVNS_FhBXaC27t_z4uJOW9Cr',
-    database: 'defaultdb'
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DATABASE
 }
 
 connPromise=mysql.createConnection(dbOptions);
