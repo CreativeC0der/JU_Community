@@ -2,18 +2,23 @@ body {
   background-color: #f8f9fa;
   font-family: Arial, sans-serif;
 }
+
 .navbar {
   background-color: #007bff;
   padding: 1.5rem 3rem;
 }
-.navbar-brand, .navbar-nav .nav-link {
+
+.navbar-brand,
+.navbar-nav .nav-link {
   color: #fff;
 }
-.navbar-brand:hover, .navbar-nav .nav-link:hover {
+
+.navbar-brand:hover,
+.navbar-nav .nav-link:hover {
   color: #f8f9fa !important;
 }
 
-.header{
+.header {
   max-width: max-content;
   margin: 30px 0px;
   background-color: #fff;
@@ -31,6 +36,7 @@ body {
   margin-bottom: 20px;
   background-color: #fff;
 }
+
 .new-members-card {
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -38,6 +44,7 @@ body {
   margin-bottom: 20px;
   background-color: #fff;
 }
+
 .footer {
   background-color: #007bff;
   color: #fff;
@@ -48,7 +55,7 @@ body {
   width: 100%;
 }
 
-.welcome-header{
+.welcome-header {
   border: 2px solid #007bff;
   border-radius: 10px;
   background-color: white;
@@ -65,17 +72,21 @@ body {
   padding: 20px;
   background-color: #fff;
 }
+
 .card-header {
   background-color: #007bff;
   color: #fff;
   font-weight: bold;
 }
+
 .card-body {
   padding: 20px;
 }
+
 .group-info {
   margin-bottom: 10px;
 }
+
 .btn-view-details {
   background-color: #007bff;
   border: none;
@@ -84,6 +95,7 @@ body {
   border-radius: 5px;
   cursor: pointer;
 }
+
 .btn-view-details:hover {
   background-color: #0056b3;
 }
@@ -97,6 +109,7 @@ body {
   background-color: #007bff;
   color: #fff;
 }
+
 .tab-content {
   border: 1px solid #007bff;
   border-top: none;
@@ -117,6 +130,7 @@ body {
   font-weight: bold;
   color: #555;
 }
+
 .btn-create-group {
   background-color: #007bff;
   border: none;
@@ -125,47 +139,59 @@ body {
   border-radius: 5px;
   margin-block: 50px;
 }
+
 .btn-create-group:hover {
   background-color: #0056b3;
   color: #fff;
 }
+
 .card-img-top {
   max-width: 70%;
   height: auto;
-  border-radius: 10px; /* Rounded borders */
+  border-radius: 10px;
+  /* Rounded borders */
 }
+
 .image-preview {
   width: 100%;
   height: auto;
   margin-bottom: 20px;
 }
+
 /* Custom styling for file input */
 .custom-file-label::after {
-  content: "Browse"; /* Text after the input field */
+  content: "Browse";
+  /* Text after the input field */
 }
-.custom-file-input:focus ~ .custom-file-label {
-  border-color: #007bff; /* Highlight border color on focus */
+
+.custom-file-input:focus~.custom-file-label {
+  border-color: #007bff;
+  /* Highlight border color on focus */
 }
+
 .container {
   max-width: 70%;
   margin: 20px auto;
 }
+
 .profile-card {
   border: none;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   background-color: #fff;
   margin-bottom: 20px;
 }
+
 .user-details {
   margin-bottom: 20px;
 }
 
 .invite-modal .modal-content {
   border-radius: 20px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .invite-modal .modal-header {
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
@@ -178,25 +204,30 @@ body {
 .invite-modal .modal-body {
   padding: 20px;
 }
+
 .invite-card {
   border: none;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   background-color: #fff;
   margin-bottom: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
+
 .invite-card:hover {
   transform: translateY(-5px);
 }
+
 .invite-card label {
   font-size: 18px;
 }
+
 .invite-card input[type="checkbox"] {
   margin-right: 10px;
 }
+
 .invite-btn {
   border-radius: 10px;
   background-color: #007bff;
@@ -207,40 +238,48 @@ body {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
 .invite-btn:hover {
   background-color: #0056b3;
 }
 
 .modal-content {
-    border-radius: 20px;
+  border-radius: 20px;
 }
+
 .modal-header {
-    border-bottom: none;
+  border-bottom: none;
 }
+
 .modal-body {
-    padding: 0;
+  padding: 0;
 }
+
 .group-card {
-    border: none;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    background-color: #fff;
-    padding: 20px;
-    margin: 10px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  padding: 20px;
+  margin: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
 }
+
 .group-card:hover {
-    transform: translateY(-5px);
+  transform: translateY(-5px);
 }
+
 .group-details {
-    font-size: 18px;
-    margin-bottom: 10px;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
+
 .btn-close-modal {
-    margin: 20px;
+  margin: 20px;
 }
-.post-container{
+
+.post-container {
   border: black 1px solid;
   padding: 12px;
   border-radius: 10px;
@@ -249,7 +288,7 @@ body {
 
 .member-card {
   border: 1px solid #ddd;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 20px;
@@ -270,6 +309,27 @@ body {
   border-radius: 5px;
   cursor: pointer;
 }
+
 .btn-view-details:hover {
+  background-color: #0056b3;
+}
+
+.card-header {
+  background-color: #007bff;
+  color: #fff;
+  border-bottom: none;
+  border-radius: 20px 20px 0 0;
+}
+
+.form-group label {
+  font-weight: bold;
+}
+
+.btn-post-resource {
+  background-color: #007bff;
+  border: none;
+}
+
+.btn-post-resource:hover {
   background-color: #0056b3;
 }
