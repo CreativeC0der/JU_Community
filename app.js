@@ -44,6 +44,12 @@ app.post('/login',async (req,res)=>{
         
 })
 
+app.get('/logout',checkSessionValid,(req,res)=>{
+    req.session.valid=false;
+    req.session.user={};
+    res.redirect('/');
+})
+
 app.use('/profile',profileRouter);
 app.use('/landing',landingRouter);
 app.use('/group',groupRouter);
