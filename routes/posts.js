@@ -6,15 +6,6 @@ const multer = require('multer')
 const {put}=require('@vercel/blob')
 
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'static/images')
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname)
-  }
-})
-
 const upload = multer({ storage: multer.memoryStorage() })
 
 router.get('/create', checkSessionValid, checkAdmin, async (req, res) => {
@@ -26,7 +17,7 @@ router.get('/create', checkSessionValid, checkAdmin, async (req, res) => {
 router.post('/create', checkSessionValid, checkAdmin, upload.single('postImage'), async (req, res) => {
   console.log(req.file);
   console.log(req.body);
-  const blob = await put(req.file.originalname+'--'+Date.now(), req.file.buffer, {
+  const blob = await put(`PostImage ${Date.now()} ${req.file.originalname}`, req.file.buffer, {
     access: 'public',
   });
   console.log(blob);
