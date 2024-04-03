@@ -77,6 +77,7 @@ body {
   background-color: #007bff;
   color: #fff;
   font-weight: bold;
+  border-radius: 20px 20px 0 0;
 }
 
 .card-body {
@@ -185,6 +186,7 @@ body {
 
 .user-details {
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .invite-modal .modal-content {
@@ -285,7 +287,6 @@ body {
   border-radius: 10px;
 }
 
-
 .member-card {
   border: 1px solid #ddd;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -314,17 +315,6 @@ body {
   background-color: #0056b3;
 }
 
-.card-header {
-  background-color: #007bff;
-  color: #fff;
-  border-bottom: none;
-  border-radius: 20px 20px 0 0;
-}
-
-.form-group label {
-  font-weight: bold;
-}
-
 .btn-post-resource {
   background-color: #007bff;
   border: none;
@@ -333,3 +323,63 @@ body {
 .btn-post-resource:hover {
   background-color: #0056b3;
 }
+
+.btn-register {
+  background-color: #007bff;
+  border: none;
+}
+.btn-register:hover {
+  background-color: #0056b3;
+}
+
+#profileImagePreview {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.profile-picture {
+  width: 150px; /* Adjust size as needed */
+  height: 150px; /* Adjust size as needed */
+  overflow: hidden;
+  margin: 0 auto 20px; /* Center the picture */
+  border-radius: 50%; /* Make it a circle */
+}
+
+.profile-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensure the image covers the entire container */
+}
+
+
+.admin-card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  background-color: #fff;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 40%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  border: 4px solid #fff;
+  box-shadow: 0 0 0 4px #f9f9f9;
+}
+
+.admin-picture-div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+

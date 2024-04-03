@@ -19,17 +19,6 @@ async function checkAdmin(req, res, next) {
     }
 }
 
-// async function checkGroupAdmin(req, res, next) {
-//     console.log(req.query);
-//     const conn = await connPromise;
-//     [admin] = await conn.query('select adminId from ju_groups where groupId=?', [req.query.groupId]);
-//     console.log(admin);
-//     if (req.session.user.userId == admin[0].adminId)
-//         next();
-//     else
-//         res.redirect(303, '/');
-// }
-
 async function checkInvitation(req, res, next) {
     console.log(req.body);
     const conn = await connPromise;

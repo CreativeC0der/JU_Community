@@ -23,7 +23,7 @@
 
 
             <div id="group_updates" class="tab-pane active">
-                <% if (currUser.admin==1) { %>
+                <% if (currUser.admin) { %>
                     <a href="/posts/create?groupId=<%= group.groupId%>">
                         <button class="btn btn-primary btn-block" style="margin-block: 40px;"
                             id="create-post-button">Create Post</button>
@@ -48,7 +48,7 @@
 
 
             <div id="group_resources" class="tab-pane">
-                <% if (currUser.admin==1) { %>
+                <% if (currUser.admin) { %>
                     <a href="/resources/create?groupId=<%= group.groupId%>">
                         <button class="btn btn-primary btn-block" style="margin-block: 40px;"
                             id="create-resource-button">Add Resource</button>
@@ -59,7 +59,7 @@
                     <div class="card">
                         <div class="card-body" id="<%= resource.resourceId %>">
                             <h5 class="card-title"><%= resource.resourceHeading %></h5>
-                            <p class="card-text">resource.resourceDescription</p>
+                            <p class="card-text"><%=resource.resourceDescription %></p>
                             <a href="<%= resource.resourceLink %>" target="_blank">Click to get resource</a>
                         </div>
                     </div>       
@@ -70,7 +70,7 @@
 
             <div id="group_members" class="tab-pane">
                 <!-- Button to Open Modal -->
-                <% if (group.adminId===currUser.userId) { %>
+                <% if (currUser.admin) { %>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inviteModal">
                         Send Invites
                     </button>

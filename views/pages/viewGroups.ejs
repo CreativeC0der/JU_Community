@@ -1,4 +1,6 @@
 <%-include ('./header')%>
+    <% admin1.dynamicFields=JSON.parse(admin1.dynamicFields) %>
+    <% admin2.dynamicFields=JSON.parse(admin2.dynamicFields) %>
     <div class="container">
         <div class="row">
             <div class="col-9 ">
@@ -10,6 +12,27 @@
                         <button class="btn btn-primary btn-block" style="margin-block: 40px;">Create Group</button>
                     </a>
                     <% } %>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6 admin-card" data-toggle="modal" data-target="#userModal<%= admin1.userId %>">
+                <div class="admin-picture-div">
+                    <img src=<%= admin1.profileImage %> alt="Admin Profile Picture" class="admin-picture">
+                </div>
+                    <div class="user-details">
+                    <h2 class="username"><%= admin1.userName %></h2>
+                    <p class="email"><%= admin1.userEmail %></p>
+                </div>
+            </div>
+            <div class="col-6 admin-card"  data-toggle="modal" data-target="#userModal<%= admin2.userId %>">
+                <div class="admin-picture-div">
+                    <img src=<%= admin2.profileImage %> alt="Admin Profile Picture" class="admin-picture">
+                </div>
+                <div class="user-details">
+                    <h2 class="username"><%= admin2.userName %></h2>
+                    <p class="email"><%= admin2.userEmail %></p>
+                </div>
             </div>
         </div>
 
@@ -32,3 +55,91 @@
             <% } %>
     </div>
     <%-include ('./footer')%>
+
+<!-- admin1 modal -->
+    <div class="modal fade" id="userModal<%= admin1.userId %>" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalLabel">User Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="profile-card">
+                        <h2 class="text-center mb-4">User Profile</h2>
+                        <hr>
+                        <div class="profile-picture">
+                            <img src="<%= admin1.profileImage %>" alt="Profile Picture">
+                        </div>
+                        <div class="user-details">
+                            <strong>Username:</strong> <%= admin1.userName %> <br>
+                            <strong>User ID:</strong> <%= admin1.userId %> <br>
+                            <strong>Email:</strong> <%= admin1.userEmail %> <br>
+                            <strong>Bio:</strong> <%= admin1.bio %> <br>
+                            <% if (admin1['dynamicFields']!=null) { %>
+                                <%  
+                                    i=1;
+                                    noOfFields=Object.keys(admin1['dynamicFields']).length/2
+                                %>
+                                <% while(i<=noOfFields){%>
+                                    <strong><%= admin1['dynamicFields'][`dynamicFieldLabel${i}`] %>:</strong> 
+                                    <%= admin1['dynamicFields'][`dynamicFieldValue${i}`]%>
+                                    <br>
+                                    <% i++ %>
+                                <% } %>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- admin2 modal -->
+    <div class="modal fade" id="userModal<%= admin2.userId %>" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalLabel">User Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="profile-card">
+                        <h2 class="text-center mb-4">User Profile</h2>
+                        <hr>
+                        <div class="profile-picture">
+                            <img src="<%= admin2.profileImage %>" alt="Profile Picture">
+                        </div>
+                        <div class="user-details">
+                            <strong>Username:</strong> <%= admin2.userName %> <br>
+                            <strong>User ID:</strong> <%= admin2.userId %> <br>
+                            <strong>Email:</strong> <%= admin2.userEmail %> <br>
+                            <strong>Bio:</strong> <%= admin2.bio %> <br>
+                            <% if (user['dynamicFields']!=null) { %>
+                                <%  
+                                    i=1;
+                                    noOfFields=Object.keys(admin2['dynamicFields']).length/2
+                                %>
+                                <% while(i<=noOfFields){%>
+                                    <strong><%= admin2['dynamicFields'][`dynamicFieldLabel${i}`] %>:</strong> 
+                                    <%= admin2['dynamicFields'][`dynamicFieldValue${i}`]%>
+                                    <br>
+                                    <% i++ %>
+                                <% } %>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>

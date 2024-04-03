@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
 <%-include ('./header')%>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0">User Registration</h5>
+                        <h5 class="mb-0">Edit User</h5>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="/profile/create" enctype="multipart/form-data">
+                        <form method="POST" action="/profile/edit" enctype="multipart/form-data" id="userForm">
                             <!-- Existing fields -->
 
                             <!-- Add image upload field -->
@@ -19,36 +17,36 @@
                             </div>
                             <!-- Image preview -->
                             <div id="imagePreviewContainer" class="text-center">
-                                <img id="profileImagePreview" src="#" alt="Profile Image Preview">
+                                <img id="profileImagePreview" src="<%= user.profileImage %>" alt="Profile Image Preview">
                             </div>
                             <!-- Remaining fields -->
                             <div class="form-group">
                                 <label for="userId">UserID:</label>
-                                <input type="text" class="form-control" id="userId" name="userId" required>
+                                <input type="text" class="form-control" id="userId" name="userId" value="<%= user.userId %>" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="username">Name:</label>
-                                <input type="text" class="form-control" id="username" name="username" required>
+                                <input type="text" class="form-control" id="username" name="username" value="<%= user.userName %>" required>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email:</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
+                                <input type="email" class="form-control" id="email" name="email" value="<%= user.userEmail %>" required>
                             </div>
                             <div class="form-group">
                                 <label for="password">Password:</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
+                                <input type="password" class="form-control" id="password" name="password" value="<%= user.userPassword %>" required>
                             </div>
                             <div class="form-group">
                                 <label for="roll">Roll (Optional):</label>
-                                <input type="text" class="form-control" id="roll" name="roll">
+                                <input type="text" class="form-control" id="roll" name="roll" value="<%= user.userRoll %>">
                             </div>
                             <div class="form-group">
                                 <label for="department">Department (Optional):</label>
-                                <input type="text" class="form-control" id="department" name="department">
+                                <input type="text" class="form-control" id="department" name="department" value="<%= user.userDepartment %>">
                             </div>
                             <div class="form-group">
                                 <label for="bio">Bio:</label>
-                                <textarea class="form-control" id="bio" name="bio" rows="3" required></textarea>
+                                <textarea class="form-control" id="bio" name="bio" rows="3" required><%= user.bio %></textarea>
                             </div>
 
                             <!-- Add more fields button -->
@@ -56,10 +54,22 @@
                             <!-- Dynamic fields container -->
                             <div id="dynamicFieldsContainer">
                                 <!-- Dynamic FIELDS ADDED HERE!! -->
-                                
+                                <% noOfFields=Object.keys(user['dynamicFields']).length/2%>
+                                <span style="display:none" id="noOfFields"><%= noOfFields %></span>
+                                <% for( let fieldCounter = 1; fieldCounter<=noOfFields; fieldCounter++ ) { %>
+                                    <div class="form-group">
+                                        <label for="dynamic Field <%= fieldCounter %>">Dynamic Field <%= fieldCounter %> :</label>
+                                        <input type="text" class="form-control" id="dynamicFieldLabel<%= fieldCounter %>" 
+                                            name="dynamicFieldLabel<%= fieldCounter %>" placeholder="Enter Label"  style="font-weight: bold;" 
+                                            value="<%= user['dynamicFields'][`dynamicFieldLabel${fieldCounter}`] %>">
+                                        <input type="text" class="form-control" id="dynamicFieldValue<%= fieldCounter %>" 
+                                            name="dynamicFieldValue<%= fieldCounter %>" placeholder="Enter Value"
+                                            value="<%= user['dynamicFields'][`dynamicFieldValue${fieldCounter}`] %>">
+                                    </div>
+                                <% } %>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-register">Register</button>
+                            <button type="submit" class="btn btn-primary btn-register" id="submitBtn">Edit Profile</button>
                         </form>
                     </div>
                 </div>
@@ -86,8 +96,8 @@
     }
 
     // Counter for dynamic fields
-    let fieldCounter = 0;
-
+    fieldCounter = $('#noOfFields').text()
+    
     // Function to add dynamic fields
     function addDynamicField() {
         fieldCounter++;
@@ -103,6 +113,8 @@
 
     // Event listener for Add More Fields button
     $("#addFieldBtn").click(function () {
+        
         addDynamicField();
     });
+
 </script>
