@@ -13,10 +13,10 @@ router.get('/home', checkSessionValid, (req, res) => {
 router.get('/view-groups', checkSessionValid, async (req, res) => {
     const conn = await connPromise;
     [results, fields] = await conn.query('select * from ju_groups');
-    console.log(results);
-    // const admins = results.map((group) => group.adminId);
-    // console.log(admins);
+    const [[admin1,admin2]]=await conn.query('select * from users where userId in (?,?)',['arijitdas','digantasaha']);
     res.render('viewGroups', {
+        admin1:admin1,
+        admin2:admin2,
         user: req.session.user,
         groups: results
     });
@@ -24,12 +24,13 @@ router.get('/view-groups', checkSessionValid, async (req, res) => {
 
 router.get('/my-profile', checkSessionValid, async (req, res) => {
     const conn = await connPromise;
-    [user] = await conn.query('select * from users where userId=?', [req.session.user.userId]);
+    [[user]] = await conn.query('select * from users where userId=?', [req.session.user.userId]);
     [invites] = await conn.query('select * from invites where inviteTo=?', [req.session.user.userId]);
     [myGroups] = await conn.query('select * from ju_groups where groupId in(select groupId from members where userId=?)', req.session.user.userId)
-    console.log(myGroups);
+    user['dynamicFields']=JSON.parse(user['dynamicFields'])
+    console.log(user);
     res.render('myProfile', {
-        user: user[0],
+        user: user,
         invites: invites,
         myGroups: myGroups
     })
@@ -39,10 +40,12 @@ router.get('/view-profiles', checkSessionValid, async (req, res) => {
     const conn = await connPromise;
     [users] = await conn.query('select * from users');
     console.log(users);
-    for (key in users) {
-        [groups] = await conn.query('select * from ju_groups where groupId in (select groupId from members where userId=?)', [users[key].userId]);
-        console.log(groups);
-        users[key].groups = groups;
+    for (user of users) {
+        [groups] = await conn.query(
+            'select * from ju_groups where groupId in (select groupId from members where userId=?)', 
+            [user.userId]);
+        user.groups = groups;
+        user.dynamicFields=JSON.parse(user['dynamicFields'])
     }
     console.log(users);
     res.render('viewProfiles', { users: users });

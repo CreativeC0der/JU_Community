@@ -1,0 +1,120 @@
+<%-include ('./header')%>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Edit User</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="/profile/edit" enctype="multipart/form-data" id="userForm">
+                            <!-- Existing fields -->
+
+                            <!-- Add image upload field -->
+                            <div class="form-group">
+                                <label for="profileImage">Profile Image:</label>
+                                <input type="file" class="form-control-file" id="profileImage" name="profileImage" accept="image/*" onchange="previewImage()">
+                            </div>
+                            <!-- Image preview -->
+                            <div id="imagePreviewContainer" class="text-center">
+                                <img id="profileImagePreview" src="<%= user.profileImage %>" alt="Profile Image Preview">
+                            </div>
+                            <!-- Remaining fields -->
+                            <div class="form-group">
+                                <label for="userId">UserID:</label>
+                                <input type="text" class="form-control" id="userId" name="userId" value="<%= user.userId %>" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="username">Name:</label>
+                                <input type="text" class="form-control" id="username" name="username" value="<%= user.userName %>" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" value="<%= user.userEmail %>" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" class="form-control" id="password" name="password" value="<%= user.userPassword %>" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="roll">Roll (Optional):</label>
+                                <input type="text" class="form-control" id="roll" name="roll" value="<%= user.userRoll %>">
+                            </div>
+                            <div class="form-group">
+                                <label for="department">Department (Optional):</label>
+                                <input type="text" class="form-control" id="department" name="department" value="<%= user.userDepartment %>">
+                            </div>
+                            <div class="form-group">
+                                <label for="bio">Bio:</label>
+                                <textarea class="form-control" id="bio" name="bio" rows="3" required><%= user.bio %></textarea>
+                            </div>
+
+                            <!-- Add more fields button -->
+                            <button type="button" class="btn btn-warning mb-3" id="addFieldBtn">Add More Fields</button>
+                            <!-- Dynamic fields container -->
+                            <div id="dynamicFieldsContainer">
+                                <!-- Dynamic FIELDS ADDED HERE!! -->
+                                <% noOfFields=Object.keys(user['dynamicFields']).length/2%>
+                                <span style="display:none" id="noOfFields"><%= noOfFields %></span>
+                                <% for( let fieldCounter = 1; fieldCounter<=noOfFields; fieldCounter++ ) { %>
+                                    <div class="form-group">
+                                        <label for="dynamic Field <%= fieldCounter %>">Dynamic Field <%= fieldCounter %> :</label>
+                                        <input type="text" class="form-control" id="dynamicFieldLabel<%= fieldCounter %>" 
+                                            name="dynamicFieldLabel<%= fieldCounter %>" placeholder="Enter Label"  style="font-weight: bold;" 
+                                            value="<%= user['dynamicFields'][`dynamicFieldLabel${fieldCounter}`] %>">
+                                        <input type="text" class="form-control" id="dynamicFieldValue<%= fieldCounter %>" 
+                                            name="dynamicFieldValue<%= fieldCounter %>" placeholder="Enter Value"
+                                            value="<%= user['dynamicFields'][`dynamicFieldValue${fieldCounter}`] %>">
+                                    </div>
+                                <% } %>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-register" id="submitBtn">Edit Profile</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<%-include ('./footer')%>
+
+<script>
+    // Function to preview selected image
+    function previewImage() {
+        const fileInput = document.getElementById('profileImage');
+        const imagePreview = document.getElementById('profileImagePreview');
+
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+            };
+
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+
+    // Counter for dynamic fields
+    fieldCounter = $('#noOfFields').text()
+    
+    // Function to add dynamic fields
+    function addDynamicField() {
+        fieldCounter++;
+        let fieldHtml = `<div class="form-group">
+                            <label for="dynamicField${fieldCounter}">Dynamic Field ${fieldCounter} :</label>
+                            <input type="text" class="form-control" id="dynamicFieldLabel${fieldCounter}" 
+                            name="dynamicFieldLabel${fieldCounter}" placeholder="Enter Label"  style="font-weight: bold;">
+                            <input type="text" class="form-control" id="dynamicFieldValue${fieldCounter}" 
+                            name="dynamicFieldValue${fieldCounter}" placeholder="Enter Value">
+                        </div>`;
+        $("#dynamicFieldsContainer").append(fieldHtml);
+    }
+
+    // Event listener for Add More Fields button
+    $("#addFieldBtn").click(function () {
+        
+        addDynamicField();
+    });
+
+</script>

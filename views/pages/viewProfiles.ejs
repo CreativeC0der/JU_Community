@@ -8,11 +8,65 @@
                 <div class="member-info"><strong>Name:</strong> <%= user.userName %> </div>
                 <div class="member-info"><strong>Email:</strong> <%= user.userEmail %> </div>
                 <div class="member-info"><strong>User ID:</strong> <%= user.userId %> </div>
-                <div class="member-info"><strong>Roll Number:</strong> <%= user.userRoll %> </div>
-                <div class="member-info"><strong>Department:</strong> <%= user.userDepartment %> </div>
-                <button class="btn btn-view-details">View Details</button>
+                <% if (user.userRoll) { %>
+                    <div class="member-info"><strong>Roll Number:</strong> <%= user.userRoll %> </div>
+                <% } %>
+                <% if (user.userDepartment) { %>
+                    <div class="member-info"><strong>Department:</strong> <%= user.userDepartment %> </div>
+                <% } %>
+                <button class="btn btn-view-details" data-toggle="modal" data-target="#userModal<%= user.userId %>">View Details</button>
+            </div>
+            <div class="modal fade" id="userModal<%= user.userId %>" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="userModalLabel">User Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="profile-card">
+                                <h2 class="text-center mb-4">User Profile</h2>
+                                <hr>
+                                <div class="profile-picture">
+                                    <img src="<%= user.profileImage %>" alt="Profile Picture">
+                                </div>
+                                <div class="user-details">
+                                    <strong>Username:</strong> <%= user.userName %> <br>
+                                    <strong>User ID:</strong> <%= user.userId %> <br>
+                                    <strong>Email:</strong> <%= user.userEmail %> <br>
+                                    <% if (user.userRoll) { %>
+                                        <strong>Roll:</strong> <%= user.userRoll %> <br>
+                                    <% } %>
+                                    <% if (user.userDepartment) { %>
+                                        <strong>Department:</strong> <%= user.userDepartment %> <br>
+                                    <% } %>
+                                    <strong>Bio:</strong> <%= user.bio %> <br>
+                                    <% if (user['dynamicFields']!=null) { %>
+                                        <%  
+                                            i=1;
+                                            noOfFields=Object.keys(user['dynamicFields']).length/2
+                                        %>
+                                        <% while(i<=noOfFields){%>
+                                            <strong><%= user['dynamicFields'][`dynamicFieldLabel${i}`] %>:</strong> 
+                                            <%= user['dynamicFields'][`dynamicFieldValue${i}`]%>
+                                            <br>
+                                            <% i++ %>
+                                        <% } %>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         <% } %>
         
     </div>
+
+    
 <%-include ('./footer')%>

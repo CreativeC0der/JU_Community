@@ -14,14 +14,30 @@
                 <div class="profile-card">
                     <h2 class="text-center mb-4">User Profile</h2>
                     <hr>
+                    <div class="profile-picture">
+                        <img src="<%= user.profileImage %>" alt="Profile Picture">
+                    </div>
                     <div class="user-details">
                         <strong>Username:</strong> <%= user.userName %> <br>
                         <strong>User ID:</strong> <%= user.userId %> <br>
                         <strong>Email:</strong> <%= user.userEmail %> <br>
-                        <strong>Roll:</strong> <%= user.userRoll %> <br>
-                        <strong>Department:</strong> <%= user.userDepartment %>
+                        <% if (user.userRoll) { %>
+                            <strong>Roll:</strong> <%= user.userRoll %> <br>
+                        <% } %>
+                        <% if (user.userDepartment) { %>
+                            <strong>Department:</strong> <%= user.userDepartment %> <br>
+                        <% } %>
+                        <strong>Bio:</strong> <%= user.bio %> <br>
+                        <% if (user['dynamicFields']!=null) { %>
+                            <% noOfFields=Object.keys(user['dynamicFields']).length/2%>
+                            <%for( let i = 1; i<=noOfFields; i++ ){%>
+                                <strong><%= user['dynamicFields'][`dynamicFieldLabel${i}`] %>:</strong> 
+                                <%= user['dynamicFields'][`dynamicFieldValue${i}`]%>
+                                <br>
+                            <% } %>
+                        <% } %>
                     </div>
-                    <button class="btn btn-secondary edit-btn">Edit</button>
+                    <a href="/profile/edit"><button class="btn btn-secondary edit-btn">Edit</button></a>
                 </div>
             </div>
         </div>
