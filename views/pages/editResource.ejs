@@ -1,0 +1,43 @@
+<%-include ('./header')%>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Post Resource</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="/resources/edit">
+                            <div class="form-group">
+                                <label for="groupPostedTo">Group Posted To:</label>
+                                <input type="text" class="form-control" id="groupPostedTo" name="groupPostedTo" value="<%= resource.groupId %>" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="resourceId">Resource ID:</label>
+                                <input type="text" class="form-control" id="resourceId" name="resourceId" value="<%= resource.resourceId %>" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="resourceHeading">Resource Heading:</label>
+                                <input type="text" class="form-control" id="resourceHeading" name="resourceHeading" 
+                                value="<%= resource.resourceHeading %>" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="resourceDescription">Description:</label>
+                                <textarea class="form-control" id="resourceDescription" name="resourceDescription"
+                                    rows="3" required><%= resource.resourceDescription %></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="resourceLink">Resource Link:</label>
+                                <input type="url" class="form-control" id="resourceLink" name="resourceLink" value="<%= resource.resourceLink %>" required>
+                            </div>
+                            <div class="text-right">
+                                <button type="submit" class="btn btn-primary btn-post-resource">Edit Resource</button>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<%-include ('./footer')%>

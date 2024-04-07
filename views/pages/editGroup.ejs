@@ -1,0 +1,34 @@
+<%-include ('./header')%>
+<div class="container col-md-6">
+    <div class="my-md-5">
+        <div class="card">
+            <div class="card-header">
+            <h2>Edit Group</h2>
+            </div>
+            <div class="card-body">
+                <form action="/group/edit" method="POST">
+                    <div class="form-group">
+                        <label for="admin_id">Admin ID:</label>
+                        <input type="text" class="form-control" id="admin_id" name="adminId" value="<%= group.adminId %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="group_id">Group ID:</label>
+                        <input type="text" class="form-control" id="group_id" name="groupId" value="<%= group.groupId %>" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="group_name">Group Name:</label>
+                        <input type="text" class="form-control" id="group_name" name="groupName" value="<%= group.groupName %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="project">Project:</label>
+                        <input type="text" class="form-control" id="project" name="project" value="<%= group.project %>" required>
+                    </div>
+                    <button type="submit" class="btn btn-create-group btn-block">Edit Group</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%-include ('./footer')%>
+

@@ -7,6 +7,7 @@ const landingRouter = require('./routes/landing');
 const groupRouter = require('./routes/group');
 const postRouter = require('./routes/posts');
 const resourceRouter = require('./routes/resources');
+const memberRouter=require('./routes/member');
 const path = require('path')
 require('dotenv').config()
 
@@ -56,6 +57,7 @@ app.use('/landing', landingRouter);
 app.use('/group', groupRouter);
 app.use('/posts', postRouter);
 app.use('/resources', resourceRouter);
+app.use('/members', memberRouter);
 
 app.listen(process.env.PORT, process.env.HOST, (err) => {
     console.log('listening on ' + process.env.HOST + ' ' + process.env.PORT);

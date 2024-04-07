@@ -3,10 +3,16 @@ const router = express.Router();
 const { checkSessionValid } = require('../middlewares');
 const { connPromise } = require('../dbConnect');
 
-router.get('/home', checkSessionValid, (req, res) => {
+router.get('/home', checkSessionValid, async (req, res) => {
     console.log(req.session);
+    const conn = await connPromise;
+    const [newPosts]=await conn.query('SELECT * FROM posts ORDER BY timestamp DESC LIMIT 3');
+    const [newMembers]=await conn.query('SELECT * FROM users ORDER BY timestamp DESC LIMIT 3');
+    console.log(newMembers);
     res.render('landing', {
         user: req.session.user.userName,
+        newMembers,
+        newPosts
     });
 })
 

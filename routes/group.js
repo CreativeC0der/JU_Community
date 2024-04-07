@@ -43,6 +43,21 @@ router.post('/sendInvites', checkSessionValid, checkAdmin, async (req, res) => {
     res.json({ response: 'Job done!!!' })
 })
 
-router.get('/')
+router.get('/edit',checkSessionValid,checkAdmin,async(req,res)=>{
+    console.log(req.query.groupId);
+    const conn = await connPromise;
+    const query = 'select * from ju_groups where groupId=?';
+    const [[group]]=await conn.query(query,[req.query.groupId])
+    console.log(group);
+    res.render('editGroup',{group});
+})
+
+router.post('/edit',checkSessionValid,checkAdmin,async (req,res)=>{
+    console.log(req.body);
+    const conn = await connPromise;
+    const query = 'update ju_groups set groupName=?,project=? where groupId=?';
+    const [results]=await conn.query(query,[req.body.groupName,req.body.project,req.body.groupId])
+    res.redirect(`/group/dashboard?groupId=${req.body.groupId}`);
+})
 
 module.exports = router

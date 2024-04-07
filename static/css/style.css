@@ -19,7 +19,7 @@ body {
 }
 
 .header {
-  max-width: max-content;
+  max-width:none;
   margin: 30px 0px;
   background-color: #fff;
   padding: 15px;
@@ -147,7 +147,7 @@ body {
 }
 
 .card-img-top {
-  max-width: 70%;
+  max-width: 40vw;
   height: auto;
   border-radius: 10px;
   /* Rounded borders */
@@ -281,12 +281,15 @@ body {
   margin: 20px;
 }
 
-.post-container {
-  border: black 1px solid;
+.post-header {
+  border: 1px solid rgba(0,0,0,0.5);
   padding: 12px;
   border-radius: 10px;
 }
-
+.post-content{
+  overflow-y: auto;
+  max-block-size: 50vh;
+}
 .member-card {
   border: 1px solid #ddd;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

@@ -1,8 +1,25 @@
 <%-include ('./header')%>
     <div class="container ">
-        <h2 class="text-center mb-4 header" style="max-width:none">Group Dashboard for <%=group.groupName%>
-        </h2>
-
+        <div class="row  mb-4 header">
+            <div class="col-8">
+                <h2 class="text-center" >
+                    Group Dashboard for <%=group.groupName%>
+                </h2>
+            </div>
+            <div class="col-4">
+                <% if (currUser.admin) { %>
+                    <div class="btn-group ml-auto" role="group" aria-label="Edit and Delete Group Buttons" style="float: right;">
+                        <a href="/group/edit?groupId=<%= group.groupId %>">
+                            <button type="button" class="btn btn-warning mx-2">Edit Group</button>
+                        </a>
+                        <a href="">
+                            <button type="button" class="btn btn-danger">Delete Group</button>
+                        </a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link active" data-toggle="tab" href="#group_updates">Group Updates</a>
@@ -15,143 +32,16 @@
             </li>
         </ul>
 
-
-
-
-
         <div class="tab-content">
+            
+            <%-include ('./groupPosts')%>
+            <%-include ('./groupResources')%>
+            <%-include ('./groupMembers')%>
 
-
-            <div id="group_updates" class="tab-pane active">
-                <% if (currUser.admin) { %>
-                    <a href="/posts/create?groupId=<%= group.groupId%>">
-                        <button class="btn btn-primary btn-block" style="margin-block: 40px;"
-                            id="create-post-button">Create Post</button>
-                    </a>
-                <% } %>
-                <% for(const post of posts ) { %>
-                    <div class="card">
-                        <div class="card-body" id="<%= post.postId %>">
-                            <h5 class="font-weight-bold my-md-3 post-container">
-                                <%= post.postHeading %>
-                            </h5>
-                            <img src="<%= post.postImage %>" class="card-img-top" alt="Image 1">
-                            <p class="font-weight-lighter my-md-3 post-container">
-                                <%= post.postContent %>
-                            </p>
-                        </div>
-                    </div>
-                <% } %>
-
-            </div>
-
-
-
-            <div id="group_resources" class="tab-pane">
-                <% if (currUser.admin) { %>
-                    <a href="/resources/create?groupId=<%= group.groupId%>">
-                        <button class="btn btn-primary btn-block" style="margin-block: 40px;"
-                            id="create-resource-button">Add Resource</button>
-                    </a>
-                <% } %>
-
-                <% for(const resource of resources ) { %>
-                    <div class="card">
-                        <div class="card-body" id="<%= resource.resourceId %>">
-                            <h5 class="card-title"><%= resource.resourceHeading %></h5>
-                            <p class="card-text"><%=resource.resourceDescription %></p>
-                            <a href="<%= resource.resourceLink %>" target="_blank">Click to get resource</a>
-                        </div>
-                    </div>       
-                <% } %>
-            </div>
-
-
-
-            <div id="group_members" class="tab-pane">
-                <!-- Button to Open Modal -->
-                <% if (currUser.admin) { %>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inviteModal">
-                        Send Invites
-                    </button>
-                    <%}%>
-
-                        <!-- Get Members of group -->
-                        <% for(member of members) { %>
-                            <div class="card">
-                                <div class="card-body" id="<%= member.userId %>">
-                                    <h5 class="card-title">
-                                        <%= member.userName %>
-                                    </h5>
-                                    <p class="card-text">
-                                        <%= member.userDepartment %>
-                                    </p>
-                                </div>
-                            </div>
-                            <% } %>
-            </div>
         </div>
     </div>
-
-
-    <!-- Invite Modal -->
-    <div class="modal fade invite-modal" id="inviteModal" tabindex="-1" role="dialog" aria-labelledby="inviteModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="inviteModalLabel">Send Invites to Users</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <% for(nonMember of nonMembers) { %>
-                        <div class="invite-card">
-                            <input type="checkbox" id="<%= nonMember.userId %>" name="inviteUsers"
-                                value="<%= nonMember.userId %>">
-                            <label for="<%= nonMember.userId %>">
-                                - User ID: <%= nonMember.userId %> <br />
-                                    - Username: <%= nonMember.userName %> <br />
-                                        - Department: <%= nonMember.userDepartment %><br />
-                            </label>
-                        </div>
-                        <% } %>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn invite-btn"
-                        onclick="sendInvites('<%= group.groupId%>','<%= group.adminId%>')">Send Invite</button>
-                </div>
-            </div>
-        </div>
-    </div>
+            
 
     <%-include ('./footer')%>
 
-        <script>
-            async function sendInvites(groupId, adminId) {
-                try {
-                    const users = [];
-                    const items = document.getElementsByName('inviteUsers');
-                    for (item of items) {
-                        if (item.checked)
-                            users.push(item.value);
-                    }
-                    console.log(users);
-                    const response = await fetch('/group/sendInvites', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ users, groupId, adminId })
-                    })
-                    const data = await response.json();
-                    console.log(data);
-                    $('#inviteModal').modal('hide');
-                }
-
-                catch (err) {
-                    console.log(err.message);
-                }
-            }
-        </script>
+    

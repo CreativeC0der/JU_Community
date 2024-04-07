@@ -55,7 +55,7 @@
                     <div class="modal-body">
                         <% for(const invite of invites) { %>
                             <div class="invite-card" id="<%= invite.inviteId %>">
-                                <h5>Invitation to Group [<%= invite.groupId %>] from <%= invite.inviteFrom %> </h5>
+                                <h5>Invitation to Group [<%= invite.groupId %>] </h5>
                                 <button class="btn btn-success" onclick="joinGroup('<%= invite.groupId %>','<%= invite.inviteId %>')">Accept</button>
                                 <button class="btn btn-danger">Reject</button>
                             </div>
@@ -108,7 +108,7 @@
 <script>
     async function joinGroup(groupId,inviteId) {
 
-            const response=await fetch('/profile/joinGroup',{
+            const response=await fetch('/members/create',{
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json'

@@ -15,16 +15,16 @@ router.get('/create', checkSessionValid, checkAdmin, async (req, res) => {
 })
 
 router.post('/create', checkSessionValid, checkAdmin, upload.single('postImage'), async (req, res) => {
-  console.log(req.file);
-  console.log(req.body);
+  let currDate = new Date().toISOString().replace('T', ' ').split('.')[0];
   const blob = await put(`PostImage ${Date.now()} ${req.file.originalname}`, req.file.buffer, {
     access: 'public',
   });
   console.log(blob);
   const conn = await connPromise;
-  const query='insert into posts(postId,postHeading,postContent,postImage,groupId) values(?,?,?,?,?)';
+  const query='insert into posts(timestamp,postId,postHeading,postContent,postImage,groupId) values(?,?,?,?,?,?)';
   const [results] = await conn.query(query,
-                        [crypto.randomUUID(), 
+                        [currDate,
+                        crypto.randomUUID(), 
                         req.body.postHeading, 
                         req.body.postContent, 
                         blob.url, 
@@ -32,6 +32,44 @@ router.post('/create', checkSessionValid, checkAdmin, upload.single('postImage')
 
   console.log(results);
   res.redirect(303, `/group/dashboard?groupId=${req.query.groupId}`);
+})
+
+router.get('/edit',checkSessionValid,checkAdmin,async(req,res)=>{
+  console.log(req.query.postId);
+  const conn = await connPromise;
+  const query = 'select * from posts where postId=?';
+  const [[post]]=await conn.query(query,[req.query.postId])
+  console.log(post);
+  res.render('editPost',{post});
+})
+
+router.post('/edit',checkSessionValid,checkAdmin,upload.single('postImage'),async(req,res)=>{
+  const conn=await connPromise;
+  console.log('RECEIVED-----');
+  console.log(req.body);
+  if(req.file)
+  {
+      // Upload to vercel blobs
+      const blob=await put(`PostImage ${Date.now()} ${req.file.originalname}`,req.file.buffer,{access:'public'})
+      await conn.query('UPDATE posts SET postImage=? where postId=?',[blob.url,req.body.postId])
+  }
+
+  const query = 'UPDATE posts SET postHeading=?, postContent=? where postId=?';
+  const [results] = await conn.query(query, 
+                    [req.body.postHeading,
+                    req.body.postContent,
+                    req.body.postId]);
+  console.log(results);
+  res.redirect(`/group/dashboard?groupId=${req.body.groupId}`);
+})
+
+router.get('/delete',checkSessionValid,checkAdmin,async (req,res)=>{
+  console.log(req.query);
+  const conn=await connPromise;
+  const query = 'DELETE FROM posts WHERE postId=?';
+  const [results]=await conn.query(query,[req.query.postId])
+  console.log(results);
+  res.redirect(`/group/dashboard?groupId=${req.query.groupId}`);
 })
 
 module.exports = router

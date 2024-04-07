@@ -1,0 +1,84 @@
+<div id="group_members" class="tab-pane">
+    <!-- Button to Open Modal -->
+    <% if (currUser.admin) { %>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inviteModal">
+            Send Invites
+        </button>
+    <%}%>
+
+    <!-- Get Members of group -->
+    <% for(member of members) { %>
+        <div class="card">
+            <div class="card-body" id="<%= member.userId %>">
+                <h5 class="card-title">
+                    <%= member.userName %>
+                </h5>
+                <p class="card-text">
+                    <%= member.userDepartment %>
+                </p>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+
+
+<!-- Invite Modal -->
+<div class="modal fade invite-modal" id="inviteModal" tabindex="-1" role="dialog" aria-labelledby="inviteModalLabel"
+aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="inviteModalLabel">Send Invites to Users</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <% for(nonMember of nonMembers) { %>
+                    <div class="invite-card">
+                        <input type="checkbox" id="<%= nonMember.userId %>" name="inviteUsers"
+                            value="<%= nonMember.userId %>">
+                        <label for="<%= nonMember.userId %>">
+                            - User ID: <%= nonMember.userId %> <br />
+                                - Username: <%= nonMember.userName %> <br />
+                                    - Department: <%= nonMember.userDepartment %><br />
+                        </label>
+                    </div>
+                    <% } %>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn invite-btn"
+                    onclick="sendInvites('<%= group.groupId%>','<%= group.adminId%>')">Send Invite</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function sendInvites(groupId, adminId) {
+        try {
+            const users = [];
+            const items = document.getElementsByName('inviteUsers');
+            for (item of items) {
+                if (item.checked)
+                    users.push(item.value);
+            }
+            console.log(users);
+            const response = await fetch('/group/sendInvites', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ users, groupId, adminId })
+            })
+            const data = await response.json();
+            console.log(data);
+            $('#inviteModal').modal('hide');
+        }
+
+        catch (err) {
+            console.log(err.message);
+        }
+    }
+</script>
