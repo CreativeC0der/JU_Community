@@ -33,16 +33,6 @@ router.post('/create', checkSessionValid, checkAdmin, async (req, res) => {
     res.redirect(303, `/group/dashboard?groupId=${req.body.group_id}`)
 })
 
-router.post('/sendInvites', checkSessionValid, checkAdmin, async (req, res) => {
-    console.log(req.body);
-    const conn = await connPromise;
-    const query = 'insert into invites(inviteId,inviteFrom,inviteTo,groupId) values (?,?,?,?)';
-    for (user of req.body.users) {
-        await conn.query(query, [crypto.randomUUID(), req.body.adminId, user, req.body.groupId]);
-    }
-    res.json({ response: 'Job done!!!' })
-})
-
 router.get('/edit',checkSessionValid,checkAdmin,async(req,res)=>{
     console.log(req.query.groupId);
     const conn = await connPromise;
@@ -58,6 +48,15 @@ router.post('/edit',checkSessionValid,checkAdmin,async (req,res)=>{
     const query = 'update ju_groups set groupName=?,project=? where groupId=?';
     const [results]=await conn.query(query,[req.body.groupName,req.body.project,req.body.groupId])
     res.redirect(`/group/dashboard?groupId=${req.body.groupId}`);
+})
+
+router.get('/delete',checkSessionValid,checkAdmin,async (req,res)=>{
+    console.log(req.query);
+    const conn=await connPromise;
+    const query = 'DELETE FROM ju_groups WHERE groupId=?';
+    const [results]=await conn.query(query,[req.query.groupId])
+    console.log(results);
+    res.redirect(`/landing/view-groups`);
 })
 
 module.exports = router

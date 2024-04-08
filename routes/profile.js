@@ -3,7 +3,7 @@ const router=express.Router();
 const {connPromise}=require('../dbConnect');
 const {checkSessionValid,checkInvitation}=require('../middlewares');
 const multer = require('multer')
-const {put}=require('@vercel/blob')
+const {del,put}=require('@vercel/blob')
 const upload = multer({ storage: multer.memoryStorage() })
 
 
@@ -42,7 +42,7 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
     res.redirect('/');
 })
 
-router.get('/edit',async (req,res)=>{
+router.get('/edit',checkSessionValid,async (req,res)=>{
     const conn=await connPromise;
     const query='select * from users where userId=?'
     const [[user]]=await conn.query(query,[req.session.user.userId])
@@ -51,7 +51,7 @@ router.get('/edit',async (req,res)=>{
     res.render('editProfile',{user})
 })
 
-router.post('/edit',upload.single('profileImage'),async(req,res)=>{
+router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,res)=>{
     const conn=await connPromise;
     console.log('RECEIVED BODY');
     console.log(req.body);
@@ -72,6 +72,15 @@ router.post('/edit',upload.single('profileImage'),async(req,res)=>{
     [username, email, password, roll, department, bio, dynamicFields,userId]);
     console.log(results);
     res.redirect('/landing/my-profile');
+})
+
+router.get('/delete',checkSessionValid,async (req,res)=>{
+    await del(req.session.user.profileImage)
+    const conn=await connPromise;
+    const query = 'DELETE FROM users WHERE userId=?';
+    const [results]=await conn.query(query,[req.session.user.userId])
+    console.log(results);
+    res.redirect(`/logout`);
 })
 
 

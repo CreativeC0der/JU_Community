@@ -3,7 +3,7 @@
         <div class="row  mb-4 header">
             <div class="col-8">
                 <h2 class="text-center" >
-                    Group Dashboard for <%=group.groupName%>
+                    <%=group.groupName%>
                 </h2>
             </div>
             <div class="col-4">
@@ -12,7 +12,7 @@
                         <a href="/group/edit?groupId=<%= group.groupId %>">
                             <button type="button" class="btn btn-warning mx-2">Edit Group</button>
                         </a>
-                        <a href="">
+                        <a href="/group/delete?groupId=<%= group.groupId %>">
                             <button type="button" class="btn btn-danger">Delete Group</button>
                         </a>
                     </div>

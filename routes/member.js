@@ -3,19 +3,20 @@ const router = express.Router();
 const { checkSessionValid, checkAdmin ,checkInvitation} = require('../middlewares');
 const { connPromise } = require('../dbConnect');
 
-router.post('/create',checkSessionValid,checkInvitation,async(req,res)=>{
+router.post('/add',checkSessionValid,checkAdmin,async(req,res)=>{
     console.log(req.body);
-    const conn=await connPromise;
-    await conn.query('insert into members(userId,groupId) values(?,?)',[req.session.user.userId,req.body.groupId]);
-    await conn.query('delete from invites where inviteId=?',[req.body.inviteId]);
-    res.json({result:'invitation sent!!'})
+    const conn = await connPromise;
+    const query='insert into members(userId,groupId) values (?,?)'
+    for(user of req.body.users)
+        await conn.query(query,[user,req.body.groupId])
+    res.json({ response: 'Job done!!!' })
 })
 
 router.get('/delete',checkSessionValid,checkAdmin,async (req,res)=>{
     console.log(req.query);
     const conn=await connPromise;
-    const query = 'DELETE FROM resources WHERE resourceId=?';
-    const [results]=await conn.query(query,[req.query.resourceId])
+    const query = 'DELETE FROM members WHERE userId=? and groupId=?';
+    const [results]=await conn.query(query,[req.query.userId,req.query.groupId])
     console.log(results);
     res.redirect(`/group/dashboard?groupId=${req.query.groupId}`);
 })

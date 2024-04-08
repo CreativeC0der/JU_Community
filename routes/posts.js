@@ -3,7 +3,7 @@ const router = express.Router();
 const { checkSessionValid, checkAdmin } = require('../middlewares');
 const { connPromise } = require('../dbConnect');
 const multer = require('multer')
-const {put}=require('@vercel/blob')
+const {del,put}=require('@vercel/blob')
 
 
 const upload = multer({ storage: multer.memoryStorage() })
@@ -65,6 +65,7 @@ router.post('/edit',checkSessionValid,checkAdmin,upload.single('postImage'),asyn
 
 router.get('/delete',checkSessionValid,checkAdmin,async (req,res)=>{
   console.log(req.query);
+  await del(req.query.blobUrl);
   const conn=await connPromise;
   const query = 'DELETE FROM posts WHERE postId=?';
   const [results]=await conn.query(query,[req.query.postId])

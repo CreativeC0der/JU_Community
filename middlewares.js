@@ -19,17 +19,6 @@ async function checkAdmin(req, res, next) {
     }
 }
 
-async function checkInvitation(req, res, next) {
-    console.log(req.body);
-    const conn = await connPromise;
-    [results] = await conn.query('select groupId,inviteTo from invites where inviteId=?', [req.body.inviteId]);
-    console.log(results);
-    if (results[0].groupId == req.body.groupId && results[0].inviteTo == req.session.user.userId)
-        next();
-    else
-        res.redirect(303, '/');
-}
-
 function getSession() {
     const sessionStore = new mySqlStore(dbOptions)
     const newSession = session({
@@ -45,4 +34,4 @@ function getSession() {
 }
 
 
-module.exports = { checkSessionValid, getSession, checkAdmin, checkInvitation }
+module.exports = { checkSessionValid, getSession, checkAdmin }

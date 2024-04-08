@@ -2,11 +2,6 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 mx-auto">
-
-                <button class="btn btn-warning my-2" data-toggle="modal" data-target="#inviteModal" >
-                    View Invites
-                </button>
-
                 <button type="button" class="btn btn-primary my-2 mx-2" data-toggle="modal" data-target="#groupsModal">
                     View My Groups
                 </button>
@@ -38,29 +33,7 @@
                         <% } %>
                     </div>
                     <a href="/profile/edit"><button class="btn btn-secondary edit-btn">Edit</button></a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Invite Modal -->
-        <div class="modal fade invite-modal" id="inviteModal" tabindex="-1" role="dialog" aria-labelledby="inviteModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="inviteModalLabel">Invites</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <% for(const invite of invites) { %>
-                            <div class="invite-card" id="<%= invite.inviteId %>">
-                                <h5>Invitation to Group [<%= invite.groupId %>] </h5>
-                                <button class="btn btn-success" onclick="joinGroup('<%= invite.groupId %>','<%= invite.inviteId %>')">Accept</button>
-                                <button class="btn btn-danger">Reject</button>
-                            </div>
-                        <% } %>
-                    </div>
+                    <a href="/profile/delete"><button class="btn btn-danger edit-btn" style="float: right;">Delete</button></a>
                 </div>
             </div>
         </div>

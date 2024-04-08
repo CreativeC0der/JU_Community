@@ -31,13 +31,11 @@ router.get('/view-groups', checkSessionValid, async (req, res) => {
 router.get('/my-profile', checkSessionValid, async (req, res) => {
     const conn = await connPromise;
     [[user]] = await conn.query('select * from users where userId=?', [req.session.user.userId]);
-    [invites] = await conn.query('select * from invites where inviteTo=?', [req.session.user.userId]);
     [myGroups] = await conn.query('select * from ju_groups where groupId in(select groupId from members where userId=?)', req.session.user.userId)
     user['dynamicFields']=JSON.parse(user['dynamicFields'])
     console.log(user);
     res.render('myProfile', {
         user: user,
-        invites: invites,
         myGroups: myGroups
     })
 })
