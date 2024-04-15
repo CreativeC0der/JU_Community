@@ -55,11 +55,12 @@
                                     <option value="M.E" <%= (user.degree=='M.E') ? 'selected' : ''%> >M.E.</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="passout">Passout:</label>
-                                <input type="date" class="form-control" id="passout" name="passout" value="<%= user.passout.toISOString().split('T')[0] %>">
-                            </div>
-
+                            <% if (user.passout) { %>
+                                <div class="form-group">
+                                    <label for="passout">Passout:</label>
+                                    <input type="date" class="form-control" id="passout" name="passout" value="<%= user.passout.toISOString().split('T')[0] %>">
+                                </div>
+                            <% } %>
                             <div class="form-group">
                                 <label for="bio">Bio:</label>
                                 <textarea class="form-control" id="bio" name="bio" rows="3" required><%= user.bio %></textarea>
