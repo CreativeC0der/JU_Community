@@ -10,17 +10,24 @@
                     <h2 class="text-center mb-4">User Profile</h2>
                     <hr>
                     <div class="profile-picture">
-                        <img src="<%= user.profileImage %>" alt="Profile Picture">
+                        <img src="<%= user.profileImage %>" alt="No Profile Picture">
                     </div>
                     <div class="user-details">
-                        <strong>Username:</strong> <%= user.userName %> <br>
                         <strong>User ID:</strong> <%= user.userId %> <br>
+                        <strong>Username:</strong> <%= user.userName %> <br>                  
                         <strong>Email:</strong> <%= user.userEmail %> <br>
                         <% if (user.userRoll) { %>
                             <strong>Roll:</strong> <%= user.userRoll %> <br>
                         <% } %>
                         <% if (user.userDepartment) { %>
                             <strong>Department:</strong> <%= user.userDepartment %> <br>
+                        <% } %>
+                        <% if (user.degree) { %>
+                            <strong>Degree:</strong> <%= user.degree %> <br>
+                        <% } %>
+                        
+                        <% if (user.passout) { %>
+                            <strong>Passout:</strong> <%= user.passout.toISOString().split('T')[0] %> <br>
                         <% } %>
                         <strong>Bio:</strong> <%= user.bio %> <br>
                         <% if (user['dynamicFields']!=null) { %>

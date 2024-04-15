@@ -12,7 +12,8 @@ router.get('/home', checkSessionValid, async (req, res) => {
     res.render('landing', {
         user: req.session.user.userName,
         newMembers,
-        newPosts
+        newPosts,
+        query:req.query
     });
 })
 
@@ -42,7 +43,7 @@ router.get('/my-profile', checkSessionValid, async (req, res) => {
 
 router.get('/view-profiles', checkSessionValid, async (req, res) => {
     const conn = await connPromise;
-    [users] = await conn.query('select * from users');
+    [users] = await conn.query('select * from users where admin!=1');
     console.log(users);
     for (user of users) {
         [groups] = await conn.query(

@@ -40,8 +40,26 @@
 
         </div>
     </div>
-            
+    
+<%-include ('./footer')%>
 
-    <%-include ('./footer')%>
+<script>
+    const query=<%- JSON.stringify(query)%>;
+    if(query.postCreate=='success')
+        Swal.fire({
+            title: 'Post Created Successfully!',
+            text: '',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        })
+
+    if(query.postCreate=='failure')
+        Swal.fire({
+            title: 'Post Creation Failed!',
+            text: 'Try Again',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
+</script>
 
     

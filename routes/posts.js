@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { checkSessionValid, checkAdmin } = require('../middlewares');
+const { checkGroupMember,checkPostUser,checkSessionValid, checkAdmin } = require('../middlewares');
 const { connPromise } = require('../dbConnect');
 const multer = require('multer')
 const {del,put}=require('@vercel/blob')
@@ -8,33 +8,39 @@ const {del,put}=require('@vercel/blob')
 
 const upload = multer({ storage: multer.memoryStorage() })
 
-router.get('/create', checkSessionValid, checkAdmin, async (req, res) => {
-  const conn = await connPromise;
-  const [group] = await conn.query('select * from ju_groups where groupId=?', [req.query.groupId])
-  res.render('createPost', { group: group[0] });
-})
-
-router.post('/create', checkSessionValid, checkAdmin, upload.single('postImage'), async (req, res) => {
-  let currDate = new Date().toISOString().replace('T', ' ').split('.')[0];
-  const blob = await put(`PostImage ${Date.now()} ${req.file.originalname}`, req.file.buffer, {
-    access: 'public',
+router.get('/create', checkSessionValid,checkGroupMember, async (req, res) => {
+  res.render('createPost', {
+    groupId: req.query.groupId,
+    currUser:req.session.user
   });
-  console.log(blob);
-  const conn = await connPromise;
-  const query='insert into posts(timestamp,postId,postHeading,postContent,postImage,groupId) values(?,?,?,?,?,?)';
-  const [results] = await conn.query(query,
-                        [currDate,
-                        crypto.randomUUID(), 
-                        req.body.postHeading, 
-                        req.body.postContent, 
-                        blob.url, 
-                        req.query.groupId]);
-
-  console.log(results);
-  res.redirect(303, `/group/dashboard?groupId=${req.query.groupId}`);
 })
 
-router.get('/edit',checkSessionValid,checkAdmin,async(req,res)=>{
+router.post('/create', checkSessionValid,checkGroupMember, upload.single('postImage'), async (req, res) => {
+  try{
+    let currDate = new Date().toISOString().replace('T', ' ').split('.')[0];
+    const blob = await put(`PostImage ${Date.now()} ${req.file.originalname}`, req.file.buffer, {
+      access: 'public',
+    });
+    const conn = await connPromise;
+    const query='insert into posts(timestamp,postId,postHeading,postContent,postImage,groupId,userId) values(?,?,?,?,?,?,?)';
+    const [results] = await conn.query(query,
+                          [currDate,
+                          crypto.randomUUID(), 
+                          req.body.postHeading, 
+                          req.body.postContent, 
+                          blob.url, 
+                          req.body.groupId,
+                          req.session.user.userId])
+    res.redirect(303, `/group/dashboard?groupId=${req.body.groupId}&postCreate=success`);
+  }
+  catch(err){
+    console.log(err);
+    res.redirect(303, `/group/dashboard?groupId=${req.body.groupId}&postCreate=failure`);
+  }
+  
+})
+
+router.get('/edit',checkSessionValid,checkPostUser ,async(req,res)=>{
   console.log(req.query.postId);
   const conn = await connPromise;
   const query = 'select * from posts where postId=?';
@@ -43,7 +49,7 @@ router.get('/edit',checkSessionValid,checkAdmin,async(req,res)=>{
   res.render('editPost',{post});
 })
 
-router.post('/edit',checkSessionValid,checkAdmin,upload.single('postImage'),async(req,res)=>{
+router.post('/edit',checkSessionValid,checkPostUser,upload.single('postImage'),async(req,res)=>{
   const conn=await connPromise;
   console.log('RECEIVED-----');
   console.log(req.body);
@@ -63,7 +69,7 @@ router.post('/edit',checkSessionValid,checkAdmin,upload.single('postImage'),asyn
   res.redirect(`/group/dashboard?groupId=${req.body.groupId}`);
 })
 
-router.get('/delete',checkSessionValid,checkAdmin,async (req,res)=>{
+router.get('/delete',checkSessionValid,checkPostUser,async (req,res)=>{
   console.log(req.query);
   await del(req.query.blobUrl);
   const conn=await connPromise;

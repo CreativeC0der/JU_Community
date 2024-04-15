@@ -1,6 +1,12 @@
-<!DOCTYPE html>
 <html lang="en">
-<%-include ('./header')%>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Homepage</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -39,12 +45,26 @@
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
                             <div class="form-group">
-                                <label for="roll">Roll (Optional):</label>
-                                <input type="text" class="form-control" id="roll" name="roll">
+                                <label for="roll">Roll:</label>
+                                <input type="text" class="form-control" id="roll" name="roll" required>
                             </div>
                             <div class="form-group">
-                                <label for="department">Department (Optional):</label>
-                                <input type="text" class="form-control" id="department" name="department">
+                                <label for="department">Department:</label>
+                                <input type="text" class="form-control" id="department" name="department" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="degree">Degree:</label>
+                                <select name="degree" id="degree" class="custom-select">
+                                    <option value="B.Tech">B.Tech</option>
+                                    <option value="M.Tech">M.Tech</option>
+                                    <option value="MCA">M.C.A</option>
+                                    <option value="B.E">B.E.</option>
+                                    <option value="M.E">M.E.</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="passout">Passout:</label>
+                                <input type="date" class="form-control" id="passout" name="passout" required>
                             </div>
                             <div class="form-group">
                                 <label for="bio">Bio:</label>
@@ -66,9 +86,16 @@
             </div>
         </div>
     </div>
-<%-include ('./footer')%>
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>
 
 <script>
+    const Swal = require('sweetalert2')
     // Function to preview selected image
     function previewImage() {
         const fileInput = document.getElementById('profileImage');

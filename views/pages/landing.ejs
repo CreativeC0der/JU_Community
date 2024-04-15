@@ -28,3 +28,14 @@
         </div>
     </div>    
 <%-include ('./footer')%>
+
+<script>
+    const query=<%- JSON.stringify(query) %>;
+    if(query.login=='success')
+      Swal.fire({
+        title: 'Successfully Logged In!',
+        text: 'Welcome to JU Community!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      })
+</script>

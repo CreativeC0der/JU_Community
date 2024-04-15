@@ -1,0 +1,120 @@
+<%-include ('./header')%>
+<div class="container">
+  <h2>Registration Requests</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Roll</th>
+        <th>Department</th>
+        <th>Degree</th>
+        <th>Passout</th>
+        <th>Bio</th>
+        <th>Dynamic Fields</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="registrationRequests">
+      
+      <% users.forEach(user => { %>
+        <tr>
+          <td><%= user.userName%></td>
+          <td><%= user.userEmail%></td>
+          <td><%= user.userRoll%></td>
+          <td><%= user.userDepartment %></td>
+          <td><%= user.degree %></td>
+          <td><%= user.passout %></td>
+          <td><%= user.bio %></td>
+          <td>
+            <button type="button" class="btn btn-dark btn-sm my-2" data-toggle="modal" data-target="#dynamicFieldsModal<%= user.userId %>">
+              View DFs
+            </button>
+          </td>
+          <td>
+            <a href="/admin/approve/<%= user.userId %>">
+              <button class="btn btn-primary btn-sm approveBtn my-2">Approve</button>
+            </a>
+            <a href="/admin/deny/<%= user.userId %>">
+              <button class="btn btn-danger btn-sm denyBtn">Deny</button>
+            </a>
+          </td>
+        </tr>
+
+        <!-- Dynamic Fields Modal -->
+        <div class="modal fade" id="dynamicFieldsModal<%= user.userId %>" tabindex="-1" role="dialog" aria-labelledby="dynamicFieldsModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                  <div class="modal-header bg-primary text-white">
+                      <h5 class="modal-title" id="dynamicFieldsModalLabel">Dynamic Fields</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="container">
+                        <% noOfFields=Object.keys(user['dynamicFields']).length/2%>
+                        <%for( let i = 1; i<=noOfFields; i++ ){%>
+                            <strong><%= user['dynamicFields'][`dynamicFieldLabel${i}`] %>:</strong>
+                            <span style="max-width: min-content;"><%= user['dynamicFields'][`dynamicFieldValue${i}`]%></span>
+                            <br>
+                        <% } %>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary btn-close-modal" data-dismiss="modal">Close</button>
+                  </div>
+              </div>
+          </div>
+        </div>
+      <!-- FOR LOOP ENDS -->
+      <% }) %>
+       
+    </tbody>
+  </table>
+</div>
+
+
+<%-include ('./footer')%>
+
+<script>
+
+  // Function to populate registration requests table
+  function populateRegistrationRequests() {
+    // Attach event listeners to approve/deny buttons
+    $('.approveBtn').click(function() {
+      const name = $(this).data('name');
+      const email = $(this).data('email');
+      showModal(name, email, 'approve');
+    });
+
+    $('.denyBtn').click(function() {
+      const name = $(this).data('name');
+      const email = $(this).data('email');
+      showModal(name, email, 'deny');
+    });
+  }
+
+  // Function to show modal for approval/denial
+  function showModal(name, email, action) {
+    $('#modalMessage').text(`Are you sure you want to ${action} registration request for ${name} (${email})?`);
+    $('#approveBtn').off().click(function() {
+      // Perform approve action here (can be AJAX call)
+      console.log(`${action} request for ${name} (${email})`);
+      // For demo, just remove the row from UI
+      $(this).closest('tr').remove();
+    });
+    $('#denyBtn').off().click(function() {
+      // Perform deny action here (can be AJAX call)
+      console.log(`Deny request for ${name} (${email})`);
+      // For demo, just remove the row from UI
+      $(this).closest('tr').remove();
+    });
+    $('#approvalModal').modal('show');
+  }
+
+  // Populate table on page load
+  $(document).ready(function() {
+    populateRegistrationRequests();
+  });
+</script>

@@ -5,19 +5,20 @@ const { connPromise } = require('../dbConnect');
 
 router.get('/dashboard', checkSessionValid, async (req, res) => {
     const conn = await connPromise;
-    const [group] = await conn.query('select * from ju_groups where groupId=?', req.query.groupId)
-    const [members] = await conn.query('select * from users where userId in(select userId from members where GroupId=?)', req.query.groupId)
-    const [posts] = await conn.query('select * from posts where groupId=?', [req.query.groupId])
-    const [nonMembers] = await conn.query('select * from users where userId not in(select userId from members where groupId=?)', [req.query.groupId])
-    const [resources]=await conn.query('select * from resources where groupId=?',req.query.groupId)
-    console.log(nonMembers);
+    const [group] = await conn.query('SELECT * FROM ju_groups WHERE groupid=?', req.query.groupId)
+    const [members] = await conn.query('SELECT * FROM users WHERE userid IN(SELECT userid FROM members WHERE groupid=?)', req.query.groupId)
+    const [posts] = await conn.query('SELECT posts.*,userName FROM posts INNER JOIN users ON posts.userId=users.userId WHERE groupId=?', [req.query.groupId])
+    const [nonMembers] = await conn.query('SELECT * FROM users WHERE userid NOT IN(SELECT userid FROM members WHERE groupid=?)', [req.query.groupId])
+    const [resources]=await conn.query('SELECT * FROM resources WHERE groupId=?',req.query.groupId)
+    
     res.render('groupDashboard', {
         group: group[0],
         currUser: req.session.user,
         members: members,
         nonMembers: nonMembers,
         posts: posts,
-        resources:resources
+        resources:resources,
+        query:req.query
     });
 })
 

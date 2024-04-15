@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Name Filter</title>
+</head>
+<body>
+  <input type="text" id="searchInput" placeholder="Search names...">
+  <ul id="nameList"></ul>
+
+  <script>
+    // Sample list of names
+    const names = ["Alice", "Bob", "Charlie", "David", "Eve", "Frank"];
+
+    // Function to filter names
+    function filterNames(searchTerm) {
+      return names.filter(name => name.toLowerCase().includes(searchTerm.toLowerCase()));
+    }
+
+    // Function to display filtered names
+    function displayNames(filteredNames) {
+      const nameList = document.getElementById("nameList");
+      nameList.innerHTML = "";
+      filteredNames.forEach(name => {
+        const li = document.createElement("li");
+        li.textContent = name;
+        nameList.appendChild(li);
+      });
+    }
+
+    // Event listener for input field
+    document.getElementById("searchInput").addEventListener("input", function(event) {
+      const searchTerm = event.target.value;
+      const filteredNames = filterNames(searchTerm);
+      displayNames(filteredNames);
+    });
+  </script>
+</body>
+</html>
