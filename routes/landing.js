@@ -37,7 +37,8 @@ router.get('/my-profile', checkSessionValid, async (req, res) => {
     console.log(user);
     res.render('myProfile', {
         user: user,
-        myGroups: myGroups
+        myGroups: myGroups,
+        query:req.query
     })
 })
 

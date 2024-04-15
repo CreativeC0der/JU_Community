@@ -86,18 +86,20 @@
 <%-include ('./footer')%>
 
 <script>
-    async function joinGroup(groupId,inviteId) {
+    const query=<%- JSON.stringify(query)%>;
+    if(query.editProfile=='success')
+        Swal.fire({
+            title: 'Yay!',
+            text: 'Profile Edited Successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        })
 
-            const response=await fetch('/members/create',{
-                method:'POST',
-                headers:{
-                    'Content-Type':'application/json'
-                },
-                body:JSON.stringify({groupId,inviteId})
-            })
-            const data=await response.json();
-            console.log(data);
-            $('#'+inviteId).remove();
-
-    }
+    if(query.editProfile=='failure')
+        Swal.fire({
+            title: 'Oops!',
+            text: 'Profile Edit Failed',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
 </script>

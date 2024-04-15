@@ -8,14 +8,14 @@ const {del,put}=require('@vercel/blob')
 
 const upload = multer({ storage: multer.memoryStorage() })
 
-router.get('/create', checkSessionValid,checkGroupMember, async (req, res) => {
+router.get('/create', checkSessionValid, async (req, res) => {
   res.render('createPost', {
     groupId: req.query.groupId,
     currUser:req.session.user
   });
 })
 
-router.post('/create', checkSessionValid,checkGroupMember, upload.single('postImage'), async (req, res) => {
+router.post('/create', checkSessionValid, upload.single('postImage'), async (req, res) => {
   try{
     let currDate = new Date().toISOString().replace('T', ' ').split('.')[0];
     const blob = await put(`PostImage ${Date.now()} ${req.file.originalname}`, req.file.buffer, {

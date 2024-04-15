@@ -71,26 +71,34 @@ router.get('/edit',checkSessionValid,async (req,res)=>{
 })
 
 router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,res)=>{
-    const conn=await connPromise;
-    console.log('RECEIVED BODY');
-    console.log(req.body);
-    // Destructure object and dynamic fields
-    let {userId,username,email,password,roll,department,degree,passout,bio,...dynamicFields}=req.body
-    dynamicFields=JSON.stringify(dynamicFields)
+    try{
+        const conn=await connPromise;
+        console.log('RECEIVED BODY');
+        console.log(req.body);
+        // Destructure object and dynamic fields
+        let {userId,username,email,password,roll,department,degree,passout,bio,...dynamicFields}=req.body
+        dynamicFields=JSON.stringify(dynamicFields)
 
-    if(req.file)
-    {
-        // Upload to vercel blobs
-        const blob=await put(`ProfileImage ${Date.now()} ${req.file.originalname}`,req.file.buffer,{access:'public'})
-        console.log(blob);
-        await conn.query('UPDATE users SET profileImage=? where userId=?',[blob.url,userId])
+        if(req.file)
+        {
+            // Upload to vercel blobs
+            const blob=await put(`ProfileImage ${Date.now()} ${req.file.originalname}`,req.file.buffer,{access:'public'})
+            console.log(blob);
+            await conn.query('UPDATE users SET profileImage=? where userId=?',[blob.url,userId])
+        }
+
+        const query = 'UPDATE users SET userName=?, userEmail=?, userPassword=?, userRoll=?, userDepartment=?, degree=?, passout=?, bio=?, dynamicFields=? where userId=?';
+        const [results] = await conn.query(query, 
+        [username, email, password, roll, department, degree, passout, bio, dynamicFields,userId]);
+        console.log(results);
+        res.redirect('/landing/my-profile?editProfile=success');
     }
-
-    const query = 'UPDATE users SET userName=?, userEmail=?, userPassword=?, userRoll=?, userDepartment=?, degree=?, passout=?, bio=?, dynamicFields=? where userId=?';
-    const [results] = await conn.query(query, 
-    [username, email, password, roll, department, degree, passout, bio, dynamicFields,userId]);
-    console.log(results);
-    res.redirect('/landing/my-profile');
+    catch(err)
+    {
+        console.log(err);
+        res.redirect('/landing/my-profile?editProfile=failure');
+    }
+    
 })
 
 router.get('/delete',checkSessionValid,async (req,res)=>{
