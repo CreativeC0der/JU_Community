@@ -9,7 +9,7 @@
                         <%= post.groupId %>: <%= post.postHeading %>
                     </h5>
                 </a>
-                <p><%= post.postContent.substring(0,100) %>.....</p>
+                <p><%- post.postContent.substring(0,100) %>.....</p>
             </div>
         <% } %>
 
@@ -38,4 +38,14 @@
         icon: 'success',
         confirmButtonText: 'OK'
       })
+</script>
+
+<script>
+    // Add an event listener to each navigation link
+    $(document).ready(function(){
+        // Remove 'active' class from all navigation links
+        $(".navbar-nav .nav-link").removeClass("active");
+        // Add 'active' class to the clicked navigation link
+        $('#home').addClass("active");
+    });
 </script>

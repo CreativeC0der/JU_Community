@@ -143,3 +143,13 @@
             </div>
         </div>
     </div>
+
+<script>
+    // Add an event listener to each navigation link
+    $(document).ready(function(){
+        // Remove 'active' class from all navigation links
+        $(".navbar-nav .nav-link").removeClass("active");
+        // Add 'active' class to the clicked navigation link
+        $('#viewGroups').addClass("active");
+    });
+</script>

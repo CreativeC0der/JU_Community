@@ -10,8 +10,11 @@ require('dotenv').config()
 const ejs=require('ejs')
 
 
-router.get('/create',(req,res)=>{
-    res.render('register',{});
+router.get('/create',async(req,res)=>{
+    const conn=await connPromise;
+    const [users]=await conn.query('select userId from users',[]);
+    const userIds=users.map(user=>user.userId);
+    res.render('register',{userIds});
 })
 
 router.post('/create',upload.single('profileImage'),async(req,res)=>{

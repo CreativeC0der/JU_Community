@@ -86,7 +86,7 @@
                                 <% } %>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-register" id="submitBtn">Edit Profile</button>
+                            <button type="submit" class="btn btn-primary btn-register" id="submitBtn">Save Changes</button>
                         </form>
                     </div>
                 </div>
@@ -121,9 +121,9 @@
         let fieldHtml = `<div class="form-group">
                             <label for="dynamicField${fieldCounter}">Dynamic Field ${fieldCounter} :</label>
                             <input type="text" class="form-control" id="dynamicFieldLabel${fieldCounter}" 
-                            name="dynamicFieldLabel${fieldCounter}" placeholder="Enter Label"  style="font-weight: bold;">
+                            name="dynamicFieldLabel${fieldCounter}" placeholder="Enter Label"  style="font-weight: bold;" required>
                             <input type="text" class="form-control" id="dynamicFieldValue${fieldCounter}" 
-                            name="dynamicFieldValue${fieldCounter}" placeholder="Enter Value">
+                            name="dynamicFieldValue${fieldCounter}" placeholder="Enter Value" required>
                         </div>`;
         $("#dynamicFieldsContainer").append(fieldHtml);
     }

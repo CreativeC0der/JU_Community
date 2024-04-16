@@ -50,23 +50,31 @@ router.get('/edit',checkSessionValid,checkPostUser ,async(req,res)=>{
 })
 
 router.post('/edit',checkSessionValid,checkPostUser,upload.single('postImage'),async(req,res)=>{
-  const conn=await connPromise;
-  console.log('RECEIVED-----');
-  console.log(req.body);
-  if(req.file)
-  {
-      // Upload to vercel blobs
-      const blob=await put(`PostImage ${Date.now()} ${req.file.originalname}`,req.file.buffer,{access:'public'})
-      await conn.query('UPDATE posts SET postImage=? where postId=?',[blob.url,req.body.postId])
-  }
+  try{
+    throw TypeError;
+    const conn=await connPromise;
+    console.log('RECEIVED-----');
+    console.log(req.body);
+    if(req.file)
+    {
+        // Upload to vercel blobs
+        const blob=await put(`PostImage ${Date.now()} ${req.file.originalname}`,req.file.buffer,{access:'public'})
+        await conn.query('UPDATE posts SET postImage=? where postId=?',[blob.url,req.body.postId])
+    }
 
-  const query = 'UPDATE posts SET postHeading=?, postContent=? where postId=?';
-  const [results] = await conn.query(query, 
-                    [req.body.postHeading,
-                    req.body.postContent,
-                    req.body.postId]);
-  console.log(results);
-  res.redirect(`/group/dashboard?groupId=${req.body.groupId}`);
+    const query = 'UPDATE posts SET postHeading=?, postContent=? where postId=?';
+    const [results] = await conn.query(query, 
+                      [req.body.postHeading,
+                      req.body.postContent,
+                      req.body.postId]);
+    console.log(results);
+    res.redirect(`/group/dashboard?groupId=${req.body.groupId}&postEdit=success`);
+  }
+  catch(err){
+    console.log(err);
+    res.redirect(`/group/dashboard?groupId=${req.body.groupId}&postEdit=failure`);
+  }
+  
 })
 
 router.get('/delete',checkSessionValid,checkPostUser,async (req,res)=>{

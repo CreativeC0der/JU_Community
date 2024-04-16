@@ -24,7 +24,7 @@
           <td><%= user.userRoll%></td>
           <td><%= user.userDepartment %></td>
           <td><%= user.degree %></td>
-          <td><%= user.passout %></td>
+          <td><%= user.passout.toISOString().split('T')[0] %></td>
           <td><%= user.bio %></td>
           <td>
             <button type="button" class="btn btn-dark btn-sm my-2" data-toggle="modal" data-target="#dynamicFieldsModal<%= user.userId %>">
@@ -116,5 +116,15 @@
   // Populate table on page load
   $(document).ready(function() {
     populateRegistrationRequests();
+  });
+</script>
+
+<script>
+  // Add an event listener to each navigation link
+  $(document).ready(function(){
+      // Remove 'active' class from all navigation links
+      $(".navbar-nav .nav-link").removeClass("active");
+      // Add 'active' class to the clicked navigation link
+      $('#adminPanel').addClass("active");
   });
 </script>

@@ -31,6 +31,7 @@
                             <div class="form-group">
                                 <label for="userId">UserID:</label>
                                 <input type="text" class="form-control" id="userId" name="userId" required>
+                                <span id="duplicateUserId" style="display: none; color: red;">This UserID is already taken.</span>
                             </div>
                             <div class="form-group">
                                 <label for="username">Name:</label>
@@ -95,7 +96,6 @@
 </html>
 
 <script>
-    const Swal = require('sweetalert2')
     // Function to preview selected image
     function previewImage() {
         const fileInput = document.getElementById('profileImage');
@@ -121,9 +121,9 @@
         let fieldHtml = `<div class="form-group">
                             <label for="dynamicField${fieldCounter}">Dynamic Field ${fieldCounter} :</label>
                             <input type="text" class="form-control" id="dynamicFieldLabel${fieldCounter}" 
-                            name="dynamicFieldLabel${fieldCounter}" placeholder="Enter Label"  style="font-weight: bold;">
+                            name="dynamicFieldLabel${fieldCounter}" placeholder="Enter Label"  style="font-weight: bold;" required>
                             <input type="text" class="form-control" id="dynamicFieldValue${fieldCounter}" 
-                            name="dynamicFieldValue${fieldCounter}" placeholder="Enter Value">
+                            name="dynamicFieldValue${fieldCounter}" placeholder="Enter Value" required>
                         </div>`;
         $("#dynamicFieldsContainer").append(fieldHtml);
     }
@@ -132,4 +132,18 @@
     $("#addFieldBtn").click(function () {
         addDynamicField();
     });
+
+    // duplicate userId warning
+    document.getElementById('userId').addEventListener('input', (event) => {
+    const userIds = <%- JSON.stringify(userIds) %>;
+    const inputValue = document.getElementById('userId').value;
+    console.log(inputValue);
+
+    const duplicateUserIdSpan = document.getElementById('duplicateUserId');
+    if (userIds.includes(inputValue)) {
+        duplicateUserIdSpan.style.display = 'block';
+    } else {
+        duplicateUserIdSpan.style.display = 'none'; // Hide the message if the input is not a duplicate anymore
+    }
+});
 </script>
