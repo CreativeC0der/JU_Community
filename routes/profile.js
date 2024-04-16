@@ -56,7 +56,7 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
             else
                 sendMail(process.env.ADMIN_MAIL,'New Registration',html);
         })
-        res.redirect('/?registraion=success');
+        res.redirect('/?registration=success');
     }
     catch(err){
         console.log(err.message);
