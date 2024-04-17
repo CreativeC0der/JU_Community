@@ -30,8 +30,8 @@ function checkPostUser(req,res,next) {
         next()
     else
     {
-         console.log('checkPostUser FAILED!');
-        res.redirect(303,'/');
+        console.log('checkPostUser FAILED!');
+        checkAdmin(req,res,next);
     }
        
 }

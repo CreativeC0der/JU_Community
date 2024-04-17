@@ -2,7 +2,7 @@
     <div class="container">
         <div class="card">
             <h2 class="text-center mb-4">Create Group Post</h2>
-            <form action="/posts/create" enctype="multipart/form-data" method="POST">
+            <form action="/posts/create?groupId=<%= groupId %>" enctype="multipart/form-data" method="POST">
                 <div class="form-group">
                     <label for="groupId">Posting to group:</label>
                     <input type="text" class="form-control" id="groupId" name="groupId" value="<%= groupId %>" readonly>

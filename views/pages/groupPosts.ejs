@@ -20,7 +20,7 @@
                         </h5>
                     </div>
                     <div class="col-4">
-                        <% if (currUser.userId==post.userId) { %>
+                        <% if (currUser.admin || currUser.userId==post.userId) { %>
                             <div style="float: right;">
                                 <a href="/posts/edit?postId=<%= post.postId %>&userId=<%= post.userId %>">
                                     <button class="btn btn-primary btn-block my-2" 

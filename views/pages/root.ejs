@@ -66,5 +66,12 @@
               icon: 'error',
               confirmButtonText: 'OK'
             })
+  if(query.login=='notApproved')
+    Swal.fire({
+              title: 'Account Not Approved Yet!',
+              text: 'Wait for Admin Approval.',
+              icon: 'warning',
+              confirmButtonText: 'OK'
+            })
     
 </script>

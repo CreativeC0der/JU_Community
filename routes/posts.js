@@ -8,7 +8,7 @@ const {del,put}=require('@vercel/blob')
 
 const upload = multer({ storage: multer.memoryStorage() })
 
-router.get('/create', checkSessionValid, async (req, res) => {
+router.get('/create', checkSessionValid,checkGroupMember, async (req, res) => {
   res.render('createPost', {
     groupId: req.query.groupId,
     currUser:req.session.user

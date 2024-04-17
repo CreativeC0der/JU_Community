@@ -189,6 +189,10 @@ body {
   margin: 20px auto;
 }
 
+.navbar.container{
+  padding-top: 100px;
+}
+
 .profile-card {
   border: none;
   border-radius: 10px;
@@ -422,6 +426,11 @@ body {
   background: grey; 
 }
 
+.fixed-top-right {
+  position: fixed;
+  top: 10px;
+  z-index: 1000; /* Adjust z-index as needed */
+}
 
 
 

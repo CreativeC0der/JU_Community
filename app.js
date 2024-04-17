@@ -26,7 +26,7 @@ app.set('views', path.join(process.cwd(), '/views/pages'))
 app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
-    console.log(req.query);
+    console.log(req);
     res.render('root', {query:req.query});
 })
 
@@ -36,10 +36,15 @@ app.post('/login', async (req, res) => {
     const conn = await connPromise;
     const [[user]] = await conn.query('select * from users where userId=? and userPassword=?', [uid,pass])
     console.log(user);
-    if (user && user.approved) {
-        req.session.valid = true;
-        req.session.user = user;
-        res.redirect('/landing/home?login=success')
+    if (user) {
+        if(user.approved)
+        {
+            req.session.valid = true;
+            req.session.user = user;
+            res.redirect('/landing/home?login=success')
+        }
+        else
+            res.redirect('/?login=notApproved')
     }
     else {
         res.redirect(303, '/?login=failure');
