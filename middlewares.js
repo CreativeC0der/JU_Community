@@ -6,7 +6,7 @@ function checkSessionValid(req, res, next) {
     if (!req.session.valid)
     {
         console.log('checkSessionValid FAILED!');
-        res.redirect('/');
+        res.redirect('/?session=invalid');
     }        
     else
         next();
@@ -19,7 +19,7 @@ async function checkAdmin(req, res, next) {
     else 
     {
         console.log('checkAdmin FAILED!');
-        res.redirect(303, '/');
+        res.redirect(303, '/?adminCheck=failure');
     }
         
 }

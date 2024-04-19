@@ -128,3 +128,22 @@
       $('#adminPanel').addClass("active");
   });
 </script>
+
+<script>
+    const query=<%- JSON.stringify(query) %>;
+    if(query.approval=='success')
+      Swal.fire({
+                  title: 'Approval/Deny Succeded!',
+                  text: 'Mail Sent to User.',
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                })
+
+    if(query.approval=='failure')
+      Swal.fire({
+                  title: 'Approval/Deny Failed!',
+                  text: 'Something Went Wrong. Try Again',
+                  icon: 'error',
+                  confirmButtonText: 'OK'
+                })
+</script>

@@ -51,7 +51,6 @@ router.get('/edit',checkSessionValid,checkPostUser ,async(req,res)=>{
 
 router.post('/edit',checkSessionValid,checkPostUser,upload.single('postImage'),async(req,res)=>{
   try{
-    throw TypeError;
     const conn=await connPromise;
     console.log('RECEIVED-----');
     console.log(req.body);
@@ -78,13 +77,19 @@ router.post('/edit',checkSessionValid,checkPostUser,upload.single('postImage'),a
 })
 
 router.get('/delete',checkSessionValid,checkPostUser,async (req,res)=>{
-  console.log(req.query);
-  await del(req.query.blobUrl);
-  const conn=await connPromise;
-  const query = 'DELETE FROM posts WHERE postId=?';
-  const [results]=await conn.query(query,[req.query.postId])
-  console.log(results);
-  res.redirect(`/group/dashboard?groupId=${req.query.groupId}`);
+  try{
+    await del(req.query.blobUrl);
+    const conn=await connPromise;
+    const query = 'DELETE FROM posts WHERE postId=?';
+    const [results]=await conn.query(query,[req.query.postId])
+    console.log(results);
+    res.redirect(`/group/dashboard?groupId=${req.query.groupId}&postDelete=success`);
+  }
+  catch(err){
+    console.log(err);
+    res.redirect(`/group/dashboard?groupId=${req.query.groupId}&postDelete=failure`);
+  }
+  
 })
 
 module.exports = router

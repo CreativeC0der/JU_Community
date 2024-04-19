@@ -73,5 +73,13 @@
               icon: 'warning',
               confirmButtonText: 'OK'
             })
+  
+  if(query.adminCheck=='failure')
+    Swal.fire({
+                title: 'Admin Authentication Required!',
+                text: 'Please login as Admin.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })    
     
 </script>

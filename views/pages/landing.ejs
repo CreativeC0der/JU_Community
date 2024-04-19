@@ -1,17 +1,16 @@
 <%-include ('./header')%>
-    <div class="container welcome-header d-flex justify-content-between align-items-center">
-        <h2>Welcome <%= user %></h2>
-    </div>
     <div class="container">
+        <div class="container welcome-header d-flex justify-content-between align-items-center">
+            <h2>Welcome <%= user %></h2>
+        </div>
         <h2 class="mt-4 header">Recent Activities</h2>
         <% for(post of newPosts) { %>
             <div class="activity-card">
                 <a href="/group/dashboard?groupId=<%= post.groupId %>">
                     <h5>
-                        <%= post.groupId %>: <%= post.postHeading %>
+                        <%= post.postHeading %> <span class="text-muted">posted in <%= post.groupId %> by <%= post.userId %></span>
                     </h5>
                 </a>
-                <p><%- post.postContent.substring(0,100) %>.....</p>
             </div>
         <% } %>
 
@@ -28,7 +27,7 @@
                 <%}%>
             </ul>
         </div>
-    </div>    
+    </div>
 <%-include ('./footer')%>
 
 <script>

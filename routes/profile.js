@@ -12,8 +12,9 @@ const ejs=require('ejs')
 
 router.get('/create',async(req,res)=>{
     const conn=await connPromise;
-    const [users]=await conn.query('select userId from users',[]);
+    const [users]=await conn.query('SELECT LOWER(userId) as userId FROM users',[]);
     const userIds=users.map(user=>user.userId);
+    console.log(userIds);
     res.render('register',{userIds});
 })
 
@@ -105,12 +106,19 @@ router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,re
 })
 
 router.get('/delete',checkSessionValid,async (req,res)=>{
-    await del(req.session.user.profileImage)
-    const conn=await connPromise;
-    const query = 'DELETE FROM users WHERE userId=?';
-    const [results]=await conn.query(query,[req.session.user.userId])
-    console.log(results);
-    res.redirect(`/logout`);
+    try{
+        await del(req.session.user.profileImage)
+        const conn=await connPromise;
+        const query = 'DELETE FROM users WHERE userId=?';
+        const [results]=await conn.query(query,[req.session.user.userId])
+        console.log(results);
+        res.redirect(`/logout`);
+    }
+    catch(err){
+        console.log(err);
+        res.redirect(`/logout`);
+    }
+    
 })
 
 

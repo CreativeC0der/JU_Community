@@ -26,7 +26,6 @@ app.set('views', path.join(process.cwd(), '/views/pages'))
 app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
-    console.log(req);
     res.render('root', {query:req.query});
 })
 

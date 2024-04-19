@@ -19,7 +19,6 @@
                 <% } %>
             </div>
         </div>
-        
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link active" data-toggle="tab" href="#group_updates">Group Updates</a>
@@ -62,21 +61,92 @@
         })
 
     if(query.postEdit=='success')
-    Swal.fire({
-        title: 'Done!',
-        text: 'Post Edited Successfully',
-        icon: 'success',
-        confirmButtonText: 'OK'
-    })
+        Swal.fire({
+            title: 'Done!',
+            text: 'Post Edited Successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        })
 
     if(query.postEdit=='failure')
-    Swal.fire({
-        title: 'Error!',
-        text: 'Post Edit Failed',
-        icon: 'error',
-        confirmButtonText: 'OK'
-    })
+        Swal.fire({
+            title: 'Error!',
+            text: 'Post Edit Failed',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
 
+    if(query.postDelete=='success')
+        Swal.fire({
+            title: 'Done!',
+            text: 'Post Deleted Successfully.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        })
+    if(query.postDelete=='failure')
+        Swal.fire({
+            title: 'Error!',
+            text: 'Post Delete Failed',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
+
+    if(query.groupCreate=='success')
+        Swal.fire({
+            title: 'Success!',
+            text: 'Group Created Successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        })
+
+    if(query.groupEdit=='success')
+        Swal.fire({
+            title: 'Success!',
+            text: 'Group Edited Successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        })
+
+    if(query.groupEdit=='failure')
+        Swal.fire({
+            title: 'Error!',
+            text: 'Group Edit Failed',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
+
+    if(query.memberDelete=='success')
+        Swal.fire({
+            title: 'Success!',
+            text: 'Member Deleted',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        })
+
+    if(query.memberDelete=='failure')
+        Swal.fire({
+            title: 'Error!',
+            text: 'Member Delete Failed!!',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
+
+    if(query.memberAdd=='success')
+        Swal.fire({
+            title: 'Done!',
+            text: "Member/s Added Successfully",
+            icon: 'success',
+            confirmButtonText: 'OK'
+        })
+    
+
+    if(query.memberAdd=='failure')
+        Swal.fire({
+            title: 'Error!',
+            text: "Member/s Add Failed!!",
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
 </script>
 
     

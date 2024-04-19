@@ -55,7 +55,7 @@ aria-hidden="true">
                             - Department: <%= nonMember.userDepartment %><br />
                         </label>
                     </div>
-                    <% } %>
+                <% } %>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn invite-btn"
@@ -75,17 +75,19 @@ aria-hidden="true">
                     users.push(item.value);
             }
             console.log(users);
-            const response = await fetch('/members/add', {
+            let response = await fetch('/members/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ users, groupId, adminId })
             })
-            const data = await response.json();
-            console.log(data);
+            response = await response.json();
             $('#inviteModal').modal('hide');
-            location.reload(true);
+            if(response.success)
+                window.location.href = `/group/dashboard?groupId=${groupId}&memberAdd=success`
+            else
+                window.location.href = `/group/dashboard?groupId=${groupId}&memberAdd=failure`
         }
 
         catch (err) {

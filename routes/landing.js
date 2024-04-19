@@ -25,7 +25,8 @@ router.get('/view-groups', checkSessionValid, async (req, res) => {
         admin1:admin1,
         admin2:admin2,
         user: req.session.user,
-        groups: results
+        groups: results,
+        query:req.query
     });
 })
 

@@ -6,8 +6,8 @@ function sendMail(recipient,subject,html){
   console.log('MAIL DETAILS');
   console.log(html);
     var transport = nodemailer.createTransport({
-        host: "smtp.zoho.in",
-        port: 465,
+        host: "smtp-relay.brevo.com",
+        port: 587,
         secure: true,
         auth: {
             user:process.env.MAIL_ID,
@@ -15,7 +15,7 @@ function sendMail(recipient,subject,html){
         }
     });
     const mailOptions = {
-        from: 'jucommunity@zohomail.in', // Sender address
+        from: process.env.MAIL_ID, // Sender address
         to: recipient, // List of recipients
         subject: subject, // Subject line
         html:html

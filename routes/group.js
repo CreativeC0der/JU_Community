@@ -27,11 +27,18 @@ router.get('/create', checkSessionValid, checkAdmin, (req, res, next) => {
 })
 
 router.post('/create', checkSessionValid, checkAdmin, async (req, res) => {
-    console.log(req.body);
-    const conn = await connPromise;
-    await conn.query('insert into ju_groups(adminId,groupName,groupId,project) values(?,?,?,?)', Object.values(req.body))
-    await conn.query('insert into members(userId,groupId) values(?,?)', [req.body.admin_id, req.body.group_id]);
-    res.redirect(303, `/group/dashboard?groupId=${req.body.group_id}`)
+    try{
+        console.log(req.body);
+        const conn = await connPromise;
+        await conn.query('insert into ju_groups(adminId,groupName,groupId,project) values(?,?,?,?)', Object.values(req.body))
+        await conn.query('insert into members(userId,groupId) values(?,?)', [req.body.admin_id, req.body.group_id]);
+        res.redirect(303, `/group/dashboard?groupId=${req.body.group_id}&groupCreate=success`)
+    }
+    catch(err){
+        console.log(err);
+        res.redirect(303, `/landing/view-groups?groupCreate=failure`)
+    }
+    
 })
 
 router.get('/edit',checkSessionValid,checkAdmin,async(req,res)=>{
@@ -44,20 +51,33 @@ router.get('/edit',checkSessionValid,checkAdmin,async(req,res)=>{
 })
 
 router.post('/edit',checkSessionValid,checkAdmin,async (req,res)=>{
-    console.log(req.body);
-    const conn = await connPromise;
-    const query = 'update ju_groups set groupName=?,project=? where groupId=?';
-    const [results]=await conn.query(query,[req.body.groupName,req.body.project,req.body.groupId])
-    res.redirect(`/group/dashboard?groupId=${req.body.groupId}`);
+    try{
+        const conn = await connPromise;
+        const query = 'update ju_groups set groupName=?,project=? where groupId=?';
+        const [results]=await conn.query(query,[req.body.groupName,req.body.project,req.body.groupId])
+        res.redirect(`/group/dashboard?groupId=${req.body.groupId}&groupEdit=success`);
+    }
+    catch(err){
+        console.log(err);
+        res.redirect(`/group/dashboard?groupId=${req.body.groupId}&groupEdit=failure`);
+    }
+    
 })
 
 router.get('/delete',checkSessionValid,checkAdmin,async (req,res)=>{
-    console.log(req.query);
-    const conn=await connPromise;
-    const query = 'DELETE FROM ju_groups WHERE groupId=?';
-    const [results]=await conn.query(query,[req.query.groupId])
-    console.log(results);
-    res.redirect(`/landing/view-groups`);
+    try{
+        console.log(req.query);
+        const conn=await connPromise;
+        const query = 'DELETE FROM ju_groups WHERE groupId=?';
+        const [results]=await conn.query(query,[req.query.groupId])
+        console.log(results);
+        res.redirect(`/landing/view-groups?groupDelete=success`);
+    }
+    catch(err){
+        console.log(err);
+        res.redirect(`/landing/view-groups?groupDelete=failure`);
+    }
+    
 })
 
 module.exports = router

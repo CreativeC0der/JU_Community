@@ -40,7 +40,7 @@
                         <% } %>
                     </div>
                     <a href="/profile/edit"><button class="btn btn-secondary edit-btn">Edit</button></a>
-                    <a href="/profile/delete"><button class="btn btn-danger edit-btn" style="float: right;">Delete</button></a>
+                    <button class="btn btn-danger edit-btn" style="float: right;" onclick="deleteProfile()">Delete</button>
                 </div>
             </div>
         </div>
@@ -112,4 +112,17 @@
         // Add 'active' class to the clicked navigation link
         $('#myProfile').addClass("active");
     });
+</script>
+
+<script>
+    function deleteProfile(event) {
+        Swal.fire({
+            title: 'Are You sure?',
+            text: 'Your Profile will be Deleted',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        })
+        .then(()=>window.location.href='/profile/delete')
+        
+    }
 </script>

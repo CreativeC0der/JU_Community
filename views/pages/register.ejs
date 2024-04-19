@@ -47,7 +47,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="roll">Roll:</label>
-                                <input type="text" class="form-control" id="roll" name="roll" required>
+                                <input type="number" class="form-control" id="roll" name="roll" required>
                             </div>
                             <div class="form-group">
                                 <label for="department">Department:</label>
@@ -65,7 +65,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="passout">Passout:</label>
-                                <input type="date" class="form-control" id="passout" name="passout" required>
+                                <input type="date" class="form-control" id="passout" name="passout" min="<%= new Date().toISOString().split('T')[0] %>" required>
                             </div>
                             <div class="form-group">
                                 <label for="bio">Bio:</label>
@@ -138,12 +138,11 @@
     const userIds = <%- JSON.stringify(userIds) %>;
     const inputValue = document.getElementById('userId').value;
     console.log(inputValue);
-
     const duplicateUserIdSpan = document.getElementById('duplicateUserId');
-    if (userIds.includes(inputValue)) {
+    if (userIds.includes(inputValue.toLowerCase())) 
         duplicateUserIdSpan.style.display = 'block';
-    } else {
-        duplicateUserIdSpan.style.display = 'none'; // Hide the message if the input is not a duplicate anymore
-    }
+    else 
+        duplicateUserIdSpan.style.display = 'none'; 
+    
 });
 </script>

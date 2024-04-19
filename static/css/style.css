@@ -4,8 +4,7 @@ body {
 }
 
 .navbar {
-  background-color: #007bff;
-  padding: 1.5rem 3rem;
+  background-color: #0069DA;
 }
 
 .navbar-brand,
@@ -61,11 +60,10 @@ body {
 }
 
 .footer {
-  background-color: #007bff;
+  background-color: #0069DA;
   color: #fff;
-  padding: 20px 0;
+  padding: 10px 0;
   text-align: center;
-  bottom: 0;
   position: relative;
   width: 100%;
 }
@@ -189,8 +187,9 @@ body {
   margin: 20px auto;
 }
 
-.navbar.container{
+.navbar + .container {
   padding-top: 100px;
+  min-height: 100%;
 }
 
 .profile-card {
@@ -375,7 +374,6 @@ body {
   object-fit: cover; /* Ensure the image covers the entire container */
 }
 
-
 .admin-card {
   border: none;
   border-radius: 10px;
@@ -403,7 +401,6 @@ body {
   flex-direction: column;
   align-items: center;
 }
-
 
 ::-webkit-scrollbar {
   width: 10px;
