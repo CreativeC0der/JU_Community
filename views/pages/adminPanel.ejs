@@ -53,10 +53,9 @@
                   </div>
                   <div class="modal-body">
                       <div class="container">
-                        <% noOfFields=Object.keys(user['dynamicFields']).length/2%>
-                        <%for( let i = 1; i<=noOfFields; i++ ){%>
-                            <strong><%= user['dynamicFields'][`dynamicFieldLabel${i}`] %>:</strong>
-                            <span style="max-width: min-content;"><%= user['dynamicFields'][`dynamicFieldValue${i}`]%></span>
+                        <%for(df of user['dynamicFields']){%>
+                            <strong><%= df.field %>:</strong>
+                            <span style="max-width: min-content;"><%= df.value %></span>
                             <br>
                         <% } %>
                       </div>

@@ -45,7 +45,7 @@ router.get('/my-profile', checkSessionValid, async (req, res) => {
 
 router.get('/view-profiles', checkSessionValid, async (req, res) => {
     const conn = await connPromise;
-    [users] = await conn.query('select * from users where admin!=1');
+    [users] = await conn.query('select * from users where admin=0 AND approved=1');
     console.log(users);
     for (user of users) {
         [groups] = await conn.query(
