@@ -22,8 +22,12 @@ router.get('/dashboard', checkSessionValid, async (req, res) => {
     });
 })
 
-router.get('/create', checkSessionValid, checkAdmin, (req, res, next) => {
-    res.render('createGroup', { user: req.session.user })
+router.get('/create', checkSessionValid, checkAdmin, async (req, res, next) => {
+    const conn=await connPromise;
+    const [groups]=await conn.query('SELECT LOWER(groupId) as groupId FROM ju_groups',[]);
+    const groupIds=groups.map(group=>group.groupId);
+    console.log(groupIds);
+    res.render('createGroup', { user: req.session.user,groupIds})
 })
 
 router.post('/create', checkSessionValid, checkAdmin, async (req, res) => {

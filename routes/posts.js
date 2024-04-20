@@ -57,8 +57,10 @@ router.post('/edit',checkSessionValid,checkPostUser,upload.single('postImage'),a
     if(req.file)
     {
         // Upload to vercel blobs
-        const blob=await put(`PostImage ${Date.now()} ${req.file.originalname}`,req.file.buffer,{access:'public'})
-        await conn.query('UPDATE posts SET postImage=? where postId=?',[blob.url,req.body.postId])
+        const newblob=await put(`PostImage ${Date.now()} ${req.file.originalname}`,req.file.buffer,{access:'public'})//upload new blob
+        const [[oldBlob]]=await conn.query('select postImage from posts where postId=?',[req.body.postId])
+        del(oldBlob.postImage);//delete old blob
+        await conn.query('UPDATE posts SET postImage=? where postId=?',[newblob.url,req.body.postId])
     }
 
     const query = 'UPDATE posts SET postHeading=?, postContent=? where postId=?';

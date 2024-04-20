@@ -6,8 +6,8 @@ function sendMail(recipient,subject,html){
   console.log('MAIL DETAILS');
   console.log(html);
     var transport = nodemailer.createTransport({
-        host: "smtp-relay.brevo.com",
-        port: 587,
+        host: "smtp.gmail.com",
+        port: 465,
         secure: true,
         auth: {
             user:process.env.MAIL_ID,

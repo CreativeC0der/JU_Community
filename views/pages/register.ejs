@@ -30,6 +30,7 @@
                             <!-- Remaining fields -->
                             <div class="form-group">
                                 <label for="userId">UserID:</label>
+                                <span class="text-muted mx-2">*UserID cannot be changed once set*</span> 
                                 <input type="text" class="form-control" id="userId" name="userId" required>
                                 <span id="duplicateUserId" style="display: none; color: red;">This UserID is already taken.</span>
                             </div>
@@ -118,14 +119,20 @@
     // Function to add dynamic fields
     function addDynamicField() {
         fieldCounter++;
-        let fieldHtml = `<div class="form-group">
-                            <label for="dynamicField${fieldCounter}">Dynamic Field ${fieldCounter} :</label>
+        let fieldHtml = `<div class="form-group" id="dynamicField${fieldCounter}">
+                            <label for="${fieldCounter}">Dynamic Field ${fieldCounter}:</label>
                             <input type="text" class="form-control" id="dynamicFieldLabel${fieldCounter}" 
-                            name="dynamicFieldLabel${fieldCounter}" placeholder="Enter Label"  style="font-weight: bold;" required>
+                            name="${fieldCounter}" placeholder="Enter Label" style="font-weight: bold;" required>
                             <input type="text" class="form-control" id="dynamicFieldValue${fieldCounter}" 
-                            name="dynamicFieldValue${fieldCounter}" placeholder="Enter Value" required>
+                            name="value${fieldCounter}" placeholder="Enter Value" required>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteDynamicField(${fieldCounter})">Delete</button>
                         </div>`;
         $("#dynamicFieldsContainer").append(fieldHtml);
+    }
+
+    // delete DF
+    function deleteDynamicField(fieldIndex) {
+        $("#dynamicField" + fieldIndex).remove();
     }
 
     // Event listener for Add More Fields button
@@ -143,6 +150,7 @@
         duplicateUserIdSpan.style.display = 'block';
     else 
         duplicateUserIdSpan.style.display = 'none'; 
+    
     
 });
 </script>

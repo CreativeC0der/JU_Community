@@ -74,15 +74,10 @@
                                         <strong>Roll:</strong> <%= user.userRoll %> <br>
                                         <strong>Department:</strong> <%= user.userDepartment %> <br>
                                         <strong>Bio:</strong> <%= user.bio %> <br>
-                                        <%  
-                                            i=1;
-                                            noOfFields=Object.keys(user['dynamicFields']).length/2
-                                        %>
-                                        <% while(i<=noOfFields){%>
-                                            <strong><%= user['dynamicFields'][`dynamicFieldLabel${i}`] %>:</strong> 
-                                            <%= user['dynamicFields'][`dynamicFieldValue${i}`]%>
+                                        <%for(df of user['dynamicFields']){%>
+                                            <strong><%= df.field %>:</strong> 
+                                            <%= df.value %>
                                             <br>
-                                            <% i++ %>
                                         <% } %>
                                     </div>
                                 </div>

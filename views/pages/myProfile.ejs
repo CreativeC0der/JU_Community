@@ -30,13 +30,10 @@
                             <strong>Passout:</strong> <%= user.passout.toISOString().split('T')[0] %> <br>
                         <% } %>
                         <strong>Bio:</strong> <%= user.bio %> <br>
-                        <% if (user['dynamicFields']!=null) { %>
-                            <% noOfFields=Object.keys(user['dynamicFields']).length/2%>
-                            <%for( let i = 1; i<=noOfFields; i++ ){%>
-                                <strong><%= user['dynamicFields'][`dynamicFieldLabel${i}`] %>:</strong> 
-                                <%= user['dynamicFields'][`dynamicFieldValue${i}`]%>
-                                <br>
-                            <% } %>
+                        <%for(df of user['dynamicFields']){%>
+                            <strong><%= df.field %>:</strong> 
+                            <%= df.value %>
+                            <br>
                         <% } %>
                     </div>
                     <a href="/profile/edit"><button class="btn btn-secondary edit-btn">Edit</button></a>
@@ -122,7 +119,9 @@
             icon: 'warning',
             confirmButtonText: 'OK'
         })
-        .then(()=>window.location.href='/profile/delete')
-        
+        .then((result)=>{
+            if(result.isConfirmed)
+                window.location.href='/profile/delete'
+        });
     }
 </script>

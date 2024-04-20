@@ -71,19 +71,23 @@
                             <!-- Dynamic fields container -->
                             <div id="dynamicFieldsContainer">
                                 <!-- Dynamic FIELDS ADDED HERE!! -->
-                                <% noOfFields=Object.keys(user['dynamicFields']).length/2%>
-                                <span style="display:none" id="noOfFields"><%= noOfFields %></span>
-                                <% for( let fieldCounter = 1; fieldCounter<=noOfFields; fieldCounter++ ) { %>
-                                    <div class="form-group">
-                                        <label for="dynamic Field <%= fieldCounter %>">Dynamic Field <%= fieldCounter %> :</label>
+                                <% fieldCounter=1%>
+                                <% for(df of user['dynamicFields']) { %>
+                                    <div class="form-group" id="dynamicField<%= fieldCounter %>">
+                                        <label for="<%= fieldCounter %>">Dynamic Field <%= fieldCounter %> :</label>
                                         <input type="text" class="form-control" id="dynamicFieldLabel<%= fieldCounter %>" 
-                                            name="dynamicFieldLabel<%= fieldCounter %>" placeholder="Enter Label"  style="font-weight: bold;" 
-                                            value="<%= user['dynamicFields'][`dynamicFieldLabel${fieldCounter}`] %>">
+                                            name="<%= fieldCounter %>" placeholder="Enter Label"  style="font-weight: bold;" 
+                                            value="<%= df.field %>">
                                         <input type="text" class="form-control" id="dynamicFieldValue<%= fieldCounter %>" 
-                                            name="dynamicFieldValue<%= fieldCounter %>" placeholder="Enter Value"
-                                            value="<%= user['dynamicFields'][`dynamicFieldValue${fieldCounter}`] %>">
+                                            name="value<%= fieldCounter %>" placeholder="Enter Value"
+                                            value="<%= df.value %>">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteDynamicField(<%=fieldCounter%>)">
+                                            Delete
+                                        </button>
                                     </div>
+                                    <% fieldCounter++ %>
                                 <% } %>
+                                <span style="display:none" id="noOfFields"><%= fieldCounter %></span>
                             </div>
 
                             <button type="submit" class="btn btn-primary btn-register" id="submitBtn">Save Changes</button>
@@ -112,20 +116,24 @@
         }
     }
 
-    // Counter for dynamic fields
     fieldCounter = $('#noOfFields').text()
-    
     // Function to add dynamic fields
     function addDynamicField() {
         fieldCounter++;
-        let fieldHtml = `<div class="form-group">
-                            <label for="dynamicField${fieldCounter}">Dynamic Field ${fieldCounter} :</label>
+        let fieldHtml = `<div class="form-group" id="dynamicField${fieldCounter}">
+                            <label for="${fieldCounter}">Dynamic Field ${fieldCounter}:</label>
                             <input type="text" class="form-control" id="dynamicFieldLabel${fieldCounter}" 
-                            name="dynamicFieldLabel${fieldCounter}" placeholder="Enter Label"  style="font-weight: bold;" required>
+                            name="${fieldCounter}" placeholder="Enter Label" style="font-weight: bold;" required>
                             <input type="text" class="form-control" id="dynamicFieldValue${fieldCounter}" 
-                            name="dynamicFieldValue${fieldCounter}" placeholder="Enter Value" required>
+                            name="value${fieldCounter}" placeholder="Enter Value" required>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteDynamicField(${fieldCounter})">Delete</button>
                         </div>`;
         $("#dynamicFieldsContainer").append(fieldHtml);
+    }
+
+    // delete DF
+    function deleteDynamicField(fieldIndex) {
+        $("#dynamicField" + fieldIndex).remove();
     }
 
     // Event listener for Add More Fields button

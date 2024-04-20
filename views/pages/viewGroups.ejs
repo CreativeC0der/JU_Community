@@ -78,17 +78,10 @@
                             <strong>User ID:</strong> <%= admin1.userId %> <br>
                             <strong>Email:</strong> <%= admin1.userEmail %> <br>
                             <strong>Bio:</strong> <%= admin1.bio %> <br>
-                            <% if (admin1['dynamicFields']!=null) { %>
-                                <%  
-                                    i=1;
-                                    noOfFields=Object.keys(admin1['dynamicFields']).length/2
-                                %>
-                                <% while(i<=noOfFields){%>
-                                    <strong><%= admin1['dynamicFields'][`dynamicFieldLabel${i}`] %>:</strong> 
-                                    <%= admin1['dynamicFields'][`dynamicFieldValue${i}`]%>
-                                    <br>
-                                    <% i++ %>
-                                <% } %>
+                            <%for(df of admin1['dynamicFields']){%>
+                                <strong><%= df.field %>:</strong> 
+                                <%= df.value %>
+                                <br>
                             <% } %>
                         </div>
                     </div>
@@ -122,17 +115,10 @@
                             <strong>User ID:</strong> <%= admin2.userId %> <br>
                             <strong>Email:</strong> <%= admin2.userEmail %> <br>
                             <strong>Bio:</strong> <%= admin2.bio %> <br>
-                            <% if (user['dynamicFields']!=null) { %>
-                                <%  
-                                    i=1;
-                                    noOfFields=Object.keys(admin2['dynamicFields']).length/2
-                                %>
-                                <% while(i<=noOfFields){%>
-                                    <strong><%= admin2['dynamicFields'][`dynamicFieldLabel${i}`] %>:</strong> 
-                                    <%= admin2['dynamicFields'][`dynamicFieldValue${i}`]%>
-                                    <br>
-                                    <% i++ %>
-                                <% } %>
+                            <%for(df of admin2['dynamicFields']){%>
+                                <strong><%= df.field %>:</strong> 
+                                <%= df.value %>
+                                <br>
                             <% } %>
                         </div>
                     </div>

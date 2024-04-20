@@ -31,9 +31,18 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
         
         // Destructure object and dynamic fields
         let {userId,username,email,password,roll,department,bio,degree,passout,...dynamicFields}=req.body
-        dynamicFields=JSON.stringify(dynamicFields)
-        console.log(dynamicFields);
-
+        dfArr=[]
+        for(key in dynamicFields)
+        {
+            if(Number(key))
+                dfArr.push({
+                    index:key,
+                    field:dynamicFields[key],
+                    value:dynamicFields[`value${key}`]
+                })
+        }
+        dynamicFields=JSON.stringify(dfArr);
+        console.log(dfArr);
         // save to DB
         const conn=await connPromise;
         const query = 'INSERT INTO users(timestamp, userId, userName, userEmail, userPassword, userRoll, userDepartment, bio, profileImage,degree,passout, dynamicFields) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -52,10 +61,7 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
                                     dynamicFields]);
         console.log(req.body);
         ejs.renderFile(process.cwd()+'/views/pages/adminMail.ejs',req.body,(err,html)=>{
-            if(err)
-                console.log(err);
-            else
-                sendMail(process.env.ADMIN_MAIL,'New Registration',html);
+            // sendMail(process.env.ADMIN_MAIL,'New Registration',html);
         })
         res.redirect('/?registration=success');
     }
@@ -77,12 +83,25 @@ router.get('/edit',checkSessionValid,async (req,res)=>{
 router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,res)=>{
     try{
         const conn=await connPromise;
-        console.log('RECEIVED BODY');
-        console.log(req.body);
+
         // Destructure object and dynamic fields
         let {userId,username,email,password,roll,department,degree,passout,bio,...dynamicFields}=req.body
-        dynamicFields=JSON.stringify(dynamicFields)
+        console.log('DFSSSSSSSSS');
+        console.log(dynamicFields);
+        dfArr=[]
+        for(key in dynamicFields)
+        {
+            if(Number(key))
+                dfArr.push({
+                    field:dynamicFields[key],
+                    value:dynamicFields[`value${key}`]
+                })
+        }
+        console.log('DFSSSSSSSSS');
+        console.log(dfArr);
+        dynamicFields=JSON.stringify(dfArr);
 
+        // Upload new image
         if(req.file)
         {
             // Upload to vercel blobs
@@ -91,6 +110,7 @@ router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,re
             await conn.query('UPDATE users SET profileImage=? where userId=?',[blob.url,userId])
         }
 
+        // Update DB
         const query = 'UPDATE users SET userName=?, userEmail=?, userPassword=?, userRoll=?, userDepartment=?, degree=?, passout=?, bio=?, dynamicFields=? where userId=?';
         const [results] = await conn.query(query, 
         [username, email, password, roll, department, degree, passout, bio, dynamicFields,userId]);
