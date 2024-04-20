@@ -61,7 +61,7 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
                                     dynamicFields]);
         console.log(req.body);
         ejs.renderFile(process.cwd()+'/views/pages/adminMail.ejs',req.body,(err,html)=>{
-            // sendMail(process.env.ADMIN_MAIL,'New Registration',html);
+            sendMail(process.env.ADMIN_MAIL,'New Registration',html);
         })
         res.redirect('/?registration=success');
     }
@@ -86,8 +86,7 @@ router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,re
 
         // Destructure object and dynamic fields
         let {userId,username,email,password,roll,department,degree,passout,bio,...dynamicFields}=req.body
-        console.log('DFSSSSSSSSS');
-        console.log(dynamicFields);
+        
         dfArr=[]
         for(key in dynamicFields)
         {
@@ -97,8 +96,7 @@ router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,re
                     value:dynamicFields[`value${key}`]
                 })
         }
-        console.log('DFSSSSSSSSS');
-        console.log(dfArr);
+
         dynamicFields=JSON.stringify(dfArr);
 
         // Upload new image
