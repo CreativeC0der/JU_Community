@@ -19,12 +19,15 @@ router.get('/panel',checkSessionValid,checkAdmin,async (req,res)=>{
 
 router.get('/approve/:userId',checkSessionValid,checkAdmin,async (req,res)=>{
     try{
+        console.log(req.params.userId);
         const conn = await connPromise;
         let query = 'UPDATE users SET approved=1 WHERE userId=?';
         const [results]=await conn.query(query,[req.params.userId]);
+        console.log(results);
         query = 'SELECT * FROM users where userId=?';
         const [[user]]=await conn.query(query,[req.params.userId]);
-        ejs.renderFile(process.cwd()+'/views/pages/userMail.ejs',{status:'Approved',name:user.userName},(err,html)=>{
+        console.log(user);
+        ejs.renderFile(process.cwd()+'/views/pages/userMail.ejs',{status:'Approved',name:user.userName,userId:user.userId},(err,html)=>{
             sendMail(user.userEmail,'JU Community Notification',html);
         })
         res.redirect('/admin/panel?approval=success');

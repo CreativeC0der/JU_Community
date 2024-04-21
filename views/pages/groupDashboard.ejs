@@ -10,10 +10,10 @@
                 <% if (currUser.admin) { %>
                     <div class="btn-group ml-auto" role="group" aria-label="Edit and Delete Group Buttons" style="float: right;">
                         <a href="/group/edit?groupId=<%= group.groupId %>">
-                            <button type="button" class="btn btn-warning mx-2">Edit Group</button>
+                            <button type="button" class="btn btn-warning mx-2">Edit Project</button>
                         </a>
                         <a href="/group/delete?groupId=<%= group.groupId %>">
-                            <button type="button" class="btn btn-danger">Delete Group</button>
+                            <button type="button" class="btn btn-danger">Delete Project</button>
                         </a>
                     </div>
                 <% } %>
@@ -21,13 +21,13 @@
         </div>
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#group_updates">Group Updates</a>
+                <a class="nav-link active" data-toggle="tab" href="#group_updates">Updates</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#group_resources">Group Resources</a>
+                <a class="nav-link" data-toggle="tab" href="#group_resources">Resources</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#group_members">Group Members</a>
+                <a class="nav-link" data-toggle="tab" href="#group_members">Members</a>
             </li>
         </ul>
 

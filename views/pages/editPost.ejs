@@ -4,7 +4,7 @@
             <h2 class="text-center mb-4">Create Group Post</h2>
             <form action="/posts/edit?postId=<%= post.postId %>&userId=<%= post.userId %>" enctype="multipart/form-data" method="post">
                 <div class="form-group">
-                    <label for="groupName">Posting to group:</label>
+                    <label for="groupName">Project ID:</label>
                     <input type="text" class="form-control" id="groupId" name="groupId" value="<%= post.groupId %>" readonly>
                 </div>
                 <div class="form-group">
