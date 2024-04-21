@@ -8,7 +8,32 @@ const upload = multer({ storage: multer.memoryStorage() })
 const {sendMail}=require('../mailService');
 require('dotenv').config()
 const ejs=require('ejs')
+const bcrypt=require('bcrypt')
 
+router.get('/passwordReset',async (req,res)=>{
+    try{
+        const conn=await connPromise;
+        const [[user]]=await conn.query('SELECT * FROM users where userId=?',[req.query.userId]);
+        if(user)
+        {
+            const newPass=crypto.randomUUID();
+            const newPassHash=await bcrypt.hash(newPass,10);
+            const [results]=await conn.query('UPDATE users SET userPassword=? where userId=?',[newPassHash,req.query.userId])
+            html=await ejs.renderFile(process.cwd()+'/views/pages/passwordResetMail.ejs',{userId:user.userId,newPass});
+            info=await sendMail(user.userEmail,'Password Reset Request',html);
+            console.log(info);
+            res.json({reset:'valid'});
+        }
+        else{
+            res.json({reset:'invalid'})
+        }
+    }
+    catch(err){
+        console.log(err);
+        res.json({reset:'failed'})
+    }
+    
+})
 
 router.get('/create',async(req,res)=>{
     const conn=await connPromise;
@@ -42,7 +67,11 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
                 })
         }
         dynamicFields=JSON.stringify(dfArr);
-        console.log(dfArr);
+
+        // Salt password
+        const passwordHash=await bcrypt.hash(password,10);
+        console.log(passwordHash);
+
         // save to DB
         const conn=await connPromise;
         const query = 'INSERT INTO users(timestamp, userId, userName, userEmail, userPassword, userRoll, userDepartment, bio, profileImage,degree,passout, dynamicFields) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -51,7 +80,7 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
                                     userId, 
                                     username, 
                                     email, 
-                                    password, 
+                                    passwordHash, 
                                     roll, 
                                     department, 
                                     bio, 
@@ -59,14 +88,13 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
                                     degree,
                                     passout, 
                                     dynamicFields]);
-        console.log(req.body);
-        ejs.renderFile(process.cwd()+'/views/pages/adminMail.ejs',req.body,(err,html)=>{
-            sendMail(process.env.ADMIN_MAIL,'New Registration',html);
+        ejs.renderFile(process.cwd()+'/views/pages/adminMail.ejs',req.body,async (err,html)=>{
+            await sendMail(process.env.ADMIN_MAIL,'New Registration',html);
         })
         res.redirect('/?registration=success');
     }
     catch(err){
-        console.log(err.message);
+        console.log(err);
         res.redirect(303,'/?registration=failure');
     }
 })
@@ -86,7 +114,7 @@ router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,re
 
         // Destructure object and dynamic fields
         let {userId,username,email,password,roll,department,degree,passout,bio,...dynamicFields}=req.body
-        
+
         dfArr=[]
         for(key in dynamicFields)
         {
@@ -108,19 +136,20 @@ router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,re
             await conn.query('UPDATE users SET profileImage=? where userId=?',[blob.url,userId])
         }
 
+        // Salt password
+        const passwordHash=await bcrypt.hash(password,10);
+
         // Update DB
         const query = 'UPDATE users SET userName=?, userEmail=?, userPassword=?, userRoll=?, userDepartment=?, degree=?, passout=?, bio=?, dynamicFields=? where userId=?';
         const [results] = await conn.query(query, 
-        [username, email, password, roll, department, degree, passout, bio, dynamicFields,userId]);
+        [username, email, passwordHash, roll, department, degree, passout, bio, dynamicFields,userId]);
         console.log(results);
         res.redirect('/landing/my-profile?editProfile=success');
     }
-    catch(err)
-    {
+    catch(err){
         console.log(err);
         res.redirect('/landing/my-profile?editProfile=failure');
     }
-    
 })
 
 router.get('/delete',checkSessionValid,async (req,res)=>{
@@ -138,7 +167,5 @@ router.get('/delete',checkSessionValid,async (req,res)=>{
     }
     
 })
-
-
 
 module.exports=router

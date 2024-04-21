@@ -34,7 +34,12 @@ router.post('/create', checkSessionValid, checkAdmin, async (req, res) => {
     try{
         console.log(req.body);
         const conn = await connPromise;
-        await conn.query('insert into ju_groups(adminId,groupName,groupId,project) values(?,?,?,?)', Object.values(req.body))
+        await conn.query('insert into ju_groups(adminId,groupId,groupName,project) values(?,?,?,?)', [
+            req.body.admin_id,
+            req.body.group_id,
+            req.body.group_name,
+            req.body.project
+        ])
         await conn.query('insert into members(userId,groupId) values(?,?)', [req.body.admin_id, req.body.group_id]);
         res.redirect(303, `/group/dashboard?groupId=${req.body.group_id}&groupCreate=success`)
     }

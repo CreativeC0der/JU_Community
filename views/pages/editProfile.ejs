@@ -13,7 +13,8 @@
                             <!-- Add image upload field -->
                             <div class="form-group">
                                 <label for="profileImage">Profile Image:</label>
-                                <input type="file" class="form-control-file" id="profileImage" name="profileImage" accept="image/*" onchange="previewImage()">
+                                <input type="file" class="form-control-file" id="profileImage" name="profileImage" 
+                                accept="image/*" onchange="checkFileSize()">
                             </div>
                             <!-- Image preview -->
                             <div id="imagePreviewContainer" class="text-center">
@@ -100,6 +101,28 @@
 <%-include ('./footer')%>
 
 <script>
+
+    // File size limit
+    function checkFileSize() {
+        const input=document.getElementById('profileImage');
+        if (input.files && input.files[0]) {
+            var fileSize = input.files[0].size; // Size in bytes
+            var maxSize = 1048576; // 1MB in bytes
+            if (fileSize > maxSize) {
+                Swal.fire({
+                    title: 'File Size Limit Exceeded!',
+                    text: "Please choose a smaller file. (< 1MB)",
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                })
+                input.value = ''; // Clear the selected file
+            }
+            else{
+                previewImage();
+            }
+        }
+    }
+
     // Function to preview selected image
     function previewImage() {
         const fileInput = document.getElementById('profileImage');
@@ -107,11 +130,9 @@
 
         if (fileInput.files && fileInput.files[0]) {
             const reader = new FileReader();
-
             reader.onload = function (e) {
                 imagePreview.src = e.target.result;
             };
-
             reader.readAsDataURL(fileInput.files[0]);
         }
     }

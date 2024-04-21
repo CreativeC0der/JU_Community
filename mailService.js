@@ -21,13 +21,7 @@ function sendMail(recipient,subject,html){
         html:html
    };
 
-   transport.sendMail(mailOptions, function(err, info) {
-       if (err) {
-         console.log(err)
-       } else {
-         console.log(info);
-       }
-   });
+   return transport.sendMail(mailOptions);
 }
 
 module.exports= {sendMail}

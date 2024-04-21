@@ -300,8 +300,9 @@ body {
 
 .post-header {
   border: 1px solid rgba(0,0,0,0.5);
-  padding: 12px;
-  border-radius: 10px;
+  padding: 15px;
+  border-radius: 8px;
+  height: fit-content;
 }
 .post-content{
   overflow-y: auto;

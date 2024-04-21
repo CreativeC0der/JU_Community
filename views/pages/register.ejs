@@ -21,7 +21,8 @@
                             <!-- Add image upload field -->
                             <div class="form-group">
                                 <label for="profileImage">Profile Image:</label>
-                                <input type="file" class="form-control-file" id="profileImage" name="profileImage" accept="image/*" onchange="previewImage()">
+                                <input type="file" class="form-control-file" id="profileImage" name="profileImage"
+                                 accept="image/*" onchange="checkFileSize()">
                             </div>
                             <!-- Image preview -->
                             <div id="imagePreviewContainer" class="text-center">
@@ -66,7 +67,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="passout">Passout:</label>
-                                <input type="date" class="form-control" id="passout" name="passout" min="<%= new Date().toISOString().split('T')[0] %>" required>
+                                <input type="date" class="form-control" id="passout" name="passout" required>
                             </div>
                             <div class="form-group">
                                 <label for="bio">Bio:</label>
@@ -97,6 +98,27 @@
 </html>
 
 <script>
+    // file size limit
+    function checkFileSize() {
+        const input=document.getElementById('profileImage');
+        if (input.files && input.files[0]) {
+            var fileSize = input.files[0].size; // Size in bytes
+            var maxSize = 1048576; // 1MB in bytes
+            if (fileSize > maxSize) {
+                Swal.fire({
+                    title: 'File Size Limit Exceeded!',
+                    text: "Please choose a smaller file. (< 1MB)",
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                })
+                input.value = ''; // Clear the selected file
+            }
+            else{
+                previewImage();
+            }
+        }
+    }
+
     // Function to preview selected image
     function previewImage() {
         const fileInput = document.getElementById('profileImage');
@@ -150,7 +172,6 @@
         duplicateUserIdSpan.style.display = 'block';
     else 
         duplicateUserIdSpan.style.display = 'none'; 
-    
     
 });
 </script>

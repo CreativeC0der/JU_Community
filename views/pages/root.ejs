@@ -25,6 +25,10 @@
                 <input type="password" class="form-control" id="password" name="password" required>
               </div>
               <button type="submit" class="btn btn-primary">Login</button>
+              <!-- Forgot Password Button -->
+              <button class="btn btn-secondary mx-2" data-toggle="modal" data-target="#forgotPasswordModal">
+                Forgot Password?
+              </button>
             </form>
             <a href="/profile/create"><button class="btn btn-warning my-3">Register Now!</button></a>
           </div>
@@ -32,6 +36,31 @@
       </div>
     </div>
   </div>
+
+<!-- Modal -->
+<div class="modal fade invite-modal" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Forgot Password</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="forgotPassUser">User ID:</label>
+                    <input type="text" id="forgotPassUser" class="form-control" placeholder="Enter User ID">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="forgotPassword(event)">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
 
@@ -39,6 +68,42 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  function forgotPassword(event) {
+    $('#forgotPasswordModal').modal('hide')
+    const input=document.getElementById('forgotPassUser').value;
+    if(input){
+      fetch('/profile/passwordReset?userId='+input)
+      .then((res)=>res.json())
+      .then((res)=>{
+            console.log(res);
+            if(res.reset=='valid'){
+              Swal.fire({
+                title: 'Password Reset Successful!',
+                text: 'Check Your Mail',
+                icon: 'success',
+                confirmButtonText: 'OK'
+              })
+            }
+            else if (res.reset=='invalid')
+              Swal.fire({
+                title: 'Password Reset Failed!',
+                text: 'Enter valid ID',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              })
+            else
+              Swal.fire({
+                title: 'Server Error!',
+                text: 'Something Went Wrong',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              })
+      })
+    }
+  }
+</script>
 
 <script>
   const query=<%- JSON.stringify(query) %>;
