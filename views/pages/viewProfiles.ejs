@@ -1,72 +1,158 @@
 <%-include ('./header')%>
     <div class="container">
-        <h2 class="text-center mb-4 header">View Profiles</h2>
-        
-
-        <% for(const user of users) { %>
-            <div class="member-card">
-                <div class="member-info"><strong>Name:</strong> <%= user.userName %> </div>
-                <div class="member-info"><strong>Email:</strong> <%= user.userEmail %> </div>
-                <div class="member-info"><strong>User ID:</strong> <%= user.userId %> </div>
-                <% if (user.userRoll) { %>
-                    <div class="member-info"><strong>Roll Number:</strong> <%= user.userRoll %> </div>
-                <% } %>
-                <% if (user.userDepartment) { %>
-                    <div class="member-info"><strong>Department:</strong> <%= user.userDepartment %> </div>
-                <% } %>
-                <button class="btn btn-view-details" data-toggle="modal" data-target="#userModal<%= user.userId %>">View Details</button>
+        <div class="row">
+            <div class="col-7">
+                <h2 class="text-center mb-4 header">View Profiles</h2>
             </div>
-            <div class="modal fade" id="userModal<%= user.userId %>" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="userModalLabel">User Details</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+            <div class="col-2" style="display: flex; align-items: center;">
+                    <label for="sortSelect" class="mr-2 font-weight-bold">Sort:</label>
+                    <select id="sortSelect" class="form-control">
+                        <option value="userName">Name</option>
+                        <option value="userEmail">Email</option>
+                        <option value="passout">Passout Year</option>
+                        <option value="degree">Degree</option>
+                    </select>
+            </div>
+            <div class="col-3" style="display: flex; align-items: center;">
+                <input type="text" id="searchInput" placeholder="Search users By Name" class="form-control mr-2">
+            </div>
+            
+        </div>
+        
+        <div id="member-container">
+            <% for(const user of users) { %>
+                <div class="member-card" id="<%= user.userId %>">
+                    <div class="row">
+                        <div class="col-2 profile-picture">
+                            <img src="<%= user.profileImage %>" alt="Profile Picture">
                         </div>
-                        <div class="modal-body">
-                            <div class="profile-card">
-                                <h2 class="text-center mb-4">User Profile</h2>
-                                <hr>
-                                <div class="profile-picture">
-                                    <img src="<%= user.profileImage %>" alt="Profile Picture">
-                                </div>
-                                <div class="user-details">
-                                    <strong>Username:</strong> <%= user.userName %> <br>
-                                    <strong>User ID:</strong> <%= user.userId %> <br>
-                                    <strong>Email:</strong> <%= user.userEmail %> <br>
-                                    <% if (user.userRoll) { %>
-                                        <strong>Roll:</strong> <%= user.userRoll %> <br>
-                                    <% } %>
-                                    <% if (user.userDepartment) { %>
-                                        <strong>Department:</strong> <%= user.userDepartment %> <br>
-                                    <% } %>
-                                    <strong>Bio:</strong> <%= user.bio %> <br>
-                                    <% if (user['dynamicFields']!=null) { %>
-                                        <%  
-                                            i=1;
-                                            noOfFields=Object.keys(user['dynamicFields']).length/2
-                                        %>
-                                        <% while(i<=noOfFields){%>
-                                            <strong><%= user['dynamicFields'][`dynamicFieldLabel${i}`] %>:</strong> 
-                                            <%= user['dynamicFields'][`dynamicFieldValue${i}`]%>
-                                            <br>
-                                            <% i++ %>
-                                        <% } %>
-                                    <% } %>
-                                </div>
+                        <div class="col-6">
+                            <div class="member-info"><strong>Name:</strong> <%= user.userName %> </div>
+                            <div class="member-info"><strong>Email:</strong> <%= user.userEmail %> </div>
+                            <% if (user.degree) { %>
+                                <div class="member-info"><strong>Degree:</strong> <%= user.degree %> </div>
+                            <% } %>
+                            <% if (user.passout) { %>
+                                <div class="member-info"><strong>Passout:</strong> <%= user.passout.toDateString() %> </div>
+                            <% } %>
+                        </div>
+                        <div class="col-4">
+                            <strong>Enrolled Groups:</strong>
+                            <div class="member-info">
+                                <ul>
+                                    <% user.groups.forEach(group => { %>
+                                        <li><%= group.groupName %></li>
+                                    <% }) %>
+                                </ul>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    <button class="btn btn-view-details" data-toggle="modal" data-target="#userModal<%= user.userId %>">View Details</button>
+                </div>
+
+                <!-- USER MODAL -->
+                <div class="modal fade" id="userModal<%= user.userId %>" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="userModalLabel">User Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="profile-card">
+                                    <h2 class="text-center mb-4">User Profile</h2>
+                                    <hr>
+                                    <div class="profile-picture">
+                                        <img src="<%= user.profileImage %>" alt="Profile Picture">
+                                    </div>
+                                    <div class="user-details">
+                                        <strong>Username:</strong> <%= user.userName %> <br>
+                                        <strong>User ID:</strong> <%= user.userId %> <br>
+                                        <strong>Email:</strong> <%= user.userEmail %> <br>
+                                        <strong>Roll:</strong> <%= user.userRoll %> <br>
+                                        <strong>Department:</strong> <%= user.userDepartment %> <br>
+                                        <strong>Bio:</strong> <%= user.bio %> <br>
+                                        <%for(df of user['dynamicFields']){%>
+                                            <strong><%= df.field %>:</strong> 
+                                            <%= df.value %>
+                                            <br>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        <% } %>
+            <% } %>
+        </div>
+        
+        
         
     </div>
-
-    
 <%-include ('./footer')%>
+
+<script>
+    const users = <%- JSON.stringify(users) %>;
+    console.log(users)
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    const sortSelect=document.getElementById('sortSelect');
+
+    searchInput.addEventListener('input', function() {
+        renderSearchResults([]);
+        const searchText = searchInput.value.toLowerCase();
+        const searchIds = users.map((user)=>{
+            if(user['userName'].toLowerCase().startsWith(searchText))
+                return user.userId;
+        });
+        renderSearchResults(searchIds);
+    });
+
+    function renderSearchResults(searchIds) {
+        for(user of users)
+        {
+            const userElement=document.getElementById(user.userId);
+            if(searchIds.includes(user['userId']))
+                userElement.style.display='block';
+            else    
+                userElement.style.display='none';
+        }
+    }
+
+    searchInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            searchButton.click(); // Trigger click event on search button
+        }
+    });
+
+    sortSelect.addEventListener('change',(event)=>{
+        users.sort(compare);
+        const memberContainer=document.getElementById('member-container');
+        for(user of users)
+        {
+            const memberElement=document.getElementById(user['userId']);
+            memberContainer.append(memberElement);
+        }
+        
+    })
+
+    function compare(a,b,val) {
+        sortBy=String(sortSelect.value);
+        return (a[sortBy].toLowerCase()<b[sortBy].toLowerCase())?-1:1;
+    }
+</script>
+
+<script>
+    // Add an event listener to each navigation link
+    $(document).ready(function(){
+        // Remove 'active' class from all navigation links
+        $(".navbar-nav .nav-link").removeClass("active");
+        // Add 'active' class to the clicked navigation link
+        $('#viewProfiles').addClass("active");
+    });
+</script>

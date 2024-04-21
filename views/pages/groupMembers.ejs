@@ -1,0 +1,97 @@
+<div id="group_members" class="tab-pane">
+    <!-- Button to Open Modal -->
+    <% if (currUser.admin) { %>
+        <div style="display: flex; justify-content: flex-end;">
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#inviteModal">
+                Add Members
+            </button>
+        </div>
+    <%}%>
+
+    <!-- Get Members of group -->
+    <% for(member of members) { %>
+        <div class="card">
+            <div class="card-body row" id="<%= member.userId %>">
+                <div class="col-8">
+                    <h5 style="font-weight: 700;" class="card-title">
+                        <%= member.userName %>
+                    </h5>
+                    <h6><%= member.userDepartment %></h6>
+                </div>
+                <div class="col-4">
+                    <% if (currUser.admin) { %>
+                        <div style="float: right;">
+                            <a href="/members/delete?userId=<%= member.userId%>&groupId=<%= group.groupId %>">
+                                <button class="btn btn-danger btn-block my-2" 
+                                    id="delete-member-button">Remove Member</button>
+                            </a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<!-- Invite Modal -->
+<div class="modal fade invite-modal" id="inviteModal" tabindex="-1" role="dialog" aria-labelledby="inviteModalLabel"
+aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="inviteModalLabel">Add Members to Group</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <% for(nonMember of nonMembers) { %>
+                    <div class="invite-card">
+                        <input type="checkbox" id="<%= nonMember.userId %>" name="inviteUsers"
+                            value="<%= nonMember.userId %>">
+                        <label for="<%= nonMember.userId %>">
+                            - User ID: <%= nonMember.userId %> <br />
+                            - Username: <%= nonMember.userName %> <br />
+                            - Department: <%= nonMember.userDepartment %><br />
+                        </label>
+                    </div>
+                <% } %>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn invite-btn"
+                    onclick="addMembers('<%= group.groupId%>','<%= group.adminId%>')">Add Members</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function addMembers(groupId, adminId) {
+        try {
+            const users = [];
+            const items = document.getElementsByName('inviteUsers');
+            for (item of items) {
+                if (item.checked)
+                    users.push(item.value);
+            }
+            console.log(users);
+            let response = await fetch('/members/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ users, groupId, adminId })
+            })
+            response = await response.json();
+            $('#inviteModal').modal('hide');
+            if(response.success)
+                window.location.href = `/group/dashboard?groupId=${groupId}&memberAdd=success`
+            else
+                window.location.href = `/group/dashboard?groupId=${groupId}&memberAdd=failure`
+        }
+
+        catch (err) {
+            console.log(err.message);
+        }
+    }
+</script>

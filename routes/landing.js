@@ -3,10 +3,17 @@ const router = express.Router();
 const { checkSessionValid } = require('../middlewares');
 const { connPromise } = require('../dbConnect');
 
-router.get('/home', checkSessionValid, (req, res) => {
+router.get('/home', checkSessionValid, async (req, res) => {
     console.log(req.session);
+    const conn = await connPromise;
+    const [newPosts]=await conn.query('SELECT * FROM posts ORDER BY timestamp DESC LIMIT 3');
+    const [newMembers]=await conn.query('SELECT * FROM users ORDER BY timestamp DESC LIMIT 3');
+    console.log(newMembers);
     res.render('landing', {
         user: req.session.user.userName,
+        newMembers,
+        newPosts,
+        query:req.query
     });
 })
 
@@ -18,27 +25,27 @@ router.get('/view-groups', checkSessionValid, async (req, res) => {
         admin1:admin1,
         admin2:admin2,
         user: req.session.user,
-        groups: results
+        groups: results,
+        query:req.query
     });
 })
 
 router.get('/my-profile', checkSessionValid, async (req, res) => {
     const conn = await connPromise;
     [[user]] = await conn.query('select * from users where userId=?', [req.session.user.userId]);
-    [invites] = await conn.query('select * from invites where inviteTo=?', [req.session.user.userId]);
     [myGroups] = await conn.query('select * from ju_groups where groupId in(select groupId from members where userId=?)', req.session.user.userId)
     user['dynamicFields']=JSON.parse(user['dynamicFields'])
     console.log(user);
     res.render('myProfile', {
         user: user,
-        invites: invites,
-        myGroups: myGroups
+        myGroups: myGroups,
+        query:req.query
     })
 })
 
 router.get('/view-profiles', checkSessionValid, async (req, res) => {
     const conn = await connPromise;
-    [users] = await conn.query('select * from users');
+    [users] = await conn.query('select * from users where admin=0 AND approved=1');
     console.log(users);
     for (user of users) {
         [groups] = await conn.query(

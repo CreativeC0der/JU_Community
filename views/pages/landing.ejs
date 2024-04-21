@@ -1,22 +1,52 @@
 <%-include ('./header')%>
-    <div class="container welcome-header"><h2 style="margin:inherit">Welcome <%= user %></h2></div>
     <div class="container">
+        <div class="container welcome-header d-flex justify-content-between align-items-center">
+            <h2>Welcome <%= user %></h2>
+        </div>
         <h2 class="mt-4 header">Recent Activities</h2>
-        <div class="activity-card">
-            <h5>Group A - New post</h5>
-            <p>User X posted a new update in Group A.</p>
-        </div>
-        <div class="activity-card">
-            <h5>Group B - Discussion</h5>
-            <p>Discussion on Topic Y started in Group B.</p>
-        </div>
+        <% for(post of newPosts) { %>
+            <div class="activity-card">
+                <a href="/group/dashboard?groupId=<%= post.groupId %>">
+                    <h5>
+                        <%= post.postHeading %> <span class="text-muted">posted in <%= post.groupId %> by <%= post.userId %></span>
+                    </h5>
+                </a>
+            </div>
+        <% } %>
+
         <h2 class="header">Newly Joined Members</h2>
         <div class="new-members-card">
             <ul>
-                <li>John Doe (john@example.com)</li>
-                <li>Jane Smith (jane@example.com)</li>
-                <li>Michael Johnson (michael@example.com)</li>
+                <% for(member of newMembers) { %>
+                    <li>
+                        <a href="/landing/view-profiles">
+                            <%= member.userName%>
+                        </a> 
+                        ( <%= member.userEmail %> )
+                    </li>
+                <%}%>
             </ul>
         </div>
-    </div>    
+    </div>
 <%-include ('./footer')%>
+
+<script>
+    const query=<%- JSON.stringify(query) %>;
+    if(query.login=='success')
+      Swal.fire({
+        title: 'Successfully Logged In!',
+        text: 'Welcome to JU Community!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      })
+</script>
+
+<script>
+    // Add an event listener to each navigation link
+    $(document).ready(function(){
+        // Remove 'active' class from all navigation links
+        $(".navbar-nav .nav-link").removeClass("active");
+        // Add 'active' class to the clicked navigation link
+        $('#home').addClass("active");
+    });
+</script>

@@ -4,8 +4,7 @@ body {
 }
 
 .navbar {
-  background-color: #007bff;
-  padding: 1.5rem 3rem;
+  background-color: #0069DA;
 }
 
 .navbar-brand,
@@ -18,8 +17,23 @@ body {
   color: #f8f9fa !important;
 }
 
+.nav-link.active {
+  border-radius: 5px; /* Adjust the value to change the roundness */
+  background-color: #ffffff; /* White background */
+  color: #000000 !important; /* Black text color */
+  padding: 8px 16px; /* Adjust padding as needed */
+}
+
+.nav-link.active:hover {
+  border-radius: 5px; /* Adjust the value to change the roundness */
+  background-color: #ffffff; /* White background */
+  color: #000000 !important; /* Black text color */
+  padding: 8px 16px; /* Adjust padding as needed */
+  font-weight: bold;
+}
+
 .header {
-  max-width: max-content;
+  max-width:none;
   margin: 30px 0px;
   background-color: #fff;
   padding: 15px;
@@ -46,11 +60,10 @@ body {
 }
 
 .footer {
-  background-color: #007bff;
+  background-color: #0069DA;
   color: #fff;
-  padding: 20px 0;
+  padding: 10px 0;
   text-align: center;
-  bottom: 0;
   position: relative;
   width: 100%;
 }
@@ -112,7 +125,6 @@ body {
 }
 
 .tab-content {
-  border: 1px solid #007bff;
   border-top: none;
   padding: 20px;
   border-radius: 0 0 10px 10px;
@@ -147,7 +159,7 @@ body {
 }
 
 .card-img-top {
-  max-width: 70%;
+  max-width: 40vw;
   height: auto;
   border-radius: 10px;
   /* Rounded borders */
@@ -173,6 +185,11 @@ body {
 .container {
   max-width: 70%;
   margin: 20px auto;
+}
+
+.navbar + .container {
+  padding-top: 100px;
+  min-height: 100%;
 }
 
 .profile-card {
@@ -281,12 +298,15 @@ body {
   margin: 20px;
 }
 
-.post-container {
-  border: black 1px solid;
+.post-header {
+  border: 1px solid rgba(0,0,0,0.5);
   padding: 12px;
   border-radius: 10px;
 }
-
+.post-content{
+  overflow-y: auto;
+  max-block-size: 50vh;
+}
 .member-card {
   border: 1px solid #ddd;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -354,7 +374,6 @@ body {
   object-fit: cover; /* Ensure the image covers the entire container */
 }
 
-
 .admin-card {
   border: none;
   border-radius: 10px;
@@ -383,3 +402,33 @@ body {
   align-items: center;
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #B5C0D0; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: grey; 
+}
+
+.fixed-top-right {
+  position: fixed;
+  top: 10px;
+  z-index: 1000; /* Adjust z-index as needed */
+}
+
+
+
+/* Style for search input and button */

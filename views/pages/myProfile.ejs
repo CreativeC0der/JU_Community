@@ -2,11 +2,6 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 mx-auto">
-
-                <button class="btn btn-warning my-2" data-toggle="modal" data-target="#inviteModal" >
-                    View Invites
-                </button>
-
                 <button type="button" class="btn btn-primary my-2 mx-2" data-toggle="modal" data-target="#groupsModal">
                     View My Groups
                 </button>
@@ -15,11 +10,11 @@
                     <h2 class="text-center mb-4">User Profile</h2>
                     <hr>
                     <div class="profile-picture">
-                        <img src="<%= user.profileImage %>" alt="Profile Picture">
+                        <img src="<%= user.profileImage %>" alt="No Profile Picture">
                     </div>
                     <div class="user-details">
-                        <strong>Username:</strong> <%= user.userName %> <br>
                         <strong>User ID:</strong> <%= user.userId %> <br>
+                        <strong>Username:</strong> <%= user.userName %> <br>                  
                         <strong>Email:</strong> <%= user.userEmail %> <br>
                         <% if (user.userRoll) { %>
                             <strong>Roll:</strong> <%= user.userRoll %> <br>
@@ -27,40 +22,22 @@
                         <% if (user.userDepartment) { %>
                             <strong>Department:</strong> <%= user.userDepartment %> <br>
                         <% } %>
+                        <% if (user.degree) { %>
+                            <strong>Degree:</strong> <%= user.degree %> <br>
+                        <% } %>
+                        
+                        <% if (user.passout) { %>
+                            <strong>Passout:</strong> <%= user.passout.toISOString().split('T')[0] %> <br>
+                        <% } %>
                         <strong>Bio:</strong> <%= user.bio %> <br>
-                        <% if (user['dynamicFields']!=null) { %>
-                            <% noOfFields=Object.keys(user['dynamicFields']).length/2%>
-                            <%for( let i = 1; i<=noOfFields; i++ ){%>
-                                <strong><%= user['dynamicFields'][`dynamicFieldLabel${i}`] %>:</strong> 
-                                <%= user['dynamicFields'][`dynamicFieldValue${i}`]%>
-                                <br>
-                            <% } %>
+                        <%for(df of user['dynamicFields']){%>
+                            <strong><%= df.field %>:</strong> 
+                            <%= df.value %>
+                            <br>
                         <% } %>
                     </div>
                     <a href="/profile/edit"><button class="btn btn-secondary edit-btn">Edit</button></a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Invite Modal -->
-        <div class="modal fade invite-modal" id="inviteModal" tabindex="-1" role="dialog" aria-labelledby="inviteModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="inviteModalLabel">Invites</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <% for(const invite of invites) { %>
-                            <div class="invite-card" id="<%= invite.inviteId %>">
-                                <h5>Invitation to Group [<%= invite.groupId %>] from <%= invite.inviteFrom %> </h5>
-                                <button class="btn btn-success" onclick="joinGroup('<%= invite.groupId %>','<%= invite.inviteId %>')">Accept</button>
-                                <button class="btn btn-danger">Reject</button>
-                            </div>
-                        <% } %>
-                    </div>
+                    <button class="btn btn-danger edit-btn" style="float: right;" onclick="deleteProfile()">Delete</button>
                 </div>
             </div>
         </div>
@@ -106,18 +83,45 @@
 <%-include ('./footer')%>
 
 <script>
-    async function joinGroup(groupId,inviteId) {
+    const query=<%- JSON.stringify(query)%>;
+    if(query.editProfile=='success')
+        Swal.fire({
+            title: 'Yay!',
+            text: 'Profile Edited Successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        })
 
-            const response=await fetch('/profile/joinGroup',{
-                method:'POST',
-                headers:{
-                    'Content-Type':'application/json'
-                },
-                body:JSON.stringify({groupId,inviteId})
-            })
-            const data=await response.json();
-            console.log(data);
-            $('#'+inviteId).remove();
+    if(query.editProfile=='failure')
+        Swal.fire({
+            title: 'Oops!',
+            text: 'Profile Edit Failed',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
+</script>
 
+<script>
+    // Add an event listener to each navigation link
+    $(document).ready(function(){
+        // Remove 'active' class from all navigation links
+        $(".navbar-nav .nav-link").removeClass("active");
+        // Add 'active' class to the clicked navigation link
+        $('#myProfile').addClass("active");
+    });
+</script>
+
+<script>
+    function deleteProfile(event) {
+        Swal.fire({
+            title: 'Are You sure?',
+            text: 'Your Profile will be Deleted',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        })
+        .then((result)=>{
+            if(result.isConfirmed)
+                window.location.href='/profile/delete'
+        });
     }
 </script>

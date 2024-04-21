@@ -1,0 +1,43 @@
+
+
+<div id="group_resources" class="tab-pane">
+    <% if (currUser.admin) { %>
+        <div style="display: flex; justify-content: flex-end;">
+            <a href="/resources/create?groupId=<%= group.groupId%>">
+                <button class="btn btn-dark btn-block"
+                    id="create-resource-button">Add Resource</button>
+            </a>
+        </div>
+        
+    <% } %>
+
+    <% for(const resource of resources ) { %>
+        <div class="card">
+            <div class="card-body" id="<%= resource.resourceId %>">
+                <div class="row">
+                    <div class="col-8">
+                        <h5 class="card-title font-weight-bold"><%= resource.resourceHeading %></h5>
+                        <p class="card-text"><%=resource.resourceDescription %></p>
+                        <a href="<%= resource.resourceLink %>" target="_blank">Click to get resource</a>
+                    </div>
+                    <div class="col-4">
+                        <% if (currUser.admin) { %>
+                            <div style="float: right;">
+                                <a href="/resources/edit?resourceId=<%= resource.resourceId%>">
+                                    <button class="btn btn-primary btn-block my-2" 
+                                        id="edit-resource-button">Edit Resource</button>
+                                </a>
+                                <a href="/resources/delete?resourceId=<%= resource.resourceId %>&groupId=<%= resource.groupId %>">
+                                    <button class="btn btn-danger btn-block" 
+                                        id="delete-resource-button">Delete Resource</button>
+                                </a>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>       
+    <% } %>
+</div>

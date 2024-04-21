@@ -7,6 +7,8 @@ const landingRouter = require('./routes/landing');
 const groupRouter = require('./routes/group');
 const postRouter = require('./routes/posts');
 const resourceRouter = require('./routes/resources');
+const memberRouter=require('./routes/member');
+const adminRouter=require('./routes/admin');
 const path = require('path')
 require('dotenv').config()
 
@@ -24,23 +26,27 @@ app.set('views', path.join(process.cwd(), '/views/pages'))
 app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
-    res.render('root', {});
+    res.render('root', {query:req.query});
 })
 
 app.post('/login', async (req, res) => {
-    // let uid=req.body.userid;
-    // let pass=req.body.password;
-    console.log(req.body);
+    let uid=req.body.userid;
+    let pass=req.body.password;
     const conn = await connPromise;
-    const [results] = await conn.query('select * from users where userId=? and userPassword=?', Object.values(req.body))
-    console.log(results);
-    if (results.length > 0) {
-        req.session.valid = true;
-        req.session.user = results[0];
-        res.redirect('/landing/home')
+    const [[user]] = await conn.query('select * from users where userId=? and userPassword=?', [uid,pass])
+    console.log(user);
+    if (user) {
+        if(user.approved)
+        {
+            req.session.valid = true;
+            req.session.user = user;
+            res.redirect('/landing/home?login=success')
+        }
+        else
+            res.redirect('/?login=notApproved')
     }
     else {
-        res.redirect(303, '/');
+        res.redirect(303, '/?login=failure');
     }
 
 })
@@ -56,6 +62,8 @@ app.use('/landing', landingRouter);
 app.use('/group', groupRouter);
 app.use('/posts', postRouter);
 app.use('/resources', resourceRouter);
+app.use('/members', memberRouter);
+app.use('/admin',adminRouter);
 
 app.listen(process.env.PORT, process.env.HOST, (err) => {
     console.log('listening on ' + process.env.HOST + ' ' + process.env.PORT);

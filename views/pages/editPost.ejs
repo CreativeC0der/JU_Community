@@ -1,0 +1,62 @@
+<%-include ('./header')%>
+    <div class="container">
+        <div class="card">
+            <h2 class="text-center mb-4">Create Group Post</h2>
+            <form action="/posts/edit?postId=<%= post.postId %>&userId=<%= post.userId %>" enctype="multipart/form-data" method="post">
+                <div class="form-group">
+                    <label for="groupName">Posting to group:</label>
+                    <input type="text" class="form-control" id="groupId" name="groupId" value="<%= post.groupId %>" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="userName">Post Creator:</label>
+                    <input type="text" class="form-control" id="userName" name="userName" value="<%= post.userId %>" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="postId">Post ID:</label>
+                    <input type="text" class="form-control" id="postId" name="postId" value="<%= post.postId %>" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="postHeading">Post Heading:</label>
+                    <input type="text" class="form-control" id="postHeading" name="postHeading" 
+                    value="<%= post.postHeading %>"required>
+                </div>
+                <div class="form-group">
+                    <label for="postContent">Post Content:</label>
+                    <textarea id="postContent" name="postContent" rows="10">
+                        
+                    </textarea>
+                </div>
+                <div class="form-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="postImage" name="postImage" style="cursor: pointer;">
+                        <label class="custom-file-label" for="postImage" >Choose file</label>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img id="imagePreview" class="image-preview" src="<%= post.postImage %>" alt=" No Image Chosen.... ">
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('postImage').addEventListener('change', function(event) {
+            var image = document.getElementById('imagePreview');
+            image.src = URL.createObjectURL(event.target.files[0]);
+        });
+    </script>
+<%-include ('./footer')%>
+
+<script>
+    $(document).ready(function() {
+        $('#postContent').summernote({
+            height: 300,                 // set editor height
+            minHeight: 300,             // set minimum height of editor
+            maxHeight: null,             // set maximum height of editor
+            focus: true                  // set focus to editable area after initializing summernote
+        });
+        $('#postContent').summernote('pasteHTML',<%- JSON.stringify(post.postContent) %>);
+    });
+</script>

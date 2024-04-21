@@ -1,37 +1,97 @@
 const express = require('express');
 const router = express.Router();
-const { checkSessionValid, checkAdmin } = require('../middlewares');
+const { checkGroupMember,checkPostUser,checkSessionValid, checkAdmin } = require('../middlewares');
 const { connPromise } = require('../dbConnect');
 const multer = require('multer')
-const {put}=require('@vercel/blob')
+const {del,put}=require('@vercel/blob')
 
 
 const upload = multer({ storage: multer.memoryStorage() })
 
-router.get('/create', checkSessionValid, checkAdmin, async (req, res) => {
-  const conn = await connPromise;
-  const [group] = await conn.query('select * from ju_groups where groupId=?', [req.query.groupId])
-  res.render('createPost', { group: group[0] });
+router.get('/create', checkSessionValid,checkGroupMember, async (req, res) => {
+  res.render('createPost', {
+    groupId: req.query.groupId,
+    currUser:req.session.user
+  });
 })
 
-router.post('/create', checkSessionValid, checkAdmin, upload.single('postImage'), async (req, res) => {
-  console.log(req.file);
-  console.log(req.body);
-  const blob = await put(`PostImage ${Date.now()} ${req.file.originalname}`, req.file.buffer, {
-    access: 'public',
-  });
-  console.log(blob);
-  const conn = await connPromise;
-  const query='insert into posts(postId,postHeading,postContent,postImage,groupId) values(?,?,?,?,?)';
-  const [results] = await conn.query(query,
-                        [crypto.randomUUID(), 
-                        req.body.postHeading, 
-                        req.body.postContent, 
-                        blob.url, 
-                        req.query.groupId]);
+router.post('/create', checkSessionValid, upload.single('postImage'), async (req, res) => {
+  try{
+    let currDate = new Date().toISOString().replace('T', ' ').split('.')[0];
+    const blob = await put(`PostImage ${Date.now()} ${req.file.originalname}`, req.file.buffer, {
+      access: 'public',
+    });
+    const conn = await connPromise;
+    const query='insert into posts(timestamp,postId,postHeading,postContent,postImage,groupId,userId) values(?,?,?,?,?,?,?)';
+    const [results] = await conn.query(query,
+                          [currDate,
+                          crypto.randomUUID(), 
+                          req.body.postHeading, 
+                          req.body.postContent, 
+                          blob.url, 
+                          req.body.groupId,
+                          req.session.user.userId])
+    res.redirect(303, `/group/dashboard?groupId=${req.body.groupId}&postCreate=success`);
+  }
+  catch(err){
+    console.log(err);
+    res.redirect(303, `/group/dashboard?groupId=${req.body.groupId}&postCreate=failure`);
+  }
+  
+})
 
-  console.log(results);
-  res.redirect(303, `/group/dashboard?groupId=${req.query.groupId}`);
+router.get('/edit',checkSessionValid,checkPostUser ,async(req,res)=>{
+  console.log(req.query.postId);
+  const conn = await connPromise;
+  const query = 'select * from posts where postId=?';
+  const [[post]]=await conn.query(query,[req.query.postId])
+  console.log(post);
+  res.render('editPost',{post});
+})
+
+router.post('/edit',checkSessionValid,checkPostUser,upload.single('postImage'),async(req,res)=>{
+  try{
+    const conn=await connPromise;
+    console.log('RECEIVED-----');
+    console.log(req.body);
+    if(req.file)
+    {
+        // Upload to vercel blobs
+        const newblob=await put(`PostImage ${Date.now()} ${req.file.originalname}`,req.file.buffer,{access:'public'})//upload new blob
+        const [[oldBlob]]=await conn.query('select postImage from posts where postId=?',[req.body.postId])
+        del(oldBlob.postImage);//delete old blob
+        await conn.query('UPDATE posts SET postImage=? where postId=?',[newblob.url,req.body.postId])
+    }
+
+    const query = 'UPDATE posts SET postHeading=?, postContent=? where postId=?';
+    const [results] = await conn.query(query, 
+                      [req.body.postHeading,
+                      req.body.postContent,
+                      req.body.postId]);
+    console.log(results);
+    res.redirect(`/group/dashboard?groupId=${req.body.groupId}&postEdit=success`);
+  }
+  catch(err){
+    console.log(err);
+    res.redirect(`/group/dashboard?groupId=${req.body.groupId}&postEdit=failure`);
+  }
+  
+})
+
+router.get('/delete',checkSessionValid,checkPostUser,async (req,res)=>{
+  try{
+    await del(req.query.blobUrl);
+    const conn=await connPromise;
+    const query = 'DELETE FROM posts WHERE postId=?';
+    const [results]=await conn.query(query,[req.query.postId])
+    console.log(results);
+    res.redirect(`/group/dashboard?groupId=${req.query.groupId}&postDelete=success`);
+  }
+  catch(err){
+    console.log(err);
+    res.redirect(`/group/dashboard?groupId=${req.query.groupId}&postDelete=failure`);
+  }
+  
 })
 
 module.exports = router

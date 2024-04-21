@@ -5,44 +5,83 @@ const { connPromise } = require('../dbConnect');
 
 router.get('/dashboard', checkSessionValid, async (req, res) => {
     const conn = await connPromise;
-    const [group] = await conn.query('select * from ju_groups where groupId=?', req.query.groupId)
-    const [members] = await conn.query('select * from users where userId in(select userId from members where GroupId=?)', req.query.groupId)
-    const [posts] = await conn.query('select * from posts where groupId=?', [req.query.groupId])
-    const [nonMembers] = await conn.query('select * from users where userId not in(select userId from members where groupId=?)', [req.query.groupId])
-    const [resources]=await conn.query('select * from resources where groupId=?',req.query.groupId)
-    console.log(nonMembers);
+    const [group] = await conn.query('SELECT * FROM ju_groups WHERE groupid=?', req.query.groupId)
+    const [members] = await conn.query('SELECT * FROM users WHERE userid IN(SELECT userid FROM members WHERE groupid=?)', req.query.groupId)
+    const [posts] = await conn.query('SELECT posts.*,userName FROM posts INNER JOIN users ON posts.userId=users.userId WHERE groupId=?', [req.query.groupId])
+    const [nonMembers] = await conn.query('SELECT * FROM users WHERE userid NOT IN(SELECT userid FROM members WHERE groupid=?)', [req.query.groupId])
+    const [resources]=await conn.query('SELECT * FROM resources WHERE groupId=?',req.query.groupId)
+    
     res.render('groupDashboard', {
         group: group[0],
         currUser: req.session.user,
         members: members,
         nonMembers: nonMembers,
         posts: posts,
-        resources:resources
+        resources:resources,
+        query:req.query
     });
 })
 
-router.get('/create', checkSessionValid, checkAdmin, (req, res, next) => {
-    res.render('createGroup', { user: req.session.user })
+router.get('/create', checkSessionValid, checkAdmin, async (req, res, next) => {
+    const conn=await connPromise;
+    const [groups]=await conn.query('SELECT LOWER(groupId) as groupId FROM ju_groups',[]);
+    const groupIds=groups.map(group=>group.groupId);
+    console.log(groupIds);
+    res.render('createGroup', { user: req.session.user,groupIds})
 })
 
 router.post('/create', checkSessionValid, checkAdmin, async (req, res) => {
-    console.log(req.body);
-    const conn = await connPromise;
-    await conn.query('insert into ju_groups(adminId,groupName,groupId,project) values(?,?,?,?)', Object.values(req.body))
-    await conn.query('insert into members(userId,groupId) values(?,?)', [req.body.admin_id, req.body.group_id]);
-    res.redirect(303, `/group/dashboard?groupId=${req.body.group_id}`)
-})
-
-router.post('/sendInvites', checkSessionValid, checkAdmin, async (req, res) => {
-    console.log(req.body);
-    const conn = await connPromise;
-    const query = 'insert into invites(inviteId,inviteFrom,inviteTo,groupId) values (?,?,?,?)';
-    for (user of req.body.users) {
-        await conn.query(query, [crypto.randomUUID(), req.body.adminId, user, req.body.groupId]);
+    try{
+        console.log(req.body);
+        const conn = await connPromise;
+        await conn.query('insert into ju_groups(adminId,groupName,groupId,project) values(?,?,?,?)', Object.values(req.body))
+        await conn.query('insert into members(userId,groupId) values(?,?)', [req.body.admin_id, req.body.group_id]);
+        res.redirect(303, `/group/dashboard?groupId=${req.body.group_id}&groupCreate=success`)
     }
-    res.json({ response: 'Job done!!!' })
+    catch(err){
+        console.log(err);
+        res.redirect(303, `/landing/view-groups?groupCreate=failure`)
+    }
+    
 })
 
-router.get('/')
+router.get('/edit',checkSessionValid,checkAdmin,async(req,res)=>{
+    console.log(req.query.groupId);
+    const conn = await connPromise;
+    const query = 'select * from ju_groups where groupId=?';
+    const [[group]]=await conn.query(query,[req.query.groupId])
+    console.log(group);
+    res.render('editGroup',{group});
+})
+
+router.post('/edit',checkSessionValid,checkAdmin,async (req,res)=>{
+    try{
+        const conn = await connPromise;
+        const query = 'update ju_groups set groupName=?,project=? where groupId=?';
+        const [results]=await conn.query(query,[req.body.groupName,req.body.project,req.body.groupId])
+        res.redirect(`/group/dashboard?groupId=${req.body.groupId}&groupEdit=success`);
+    }
+    catch(err){
+        console.log(err);
+        res.redirect(`/group/dashboard?groupId=${req.body.groupId}&groupEdit=failure`);
+    }
+    
+})
+
+router.get('/delete',checkSessionValid,checkAdmin,async (req,res)=>{
+    try{
+        console.log(req.query);
+        const conn=await connPromise;
+        const query = 'DELETE FROM ju_groups WHERE groupId=?';
+        const [results]=await conn.query(query,[req.query.groupId])
+        console.log(results);
+        res.redirect(`/landing/view-groups?groupDelete=success`);
+    }
+    catch(err){
+        console.log(err);
+        res.redirect(`/landing/view-groups?groupDelete=failure`);
+    }
+    
+})
 
 module.exports = router

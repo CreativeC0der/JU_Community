@@ -1,0 +1,50 @@
+<div id="group_updates" class="tab-pane active">
+    <% memberIds=members.map(member=>member.userId) %>
+    <% if (currUser.admin || memberIds.includes(currUser.userId)) { %>
+        <div style="display: flex; justify-content: flex-end;">
+            <a href="/posts/create?groupId=<%= group.groupId%>">
+                <button class="btn btn-dark btn-block"
+                    id="create-post-button">Create Post</button>
+            </a>
+        </div>
+    <% } %>
+    
+    <% for(const post of posts ) { %>
+        <div class="card">
+            <div class="card-body" id="<%= post.postId %>">
+                <span class="text-muted">Posted By <strong><%= post.userName %></strong> on <%= post.timestamp.toDateString() %></span>
+                <div class="row" style="margin-left: 0px;margin-right: 0px;">
+                    <div class="post-header my-md-3 col-8">
+                        <h5 class="font-weight-bold">
+                            <%= post.postHeading %>
+                        </h5>
+                    </div>
+                    <div class="col-4">
+                        <% if (currUser.admin || currUser.userId==post.userId) { %>
+                            <div style="float: right;">
+                                <a href="/posts/edit?postId=<%= post.postId %>&userId=<%= post.userId %>">
+                                    <button class="btn btn-primary btn-block my-2" 
+                                        id="edit-resource-button">Edit Post</button>
+                                </a>
+                                <a href="/posts/delete?postId=<%= post.postId %>&groupId=<%= post.groupId %>&blobUrl=<%= post.postImage %>&userId=<%= post.userId %>"">
+                                    <button class="btn btn-danger btn-block" 
+                                        id="delete-resource-button">Delete Post</button>
+                                </a>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <img src="<%= post.postImage %>" class="card-img-top" alt="Image 1">
+                
+                <hr style="border-top: 1px solid rgba(0, 0, 0, .3);">
+                <div class="font-weight-lighter my-md-3 post-content">
+                    <%- post.postContent %>
+                </div>
+                <hr style="border-top: 1px solid rgba(0, 0, 0, .3);">
+            </div>
+        </div>
+    <% } %>
+
+</div>
+

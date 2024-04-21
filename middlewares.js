@@ -4,30 +4,52 @@ const { dbOptions, connPromise } = require('./dbConnect')
 
 function checkSessionValid(req, res, next) {
     if (!req.session.valid)
-        res.redirect('/');
+    {
+        console.log('checkSessionValid FAILED!');
+        res.redirect('/?session=invalid');
+    }        
     else
         next();
 }
 
 async function checkAdmin(req, res, next) {
     const currUser = req.session.user
-    if (currUser.admin == 1) {
+    if (currUser.admin == 1) 
         next();
+    else 
+    {
+        console.log('checkAdmin FAILED!');
+        res.redirect(303, '/?adminCheck=failure');
     }
-    else {
-        res.redirect(303, '/');
-    }
+        
 }
 
-async function checkInvitation(req, res, next) {
-    console.log(req.body);
+function checkPostUser(req,res,next) {
+    console.log(req.query);
+    if(req.query.userId==req.session.user.userId)
+        next()
+    else
+    {
+        console.log('checkPostUser FAILED!');
+        checkAdmin(req,res,next);
+    }
+       
+}
+
+async function checkGroupMember(req,res,next) {
     const conn = await connPromise;
-    [results] = await conn.query('select groupId,inviteTo from invites where inviteId=?', [req.body.inviteId]);
-    console.log(results);
-    if (results[0].groupId == req.body.groupId && results[0].inviteTo == req.session.user.userId)
+    const query = 'select userId from members where groupId=?';
+    let [memberIds]=await conn.query(query,[req.query.groupId])
+    memberIds=memberIds.map(member=>member.userId)
+    console.log(memberIds);
+    if(memberIds.includes(req.session.user.userId))
         next();
     else
-        res.redirect(303, '/');
+    {
+        console.log('checkGroupMember FAILED!');
+        checkAdmin(req,res,next);
+    }
+        
 }
 
 function getSession() {
@@ -45,4 +67,4 @@ function getSession() {
 }
 
 
-module.exports = { checkSessionValid, getSession, checkAdmin, checkInvitation }
+module.exports = { checkGroupMember,checkPostUser,checkSessionValid, getSession, checkAdmin }

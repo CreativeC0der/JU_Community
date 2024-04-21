@@ -1,28 +1,85 @@
-<%-include ('./header')%>
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h4>Login Form</h4>
-        </div>
-        <div class="card-body">
-          <form action="/login" method="POST">
-            <div class="form-group">
-              <label for="userid">User ID:</label>
-              <input type="text" class="form-control" id="userid" name="userid" required>
-            </div>
-            <div class="form-group">
-              <label for="password">Password:</label>
-              <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-          </form>
-          <a href="/profile/create"><button class="btn btn-warning my-3">Register Now!</button></a>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Homepage</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h4>Login Form</h4>
+          </div>
+          <div class="card-body">
+            <form action="/login" method="POST">
+              <div class="form-group">
+                <label for="userid">User ID:</label>
+                <input type="text" class="form-control" id="userid" name="userid" required>
+              </div>
+              <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <a href="/profile/create"><button class="btn btn-warning my-3">Register Now!</button></a>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</body>
+</html>
 
-<%-include ('./footer')%>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  const query=<%- JSON.stringify(query) %>;
+
+  if(query.registration=='success')
+    Swal.fire({
+      title: 'Successfully Registered!',
+      text: 'Wait for Admin Approval',
+      icon: 'success',
+      confirmButtonText: 'OK'
+    })
+
+  if(query.registration=='failure')
+    Swal.fire({
+              title: 'Registration Failed!',
+              text: 'Try Again Later or Contact Admin!',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+
+  if(query.login=='failure')
+    Swal.fire({
+              title: 'Login Failed!',
+              text: 'Enter Valid Credentials!',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+  if(query.login=='notApproved')
+    Swal.fire({
+              title: 'Account Not Approved Yet!',
+              text: 'Wait for Admin Approval.',
+              icon: 'warning',
+              confirmButtonText: 'OK'
+            })
+  
+  if(query.adminCheck=='failure')
+    Swal.fire({
+                title: 'Admin Authentication Required!',
+                text: 'Please login as Admin.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })    
+    
+</script>
