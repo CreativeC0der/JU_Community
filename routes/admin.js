@@ -8,7 +8,7 @@ const { MulterError } = require('multer');
 
 router.get('/panel',checkSessionValid,checkAdmin,async (req,res)=>{
     const conn = await connPromise;
-    const query = 'SELECT * FROM users WHERE approved=0 ORDER BY timestamp DESC';
+    const query = 'SELECT * FROM users INNER JOIN members ON users.userId=members.userId WHERE approved=0 ORDER BY timestamp DESC';
     const [users]=await conn.query(query,[req.query.groupId])
     users.map((user)=>{
         user['dynamicFields']=JSON.parse(user['dynamicFields'])

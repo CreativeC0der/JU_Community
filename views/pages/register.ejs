@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Homepage</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -12,7 +13,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0">User Registration</h5>
+                        <h5 class="mb-0"><i class="fa-solid fa-user-plus mr-2 fa-sm"></i>User Registration</h5>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="/profile/create" enctype="multipart/form-data">
@@ -74,16 +75,28 @@
                                 <label for="bio">Bio:</label>
                                 <textarea class="form-control" id="bio" name="bio" rows="3" required></textarea>
                             </div>
+                            <div class="form-group">
+                                <label for="joinGroup">Join Project:</label>
+                                <select name="joinGroup" id="joinGroup" class="custom-select">
+                                    <% for( group of groups ) { %>
+                                        <option value="<%= group.groupId %>"><%= group.groupName %></option>
+                                    <% } %>
+                                </select>
+                            </div>
 
                             <!-- Add more fields button -->
-                            <button type="button" class="btn btn-warning mb-3" id="addFieldBtn">Add More Fields</button>
+                            <button type="button" class="btn btn-warning mb-3" id="addFieldBtn">
+                                <i class="fa-solid fa-plus mr-2"></i>Add More Fields
+                            </button>
                             <!-- Dynamic fields container -->
                             <div id="dynamicFieldsContainer">
                                 <!-- Dynamic FIELDS ADDED HERE!! -->
                                 
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-register">Register</button>
+                            <button type="submit" class="btn btn-primary btn-register">
+                                <i class="fa-solid fa-pen-to-square mr-2"></i>Register
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -95,6 +108,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 </html>
 
@@ -142,13 +156,17 @@
     // Function to add dynamic fields
     function addDynamicField() {
         fieldCounter++;
-        let fieldHtml = `<div class="form-group" id="dynamicField${fieldCounter}">
-                            <label for="${fieldCounter}">Dynamic Field ${fieldCounter}:</label>
+        let fieldHtml = `<div class="form-group" id="dynamicField${fieldCounter}">  
+                            <label for="${fieldCounter}">
+                                Dynamic Field ${fieldCounter}:
+                            </label>
+                            <button type="button" class="btn btn-danger btn-sm float-right" onclick="deleteDynamicField(${fieldCounter})">
+                                <i class="fa-solid fa-trash-can "></i>
+                            </button>
                             <input type="text" class="form-control" id="dynamicFieldLabel${fieldCounter}" 
                             name="${fieldCounter}" placeholder="Enter Label" style="font-weight: bold;" required>
                             <input type="text" class="form-control" id="dynamicFieldValue${fieldCounter}" 
                             name="value${fieldCounter}" placeholder="Enter Value" required>
-                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteDynamicField(${fieldCounter})">Delete</button>
                         </div>`;
         $("#dynamicFieldsContainer").append(fieldHtml);
     }

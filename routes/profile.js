@@ -39,8 +39,8 @@ router.get('/create',async(req,res)=>{
     const conn=await connPromise;
     const [users]=await conn.query('SELECT LOWER(userId) as userId FROM users',[]);
     const userIds=users.map(user=>user.userId);
-    console.log(userIds);
-    res.render('register',{userIds});
+    const [groups]=await conn.query('SELECT groupId,groupName FROM ju_groups',[]);
+    res.render('register',{userIds,groups});
 })
 
 router.post('/create',upload.single('profileImage'),async(req,res)=>{
@@ -55,13 +55,12 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
         }
         
         // Destructure object and dynamic fields
-        let {userId,username,email,password,roll,department,bio,degree,passout,...dynamicFields}=req.body
+        let {userId,username,email,password,roll,department,bio,degree,passout,joinGroup,...dynamicFields}=req.body
         dfArr=[]
         for(key in dynamicFields)
         {
             if(Number(key))
                 dfArr.push({
-                    index:key,
                     field:dynamicFields[key],
                     value:dynamicFields[`value${key}`]
                 })
@@ -88,6 +87,7 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
                                     degree,
                                     passout, 
                                     dynamicFields]);
+        await conn.query('INSERT INTO members(groupId,userId) VALUES(?,?)',[joinGroup,userId]);
         ejs.renderFile(process.cwd()+'/views/pages/adminMail.ejs',req.body,async (err,html)=>{
             await sendMail(process.env.ADMIN_MAIL,'New Registration',html);
         })
