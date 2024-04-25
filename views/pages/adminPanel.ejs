@@ -1,5 +1,5 @@
 <%-include ('./header')%>
-<div class="container">
+<div class="container" style="min-width: max-content;">
   <h2>Registration Requests</h2>
   <table class="table table-striped">
     <thead>
@@ -11,6 +11,7 @@
         <th>Degree</th>
         <th>Passout</th>
         <th>Bio</th>
+        <th>Project ID</th>
         <th>Dynamic Fields</th>
         <th>Action</th>
       </tr>
@@ -26,6 +27,7 @@
           <td><%= user.degree %></td>
           <td><%= user.passout.toISOString().split('T')[0] %></td>
           <td><%= user.bio %></td>
+          <td><%= user.groupId %></td>
           <td>
             <button type="button" class="btn btn-dark btn-sm my-2" data-toggle="modal" data-target="#dynamicFieldsModal<%= user.userId %>">
               View DFs

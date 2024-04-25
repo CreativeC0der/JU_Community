@@ -8,7 +8,7 @@ const { MulterError } = require('multer');
 
 router.get('/panel',checkSessionValid,checkAdmin,async (req,res)=>{
     const conn = await connPromise;
-    const query = 'SELECT * FROM users WHERE approved=0 ORDER BY timestamp DESC';
+    const query = 'SELECT * FROM users INNER JOIN members ON users.userId=members.userId WHERE approved=0 ORDER BY timestamp DESC';
     const [users]=await conn.query(query,[req.query.groupId])
     users.map((user)=>{
         user['dynamicFields']=JSON.parse(user['dynamicFields'])
@@ -19,12 +19,15 @@ router.get('/panel',checkSessionValid,checkAdmin,async (req,res)=>{
 
 router.get('/approve/:userId',checkSessionValid,checkAdmin,async (req,res)=>{
     try{
+        console.log(req.params.userId);
         const conn = await connPromise;
         let query = 'UPDATE users SET approved=1 WHERE userId=?';
         const [results]=await conn.query(query,[req.params.userId]);
+        console.log(results);
         query = 'SELECT * FROM users where userId=?';
         const [[user]]=await conn.query(query,[req.params.userId]);
-        ejs.renderFile(process.cwd()+'/views/pages/userMail.ejs',{status:'Approved',name:user.userName},(err,html)=>{
+        console.log(user);
+        ejs.renderFile(process.cwd()+'/views/pages/userMail.ejs',{status:'Approved',name:user.userName,userId:user.userId},(err,html)=>{
             sendMail(user.userEmail,'JU Community Notification',html);
         })
         res.redirect('/admin/panel?approval=success');

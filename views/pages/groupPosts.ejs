@@ -4,7 +4,7 @@
         <div style="display: flex; justify-content: flex-end;">
             <a href="/posts/create?groupId=<%= group.groupId%>">
                 <button class="btn btn-dark btn-block"
-                    id="create-post-button">Create Post</button>
+                    id="create-post-button"><i class="fa-solid fa-plus mr-2"></i>Create Post</button>
             </a>
         </div>
     <% } %>
@@ -15,7 +15,7 @@
                 <span class="text-muted">Posted By <strong><%= post.userName %></strong> on <%= post.timestamp.toDateString() %></span>
                 <div class="row" style="margin-left: 0px;margin-right: 0px;">
                     <div class="post-header my-md-3 col-8">
-                        <h5 class="font-weight-bold">
+                        <h5 class="font-weight-bold mb-0">
                             <%= post.postHeading %>
                         </h5>
                     </div>
@@ -23,12 +23,14 @@
                         <% if (currUser.admin || currUser.userId==post.userId) { %>
                             <div style="float: right;">
                                 <a href="/posts/edit?postId=<%= post.postId %>&userId=<%= post.userId %>">
-                                    <button class="btn btn-primary btn-block my-2" 
-                                        id="edit-resource-button">Edit Post</button>
+                                    <button class="btn btn-primary btn-block my-2" id="edit-resource-button">
+                                        <i class="fa-solid fa-pen-to-square mr-2"></i>Edit Post
+                                    </button>
                                 </a>
                                 <a href="/posts/delete?postId=<%= post.postId %>&groupId=<%= post.groupId %>&blobUrl=<%= post.postImage %>&userId=<%= post.userId %>"">
-                                    <button class="btn btn-danger btn-block" 
-                                        id="delete-resource-button">Delete Post</button>
+                                    <button class="btn btn-danger btn-block" id="delete-resource-button">
+                                        <i class="fa-solid fa-trash mr-2"></i>Delete Post
+                                    </button>
                                 </a>
                             </div>
                         <% } %>

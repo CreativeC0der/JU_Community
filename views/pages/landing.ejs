@@ -1,9 +1,11 @@
 <%-include ('./header')%>
     <div class="container">
         <div class="container welcome-header d-flex justify-content-between align-items-center">
-            <h2>Welcome <%= user %></h2>
+            <i class="fa-solid fa-check mr-2 mb-1 fa-2xl"></i><h2>Welcome <%= user %></h2>
         </div>
-        <h2 class="mt-4 header">Recent Activities</h2>
+        <h2 class="mt-4 header">
+            <i class="fa-solid fa-clock-rotate-left mr-2 fa-xs"></i>Recent Activities
+        </h2>
         <% for(post of newPosts) { %>
             <div class="activity-card">
                 <a href="/group/dashboard?groupId=<%= post.groupId %>">
@@ -14,7 +16,8 @@
             </div>
         <% } %>
 
-        <h2 class="header">Newly Joined Members</h2>
+        <h2 class="header">
+            <i class="fa-solid fa-user mr-2 fa-xs"></i>Newly Joined Members</h2>
         <div class="new-members-card">
             <ul>
                 <% for(member of newMembers) { %>

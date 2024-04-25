@@ -9,7 +9,8 @@ const postRouter = require('./routes/posts');
 const resourceRouter = require('./routes/resources');
 const memberRouter=require('./routes/member');
 const adminRouter=require('./routes/admin');
-const path = require('path')
+const path = require('path');
+const bcrypt=require('bcrypt');
 require('dotenv').config()
 
 app.use(getSession());
@@ -33,9 +34,9 @@ app.post('/login', async (req, res) => {
     let uid=req.body.userid;
     let pass=req.body.password;
     const conn = await connPromise;
-    const [[user]] = await conn.query('select * from users where userId=? and userPassword=?', [uid,pass])
-    console.log(user);
-    if (user) {
+    const [[user]] = await conn.query('select * from users where userId=?', [uid])
+    
+    if (user && await bcrypt.compare(pass,user.userPassword)) {
         if(user.approved)
         {
             req.session.valid = true;

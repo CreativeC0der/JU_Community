@@ -6,9 +6,9 @@ const { connPromise } = require('../dbConnect');
 router.get('/dashboard', checkSessionValid, async (req, res) => {
     const conn = await connPromise;
     const [group] = await conn.query('SELECT * FROM ju_groups WHERE groupid=?', req.query.groupId)
-    const [members] = await conn.query('SELECT * FROM users WHERE userid IN(SELECT userid FROM members WHERE groupid=?)', req.query.groupId)
+    const [members] = await conn.query('SELECT * FROM users WHERE userid IN(SELECT userid FROM members WHERE groupid=? AND approved=1)', req.query.groupId)
     const [posts] = await conn.query('SELECT posts.*,userName FROM posts INNER JOIN users ON posts.userId=users.userId WHERE groupId=?', [req.query.groupId])
-    const [nonMembers] = await conn.query('SELECT * FROM users WHERE userid NOT IN(SELECT userid FROM members WHERE groupid=?)', [req.query.groupId])
+    const [nonMembers] = await conn.query('SELECT * FROM users WHERE userid NOT IN(SELECT userid FROM members WHERE groupid=?) AND approved=1', [req.query.groupId])
     const [resources]=await conn.query('SELECT * FROM resources WHERE groupId=?',req.query.groupId)
     
     res.render('groupDashboard', {
@@ -34,7 +34,12 @@ router.post('/create', checkSessionValid, checkAdmin, async (req, res) => {
     try{
         console.log(req.body);
         const conn = await connPromise;
-        await conn.query('insert into ju_groups(adminId,groupName,groupId,project) values(?,?,?,?)', Object.values(req.body))
+        await conn.query('insert into ju_groups(adminId,groupId,groupName,project) values(?,?,?,?)', [
+            req.body.admin_id,
+            req.body.group_id,
+            req.body.group_name,
+            req.body.project
+        ])
         await conn.query('insert into members(userId,groupId) values(?,?)', [req.body.admin_id, req.body.group_id]);
         res.redirect(303, `/group/dashboard?groupId=${req.body.group_id}&groupCreate=success`)
     }

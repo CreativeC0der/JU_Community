@@ -1,2 +1,4 @@
-const path=require('path')
-console.log(process.cwd())
+const bcrypt=require('bcrypt')
+
+bcrypt.hash('password123',10)
+.then((hash)=>console.log(hash))

@@ -12,20 +12,20 @@
                         <input type="text" class="form-control" id="admin_id" name="admin_id" value="<%= user.userId %>" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="group_id">Group ID:</label>
+                        <label for="group_id">Project ID:</label>
                         <span class="text-muted mx-2">*GroupId cannot be changed once set*</span>
                         <input type="text" class="form-control" id="group_id" name="group_id" required>
                         <span id="duplicateGroupId" style="display: none; color: red;">This groupId is already taken.</span>
                     </div>
                     <div class="form-group">
-                        <label for="group_name">Group Name:</label>
+                        <label for="group_name">Project Name:</label>
                         <input type="text" class="form-control" id="group_name" name="group_name" required>
                     </div>
                     <div class="form-group">
-                        <label for="project">Project:</label>
+                        <label for="project">Project Description:</label>
                         <input type="text" class="form-control" id="project" name="project" required>
                     </div>
-                    <button type="submit" class="btn btn-create-group btn-block">Create Group</button>
+                    <button type="submit" class="btn btn-create-group btn-block">Create Project</button>
                 </form>
             </div>
         </div>

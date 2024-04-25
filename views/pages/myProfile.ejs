@@ -3,11 +3,11 @@
         <div class="row">
             <div class="col-md-8 mx-auto">
                 <button type="button" class="btn btn-primary my-2 mx-2" data-toggle="modal" data-target="#groupsModal">
-                    View My Groups
+                    <i class="fa-regular fa-clipboard mr-2"></i>View My Projects
                 </button>
 
                 <div class="profile-card">
-                    <h2 class="text-center mb-4">User Profile</h2>
+                    <h2 class="text-center mb-4"><i class="fa-solid fa-user-tie mr-2 fa-sm"></i>User Profile</h2>
                     <hr>
                     <div class="profile-picture">
                         <img src="<%= user.profileImage %>" alt="No Profile Picture">
@@ -36,18 +36,22 @@
                             <br>
                         <% } %>
                     </div>
-                    <a href="/profile/edit"><button class="btn btn-secondary edit-btn">Edit</button></a>
-                    <button class="btn btn-danger edit-btn" style="float: right;" onclick="deleteProfile()">Delete</button>
+                    <a href="/profile/edit"><button class="btn btn-secondary edit-btn">
+                        <i class="fa-solid fa-pencil mr-2"></i>Edit</button>
+                    </a>
+                    <button class="btn btn-danger edit-btn" style="float: right;" onclick="deleteProfile()">
+                        <i class="fa-solid fa-trash-can mr-2"></i>Delete</button>
                 </div>
             </div>
         </div>
 
         <!-- My Groups Modal -->
-        <div class="modal fade" id="groupsModal" tabindex="-1" role="dialog" aria-labelledby="groupsModalLabel" aria-hidden="true">
+        <div class="modal fade invite-modal" id="groupsModal" tabindex="-1" role="dialog" aria-labelledby="groupsModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="groupsModalLabel">My Groups</h5>
+                        <h5 class="modal-title" id="groupsModalLabel"> 
+                            <i class="fa-solid fa-clipboard mr-2 fa-sm"></i>My Projects</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -55,20 +59,19 @@
                     <div class="modal-body">
                         <!-- Group Cards -->
                         <div class="container">
-                                <% for(const group of myGroups) { %>
-                                    <div class="group-card">
-                                        <div class="group-details">
-                                            <strong>Group ID:</strong> <%= group.groupId %> <br>
-                                            <strong>Group Name:</strong> <%= group.groupName %><br>
-                                            <strong>Admin:</strong> <%= group.adminId %>
-                                            <a href="/group/dashboard?groupId=<%= group.groupId %>">
-                                                <button class="btn btn-primary" style="float: right;">View Dashboard</button>
-                                            </a>
-                                        </div>
+                            <% for(const group of myGroups) { %>
+                                <div class="group-card">
+                                    <div class="group-details">
+                                        <strong>Project ID:</strong> <%= group.groupId %> <br>
+                                        <strong>Project Name:</strong> <%= group.groupName %><br>
+                                        <strong>Admin:</strong> <%= group.adminId %>
+                                        <a href="/group/dashboard?groupId=<%= group.groupId %>">
+                                            <button class="btn btn-primary" style="float: right;">
+                                                <i class="fa-solid fa-sitemap mr-2"></i>View Dashboard</button>
+                                        </a>
                                     </div>
-                                <% } %>
-    
-                                <!-- Add more group cards here -->
+                                </div>
+                            <% } %>
                         </div>
                     </div>
                     <div class="modal-footer">
