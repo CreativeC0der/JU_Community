@@ -1,7 +1,7 @@
 <%-include ('./header')%>
     <div class="container">
         <div class="card">
-            <h2 class="text-center mb-4">Create Group Post</h2>
+            <h2 class="text-center mb-4"><i class="fa-solid fa-comment mr-2"></i>Create Post</h2>
             <form action="/posts/create?groupId=<%= groupId %>" enctype="multipart/form-data" method="POST">
                 <div class="form-group">
                     <label for="groupId">Project ID:</label>
@@ -30,7 +30,7 @@
                 <div class="card">
                     <img id="imagePreview" class="image-preview" src="#" alt=" No Image Chosen.... ">
                 </div>
-                <button type="submit" class="btn btn-primary">Create Post</button>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk mr-2"></i>Add Post</button>
             </form>
         </div>
     </div>

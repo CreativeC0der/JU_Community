@@ -1,7 +1,7 @@
 <%-include ('./header')%>
     <div class="container">
         <div class="card">
-            <h2 class="text-center mb-4">Create Group Post</h2>
+            <h2 class="text-center mb-4"><i class="fa-solid fa-pen-to-square mr-2"></i>Edit Post</h2>
             <form action="/posts/edit?postId=<%= post.postId %>&userId=<%= post.userId %>" enctype="multipart/form-data" method="post">
                 <div class="form-group">
                     <label for="groupName">Project ID:</label>
@@ -37,7 +37,7 @@
                 <div class="card">
                     <img id="imagePreview" class="image-preview" src="<%= post.postImage %>" alt=" No Image Chosen.... ">
                 </div>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="submit" class="btn btn-primary float-right"><i class="fa-solid fa-floppy-disk mr-1"></i>Save Changes</button>
             </form>
         </div>
     </div>

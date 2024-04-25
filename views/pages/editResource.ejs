@@ -4,7 +4,7 @@
             <div class="col-md-6 mx-auto">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0">Post Resource</h5>
+                        <h5 class="mb-0"><i class="fa-solid fa-file-pen mr-2"></i>Edit Resource</h5>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="/resources/edit">
@@ -31,7 +31,9 @@
                                 <input type="url" class="form-control" id="resourceLink" name="resourceLink" value="<%= resource.resourceLink %>" required>
                             </div>
                             <div class="text-right">
-                                <button type="submit" class="btn btn-primary btn-post-resource">Save Changes</button>
+                                <button type="submit" class="btn btn-primary btn-post-resource">
+                                    <i class="fa-solid fa-floppy-disk mr-1"></i> Save Changes
+                                </button>
                             </div>
                             
                         </form>
