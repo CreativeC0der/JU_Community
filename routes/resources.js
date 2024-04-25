@@ -9,17 +9,23 @@ router.get('/create',checkSessionValid,checkAdmin, (req, res) => {
 })
 
 router.post('/create',checkSessionValid,checkAdmin,async(req,res)=>{
-    console.log(req.body);
-    const conn=await connPromise;
-    const query='insert into resources values(?,?,?,?,?)';
-    const [results]=await conn.query(query,[
-        crypto.randomUUID(),
-        req.body.resourceHeading,
-        req.body.resourceDescription,
-        req.body.resourceLink,
-        req.body.groupPostedTo])
-    console.log(results);
-    res.redirect(303,'/group/dashboard?groupId='+req.body.groupPostedTo);
+    try{
+        const conn=await connPromise;
+        const query='insert into resources values(?,?,?,?,?)';
+        const [results]=await conn.query(query,[
+            crypto.randomUUID(),
+            req.body.resourceHeading,
+            req.body.resourceDescription,
+            req.body.resourceLink,
+            req.body.groupPostedTo])
+        console.log(results);
+        res.redirect(303,'/group/dashboard?resourceCreate=success&groupId='+req.body.groupPostedTo);
+    }
+    catch(err){
+        console.log(err);
+        res.redirect(303,'/group/dashboard?resourceCreate=failure&groupId='+req.body.groupPostedTo);
+    }
+    
 })
 
 router.get('/edit',checkSessionValid,checkAdmin,async(req,res)=>{
@@ -33,24 +39,36 @@ router.get('/edit',checkSessionValid,checkAdmin,async(req,res)=>{
 
 
 router.post('/edit',checkSessionValid,checkAdmin,async (req,res)=>{
-    console.log(req.body);
-    const conn = await connPromise;
-    const query = 'update resources set resourceHeading=?,resourceDescription=?,resourceLink=? where resourceId=?';
-    const [results]=await conn.query(query,
-        [req.body.resourceHeading,
-        req.body.resourceDescription,
-        req.body.resourceLink,
-        req.body.resourceId])
-    res.redirect(`/group/dashboard?groupId=${req.body.groupPostedTo}`);
+    try{
+        const conn = await connPromise;
+        const query = 'update resources set resourceHeading=?,resourceDescription=?,resourceLink=? where resourceId=?';
+        const [results]=await conn.query(query,
+            [req.body.resourceHeading,
+            req.body.resourceDescription,
+            req.body.resourceLink,
+            req.body.resourceId])
+        res.redirect(`/group/dashboard?resourceEdit=success&groupId=${req.body.groupPostedTo}`);
+    }
+    catch(err){
+        console.log(err);
+        res.redirect(`/group/dashboard?resourceEdit=failure&groupId=${req.body.groupPostedTo}`);
+    }
+    
 })
 
 router.get('/delete',checkSessionValid,checkAdmin,async (req,res)=>{
-    console.log(req.query);
-    const conn=await connPromise;
-    const query = 'DELETE FROM resources WHERE resourceId=?';
-    const [results]=await conn.query(query,[req.query.resourceId])
-    console.log(results);
-    res.redirect(`/group/dashboard?groupId=${req.query.groupId}`);
+    try{
+        const conn=await connPromise;
+        const query = 'DELETE FROM resources WHERE resourceId=?';
+        const [results]=await conn.query(query,[req.query.resourceId])
+        console.log(results);
+        res.redirect(`/group/dashboard?resourceDelete=success&groupId=${req.query.groupId}`);
+    }
+    catch(err){
+        console.log(err);
+        res.redirect(`/group/dashboard?resourceDelete=failure&groupId=${req.query.groupId}`);
+    }
+    
 })
   
 

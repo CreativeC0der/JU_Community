@@ -3,7 +3,7 @@
     <% if (currUser.admin) { %>
         <div style="display: flex; justify-content: flex-end;">
             <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#inviteModal">
-                Add Members
+                <i class="fa-solid fa-user-plus mr-2"></i>Add Members
             </button>
         </div>
     <%}%>
@@ -23,7 +23,8 @@
                         <div style="float: right;">
                             <a href="/members/delete?userId=<%= member.userId%>&groupId=<%= group.groupId %>">
                                 <button class="btn btn-danger btn-block my-2" 
-                                    id="delete-member-button">Remove Member</button>
+                                    id="delete-member-button">
+                                    <i class="fa-solid fa-user-minus mr-2"></i>Remove Member</button>
                             </a>
                         </div>
                     <% } %>

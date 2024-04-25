@@ -5,10 +5,9 @@
         <div style="display: flex; justify-content: flex-end;">
             <a href="/resources/create?groupId=<%= group.groupId%>">
                 <button class="btn btn-dark btn-block"
-                    id="create-resource-button">Add Resource</button>
+                    id="create-resource-button"><i class="fa-solid fa-file-circle-plus mr-2"></i>Add Resource</button>
             </a>
         </div>
-        
     <% } %>
 
     <% for(const resource of resources ) { %>
@@ -24,12 +23,14 @@
                         <% if (currUser.admin) { %>
                             <div style="float: right;">
                                 <a href="/resources/edit?resourceId=<%= resource.resourceId%>">
-                                    <button class="btn btn-primary btn-block my-2" 
-                                        id="edit-resource-button">Edit Resource</button>
+                                    <button class="btn btn-primary btn-block my-2" id="edit-resource-button">
+                                        <i class="fa-solid fa-file-pen mr-2"></i>Edit Resource
+                                    </button>
                                 </a>
                                 <a href="/resources/delete?resourceId=<%= resource.resourceId %>&groupId=<%= resource.groupId %>">
-                                    <button class="btn btn-danger btn-block" 
-                                        id="delete-resource-button">Delete Resource</button>
+                                    <button class="btn btn-danger btn-block" id="delete-resource-button">
+                                        <i class="fa-solid fa-file-circle-minus mr-2"></i>Delete Resource
+                                    </button>
                                 </a>
                             </div>
                         <% } %>
