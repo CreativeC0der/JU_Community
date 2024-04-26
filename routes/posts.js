@@ -52,8 +52,6 @@ router.get('/edit',checkSessionValid,checkPostUser ,async(req,res)=>{
 router.post('/edit',checkSessionValid,checkPostUser,upload.single('postImage'),async(req,res)=>{
   try{
     const conn=await connPromise;
-    console.log('RECEIVED-----');
-    console.log(req.body);
     if(req.file)
     {
         // Upload to vercel blobs

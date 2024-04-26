@@ -17,14 +17,19 @@ body {
   color: #f8f9fa !important;
 }
 
-.nav-link.active {
+.nav-link.active{
+  border-radius: 5px; /* Adjust the value to change the roundness */
+  padding: 8px 16px; /* Adjust padding as needed */
+}
+
+.nav-link.header-tab.active{
   border-radius: 5px; /* Adjust the value to change the roundness */
   background-color: #ffffff; /* White background */
   color: #000000 !important; /* Black text color */
   padding: 8px 16px; /* Adjust padding as needed */
 }
 
-.nav-link.active:hover {
+.nav-link.header-tab.active:hover {
   border-radius: 5px; /* Adjust the value to change the roundness */
   background-color: #ffffff; /* White background */
   color: #000000 !important; /* Black text color */

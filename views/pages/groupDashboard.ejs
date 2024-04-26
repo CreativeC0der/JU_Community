@@ -4,6 +4,8 @@
             <div class="col-8">
                 <h2 class="text-center" >
                     <i class="fa-solid fa-clipboard mr-2 fa-sm"></i><%=group.groupName%>
+                    <!-- Button to open the modal -->
+                        <i class="fa-solid fa-circle-info mb-3" style="font-size: 14px;cursor: pointer;;" data-toggle="modal" data-target="#projectDetailsModal"></i>
                 </h2>
             </div>
             <div class="col-4">
@@ -11,7 +13,7 @@
                     <div class="btn-group ml-auto" role="group" aria-label="Edit and Delete Group Buttons" style="float: right;">
                         <a href="/group/edit?groupId=<%= group.groupId %>">
                             <button type="button" class="btn btn-warning mx-2">
-                                <i class="fa-solid fa-pen mr-2"></i>Edit Project
+                                <i class="fa-solid fa-pen-nib mr-2"></i>Edit Project
                             </button>
                         </a>
                         <a href="/group/delete?groupId=<%= group.groupId %>">
@@ -45,7 +47,30 @@
 
         </div>
     </div>
-    
+
+    <!-- Group Details Modal -->
+    <div class="modal fade invite-modal" id="projectDetailsModal" tabindex="-1" role="dialog" aria-labelledby="projectDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="projectDetailsModalLabel">Project Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Project details content -->
+                    <p><strong>Project ID:</strong> <span id="projectId"><%= group.groupId %></span></p>
+                    <p><strong>Project Name:</strong> <span id="projectName"><%= group.groupName %></span></p>
+                    <p><strong>Admin ID:</strong> <span id="adminId"><%= group.adminId %></span></p>
+                    <p><strong>Project Description:</strong> <span id="projectDescription"><%= group.project %></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 <%-include ('./footer')%>
 
 <script>

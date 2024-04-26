@@ -3,7 +3,7 @@
     <div class="my-md-5">
         <div class="card">
             <div class="card-header">
-            <h2>Edit Group</h2>
+            <h2><i class="fa-solid fa-pen-nib mr-2 fa-sm"></i>Edit Project</h2>
             </div>
             <div class="card-body">
                 <form action="/group/edit" method="POST">
@@ -23,7 +23,7 @@
                         <label for="project">Project Description:</label>
                         <input type="text" class="form-control" id="project" name="project" value="<%= group.project %>" required>
                     </div>
-                    <button type="submit" class="btn btn-create-group btn-block">Save Changes</button>
+                    <button type="submit" class="btn btn-create-group btn-block"><i class="fa-solid fa-floppy-disk mr-1"></i>Save Changes</button>
                 </form>
             </div>
         </div>

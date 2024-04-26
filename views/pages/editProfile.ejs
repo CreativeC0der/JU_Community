@@ -4,7 +4,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0">Edit User</h5>
+                        <h5 class="mb-0"><i class="fa-solid fa-user-pen mr-2"></i>Edit My Profile</h5>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="/profile/edit" enctype="multipart/form-data" id="userForm">
@@ -14,7 +14,7 @@
                             <div class="form-group">
                                 <label for="profileImage">Profile Image:</label>
                                 <input type="file" class="form-control-file" id="profileImage" name="profileImage" 
-                                accept="image/*" onchange="checkFileSize()">
+                                accept="image/*" onchange="checkFileSizeAndType()">
                             </div>
                             <!-- Image preview -->
                             <div id="imagePreviewContainer" class="text-center">
@@ -69,30 +69,35 @@
                             </div>
 
                             <!-- Add more fields button -->
-                            <button type="button" class="btn btn-warning mb-3" id="addFieldBtn">Add More Fields</button>
+                            <button type="button" class="btn btn-warning mb-3" id="addFieldBtn">
+                                <i class="fa-solid fa-plus mr-2"></i>Add More Fields
+                            </button>
                             <!-- Dynamic fields container -->
                             <div id="dynamicFieldsContainer">
                                 <!-- Dynamic FIELDS ADDED HERE!! -->
                                 <% fieldCounter=1%>
                                 <% for(df of user['dynamicFields']) { %>
                                     <div class="form-group" id="dynamicField<%= fieldCounter %>">
-                                        <label for="<%= fieldCounter %>">Dynamic Field <%= fieldCounter %> :</label>
+                                        <label for="<%= fieldCounter %>">Dynamic Field :</label>
+                                        <button type="button" class="btn btn-danger btn-sm float-right" 
+                                        onclick="deleteDynamicField(<%=fieldCounter%>)">
+                                            <i class="fa-solid fa-trash-can "></i>
+                                        </button>
                                         <input type="text" class="form-control" id="dynamicFieldLabel<%= fieldCounter %>" 
                                             name="<%= fieldCounter %>" placeholder="Enter Label"  style="font-weight: bold;" 
                                             value="<%= df.field %>">
                                         <input type="text" class="form-control" id="dynamicFieldValue<%= fieldCounter %>" 
                                             name="value<%= fieldCounter %>" placeholder="Enter Value"
                                             value="<%= df.value %>">
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteDynamicField(<%=fieldCounter%>)">
-                                            Delete
-                                        </button>
                                     </div>
                                     <% fieldCounter++ %>
                                 <% } %>
                                 <span style="display:none" id="noOfFields"><%= fieldCounter %></span>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-register" id="submitBtn">Save Changes</button>
+                            <button type="submit" class="btn btn-primary btn-register" id="submitBtn">
+                                <i class="fa-solid fa-floppy-disk mr-1"></i>Save Changes
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -104,15 +109,26 @@
 <script>
 
     // File size limit
-    function checkFileSize() {
+    function checkFileSizeAndType() {
         const input=document.getElementById('profileImage');
-        if (input.files && input.files[0]) {
+        if (input.files && input.files[0]) 
+        {
             var fileSize = input.files[0].size; // Size in bytes
             var maxSize = 1048576; // 1MB in bytes
-            if (fileSize > maxSize) {
+            if (fileSize > maxSize) 
+            {
                 Swal.fire({
                     title: 'File Size Limit Exceeded!',
                     text: "Please choose a smaller file. (< 1MB)",
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                })
+                input.value = ''; // Clear the selected file
+            }
+            else if(!input.files[0].type.includes('image/')){
+                Swal.fire({
+                    title: 'Incorrect File Type!',
+                    text: "Upload Images ONLY",
                     icon: 'warning',
                     confirmButtonText: 'OK'
                 })
@@ -143,12 +159,14 @@
     function addDynamicField() {
         fieldCounter++;
         let fieldHtml = `<div class="form-group" id="dynamicField${fieldCounter}">
-                            <label for="${fieldCounter}">Dynamic Field ${fieldCounter}:</label>
+                            <label for="${fieldCounter}">Dynamic Field:</label>
+                            <button type="button" class="btn btn-danger btn-sm float-right" onclick="deleteDynamicField(${fieldCounter})">
+                                <i class="fa-solid fa-trash-can "></i>
+                            </button>
                             <input type="text" class="form-control" id="dynamicFieldLabel${fieldCounter}" 
                             name="${fieldCounter}" placeholder="Enter Label" style="font-weight: bold;" required>
                             <input type="text" class="form-control" id="dynamicFieldValue${fieldCounter}" 
                             name="value${fieldCounter}" placeholder="Enter Value" required>
-                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteDynamicField(${fieldCounter})">Delete</button>
                         </div>`;
         $("#dynamicFieldsContainer").append(fieldHtml);
     }
