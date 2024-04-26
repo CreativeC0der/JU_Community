@@ -11,6 +11,7 @@ const memberRouter=require('./routes/member');
 const adminRouter=require('./routes/admin');
 const path = require('path');
 const bcrypt=require('bcrypt');
+const sanitizeHtml=require('sanitize-html')
 require('dotenv').config()
 
 app.use(getSession());
@@ -27,7 +28,8 @@ app.set('views', path.join(process.cwd(), '/views/pages'))
 app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
-    res.render('root', {query:req.query});
+    const sanitizedQuery = sanitizeHtml(JSON.stringify(req.query));
+    res.render('root', {query:sanitizedQuery});
 })
 
 app.post('/login', async (req, res) => {

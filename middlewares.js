@@ -60,7 +60,8 @@ function getSession() {
         saveUninitialized: true,
         store: sessionStore,
         cookie: {
-            maxAge: 1 * 60 * 60 * 1000
+            maxAge: 1 * 60 * 60 * 1000,
+            secure:"auto"
         }
     })
     return newSession;
