@@ -14,7 +14,7 @@
                             <div class="form-group">
                                 <label for="profileImage">Profile Image:</label>
                                 <input type="file" class="form-control-file" id="profileImage" name="profileImage" 
-                                accept="image/*" onchange="checkFileSize()">
+                                accept="image/*" onchange="checkFileSizeAndType()">
                             </div>
                             <!-- Image preview -->
                             <div id="imagePreviewContainer" class="text-center">
@@ -109,15 +109,26 @@
 <script>
 
     // File size limit
-    function checkFileSize() {
+    function checkFileSizeAndType() {
         const input=document.getElementById('profileImage');
-        if (input.files && input.files[0]) {
+        if (input.files && input.files[0]) 
+        {
             var fileSize = input.files[0].size; // Size in bytes
             var maxSize = 1048576; // 1MB in bytes
-            if (fileSize > maxSize) {
+            if (fileSize > maxSize) 
+            {
                 Swal.fire({
                     title: 'File Size Limit Exceeded!',
                     text: "Please choose a smaller file. (< 1MB)",
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                })
+                input.value = ''; // Clear the selected file
+            }
+            else if(!input.files[0].type.includes('image/')){
+                Swal.fire({
+                    title: 'Incorrect File Type!',
+                    text: "Upload Images ONLY",
                     icon: 'warning',
                     confirmButtonText: 'OK'
                 })
