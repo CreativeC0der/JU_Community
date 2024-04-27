@@ -47,6 +47,8 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
         let cloudFile={data:"default.img"}
         if(req.file)
         {
+            console.log("FILE UPLOADED");
+            console.log(req.file);
             // Upload to Cloudflare R2 
             [cloudFile] = await new traffic()
             .bucketName("ju-community") // Your Cloudflare-R2 Bucket Name where you want to upload the image
