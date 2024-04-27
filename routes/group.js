@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { checkSessionValid, checkAdmin } = require('../middlewares');
 const { connPromise } = require('../dbConnect');
+const sanitizeHtml=require('sanitize-html');
 
 router.get('/dashboard', checkSessionValid, async (req, res) => {
     const conn = await connPromise;
@@ -10,7 +11,7 @@ router.get('/dashboard', checkSessionValid, async (req, res) => {
     const [posts] = await conn.query('SELECT posts.*,userName FROM posts INNER JOIN users ON posts.userId=users.userId WHERE groupId=?', [req.query.groupId])
     const [nonMembers] = await conn.query('SELECT * FROM users WHERE userid NOT IN(SELECT userid FROM members WHERE groupid=?) AND approved=1', [req.query.groupId])
     const [resources]=await conn.query('SELECT * FROM resources WHERE groupId=?',req.query.groupId)
-    
+    const sanitizedQuery = sanitizeHtml(JSON.stringify(req.query));
     res.render('groupDashboard', {
         group: group[0],
         currUser: req.session.user,
@@ -18,7 +19,7 @@ router.get('/dashboard', checkSessionValid, async (req, res) => {
         nonMembers: nonMembers,
         posts: posts,
         resources:resources,
-        query:req.query
+        query:sanitizedQuery
     });
 })
 

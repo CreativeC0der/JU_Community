@@ -5,6 +5,7 @@ const { connPromise } = require('../dbConnect');
 const {sendMail}=require('../mailService')
 const ejs=require('ejs');
 const { MulterError } = require('multer');
+const sanitizeHtml=require('sanitize-html')
 
 router.get('/panel',checkSessionValid,checkAdmin,async (req,res)=>{
     const conn = await connPromise;
@@ -14,7 +15,8 @@ router.get('/panel',checkSessionValid,checkAdmin,async (req,res)=>{
         user['dynamicFields']=JSON.parse(user['dynamicFields'])
         return user;
     })
-    res.render('adminPanel',{users,query:req.query});
+    const sanitizedQuery = sanitizeHtml(JSON.stringify(req.query));
+    res.render('adminPanel',{users,query:sanitizedQuery});
 })
 
 router.get('/approve/:userId',checkSessionValid,checkAdmin,async (req,res)=>{

@@ -74,7 +74,7 @@
 <%-include ('./footer')%>
 
 <script>
-    const query=<%- JSON.stringify(query)%>;
+    const query=<%- query %>;
     if(query.postCreate=='success')
         Swal.fire({
             title: 'Post Created Successfully!',
