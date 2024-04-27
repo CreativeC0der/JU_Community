@@ -1,14 +1,12 @@
 const express=require('express');
 const router=express.Router();
 const {connPromise}=require('../dbConnect');
-const {checkSessionValid,checkInvitation}=require('../middlewares');
-const multer = require('multer')
-const {del,put}=require('@vercel/blob')
-const upload = multer({ storage: multer.memoryStorage() })
+const {upload,checkSessionValid}=require('../middlewares');
 const {sendMail}=require('../mailService');
 require('dotenv').config()
 const ejs=require('ejs')
 const bcrypt=require('bcrypt')
+const { traffic } = require("cloudflare-r2.js");
 
 router.get('/passwordReset',async (req,res)=>{
     try{
@@ -46,12 +44,16 @@ router.get('/create',async(req,res)=>{
 router.post('/create',upload.single('profileImage'),async(req,res)=>{
     try{
         let currDate = new Date().toISOString().replace('T', ' ').split('.')[0];
-        let blob={url:null};
+        let cloudFile={data:"default.img"}
         if(req.file)
         {
-            // Upload to vercel blobs
-            blob=await put(`ProfileImage ${Date.now()} ${req.file.originalname}`,req.file.buffer,{access:'public'})
-            console.log(blob);
+            console.log("FILE UPLOADED");
+            console.log(req.file);
+            // Upload to Cloudflare R2 
+            [cloudFile] = await new traffic()
+            .bucketName("ju-community") // Your Cloudflare-R2 Bucket Name where you want to upload the image
+            .upload([req.file.path]) // Your image path (Must use an array)
+            console.log(cloudFile);
         }
         
         // Destructure object and dynamic fields
@@ -69,7 +71,6 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
 
         // Salt password
         const passwordHash=await bcrypt.hash(password,10);
-        console.log(passwordHash);
 
         // save to DB
         const conn=await connPromise;
@@ -83,7 +84,7 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
                                     roll, 
                                     department, 
                                     bio, 
-                                    blob.url,
+                                    process.env.PUBLIC_URL+cloudFile.data,
                                     degree,
                                     passout, 
                                     dynamicFields]);
@@ -111,10 +112,8 @@ router.get('/edit',checkSessionValid,async (req,res)=>{
 router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,res)=>{
     try{
         const conn=await connPromise;
-
         // Destructure object and dynamic fields
         let {userId,username,email,password,roll,department,degree,passout,bio,...dynamicFields}=req.body
-
         dfArr=[]
         for(key in dynamicFields)
         {
@@ -124,16 +123,19 @@ router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,re
                     value:dynamicFields[`value${key}`]
                 })
         }
-
         dynamicFields=JSON.stringify(dfArr);
 
         // Upload new image
         if(req.file)
         {
-            // Upload to vercel blobs
-            const blob=await put(`ProfileImage ${Date.now()} ${req.file.originalname}`,req.file.buffer,{access:'public'})
-            console.log(blob);
-            await conn.query('UPDATE users SET profileImage=? where userId=?',[blob.url,userId])
+            // Upload to CloudFlare
+            [cloudFile] = await new traffic()
+            .bucketName(process.env.BUCKET) // Your Cloudflare-R2 Bucket Name where you want to upload the image
+            .upload([req.file.path]) // Your image path (Must use an array)
+
+            console.log(cloudFile);
+
+            await conn.query('UPDATE users SET profileImage=? where userId=?',[process.env.PUBLIC_URL+cloudFile.data,userId])
         }
 
         // Salt password
@@ -154,7 +156,6 @@ router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,re
 
 router.get('/delete',checkSessionValid,async (req,res)=>{
     try{
-        await del(req.session.user.profileImage)
         const conn=await connPromise;
         const query = 'DELETE FROM users WHERE userId=?';
         const [results]=await conn.query(query,[req.session.user.userId])
@@ -165,7 +166,6 @@ router.get('/delete',checkSessionValid,async (req,res)=>{
         console.log(err);
         res.redirect(`/logout`);
     }
-    
 })
 
 module.exports=router

@@ -11,7 +11,17 @@ const memberRouter=require('./routes/member');
 const adminRouter=require('./routes/admin');
 const path = require('path');
 const bcrypt=require('bcrypt');
+const sanitizeHtml=require('sanitize-html')
+const { R2 } = require("cloudflare-r2.js");
 require('dotenv').config()
+
+const R2Object = new R2()
+  .setSecret("f3822851f35a3279f88b71e4d1d4db4629195cb7ce766c1367d89d7470950f69") // Your Cloudflare-R2 Secret Key
+  .setAccessKey("e3b3c5995cd6531f2c1a305ee1cadaf3") // Your Cloudflare-R2 Access Key
+  .setId("56b06f3273b7d3101fc6cd7b17e14584") // Your Cloudflare-R2 ID
+  .build(); // Building the client in the end
+
+console.log(R2Object);
 
 app.use(getSession());
 
@@ -27,7 +37,8 @@ app.set('views', path.join(process.cwd(), '/views/pages'))
 app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
-    res.render('root', {query:req.query});
+    const sanitizedQuery = sanitizeHtml(JSON.stringify(req.query));
+    res.render('root', {query:sanitizedQuery});
 })
 
 app.post('/login', async (req, res) => {

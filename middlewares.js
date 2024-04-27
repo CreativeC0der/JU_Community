@@ -1,6 +1,19 @@
 const session = require('express-session')
 const mySqlStore = require('express-mysql-session')(session)
 const { dbOptions, connPromise } = require('./dbConnect')
+const multer=require('multer');
+
+// MUlter Upload
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'tmp/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+
+const upload = multer({storage:storage})
 
 function checkSessionValid(req, res, next) {
     if (!req.session.valid)
@@ -60,11 +73,11 @@ function getSession() {
         saveUninitialized: true,
         store: sessionStore,
         cookie: {
-            maxAge: 1 * 60 * 60 * 1000
+            maxAge: 1 * 60 * 60 * 1000,
+            secure:"auto"
         }
     })
     return newSession;
 }
 
-
-module.exports = { checkGroupMember,checkPostUser,checkSessionValid, getSession, checkAdmin }
+module.exports = {upload,checkGroupMember,checkPostUser,checkSessionValid, getSession, checkAdmin }
