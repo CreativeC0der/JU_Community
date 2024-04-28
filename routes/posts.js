@@ -44,7 +44,6 @@ router.get('/edit',checkSessionValid,checkPostUser ,async(req,res)=>{
   const conn = await connPromise;
   const query = 'select * from posts where postId=?';
   const [[post]]=await conn.query(query,[req.query.postId])
-  console.log(post);
   res.render('editPost',{post});
 })
 
@@ -58,7 +57,6 @@ router.post('/edit',checkSessionValid,checkPostUser,upload.single('postImage'),a
         .bucketName(process.env.BUCKET)
         .upload([req.file.path])
         console.log(cloudFile);
-
         await conn.query('UPDATE posts SET postImage=? where postId=?',[process.env.PUBLIC_URL+cloudFile.data,req.body.postId])
     }
 

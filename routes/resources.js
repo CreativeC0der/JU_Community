@@ -4,7 +4,6 @@ const { checkSessionValid, checkAdmin } = require('../middlewares');
 const { connPromise } = require('../dbConnect');
 
 router.get('/create',checkSessionValid,checkAdmin, (req, res) => {
-    console.log(req.query);
     res.render('createResource', {groupId:req.query.groupId});
 })
 
@@ -71,6 +70,4 @@ router.get('/delete',checkSessionValid,checkAdmin,async (req,res)=>{
     
 })
   
-
-
 module.exports = router
