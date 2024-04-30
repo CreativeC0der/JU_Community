@@ -34,7 +34,7 @@
 <%-include ('./footer')%>
 
 <script>
-    const query=<%- JSON.stringify(query) %>;
+    const query=<%- query %>;
     if(query.login=='success')
       Swal.fire({
         title: 'Successfully Logged In!',
