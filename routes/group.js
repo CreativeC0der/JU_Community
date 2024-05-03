@@ -8,10 +8,15 @@ router.get('/dashboard', checkSessionValid, async (req, res) => {
     const conn = await connPromise;
     const [group] = await conn.query('SELECT * FROM ju_groups WHERE groupid=?', req.query.groupId)
     const [members] = await conn.query('SELECT * FROM users WHERE userid IN(SELECT userid FROM members WHERE groupid=? AND approved=1)', req.query.groupId)
-    const [posts] = await conn.query('SELECT posts.*,userName FROM posts INNER JOIN users ON posts.userId=users.userId WHERE groupId=?', [req.query.groupId])
+    const [posts] = await conn.query('SELECT posts.*,userName FROM posts INNER JOIN users ON posts.userId=users.userId WHERE groupId=? ORDER BY timestamp DESC', [req.query.groupId])
     const [nonMembers] = await conn.query('SELECT * FROM users WHERE userid NOT IN(SELECT userid FROM members WHERE groupid=?) AND approved=1', [req.query.groupId])
     const [resources]=await conn.query('SELECT * FROM resources WHERE groupId=?',req.query.groupId)
     const sanitizedQuery = sanitizeHtml(JSON.stringify(req.query));
+    for (user of members) {
+        user.dynamicFields=JSON.parse(user['dynamicFields'])
+        user.degree=JSON.parse(user['degree'])
+    }
+    
     res.render('groupDashboard', {
         group: group[0],
         currUser: req.session.user,

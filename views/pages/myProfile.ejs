@@ -1,3 +1,11 @@
+<% function isValidHttpUrl(string) {
+    try {
+      const url = new URL(string);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch (err) {
+      return false;
+    }
+} %> 
 <%-include ('./header')%>
     <div class="container">
         <div class="row">
@@ -7,7 +15,10 @@
                 </button>
 
                 <div class="profile-card">
-                    <h2 class="text-center mb-4"><i class="fa-solid fa-user-tie mr-2 fa-sm"></i>User Profile</h2>
+                    <button type="button" class="btn btn-dark float-right" data-toggle="modal" data-target="#passwordChangeModal">
+                        <i class="fa-solid fa-key "></i> Change Password
+                    </button>
+                    <h2 class="text-center mb-4" style="margin-left: 10rem;"><i class="fa-solid fa-user-tie mr-2 fa-sm"></i>User Profile</h2>
                     <hr>
                     <div class="profile-picture">
                         <img src="<%= user.profileImage %>" alt="No Profile Picture">
@@ -22,8 +33,12 @@
                         <% if (user.userDepartment) { %>
                             <strong>Department:</strong> <%= user.userDepartment %> <br>
                         <% } %>
-                        <% if (user.degree) { %>
-                            <strong>Degree:</strong> <%= user.degree %> <br>
+                        <% if (user.degree.length >0) { %>
+                            <strong>Degree:</strong> |
+                            <% user['degree'].forEach(degree => { %>
+                                <%= degree %> | 
+                            <% }) %>
+                            <br>
                         <% } %>
                         
                         <% if (user.passout) { %>
@@ -31,12 +46,16 @@
                         <% } %>
                         <strong>Bio:</strong> <%= user.bio %> <br>
                         <%for(df of user['dynamicFields']){%>
-                            <strong><%= df.field %>:</strong> 
-                            <%= df.value %>
+                            <strong><%= df.field %>:</strong>
+                            <% if (isValidHttpUrl(df.value)) { %>
+                                <a href="<%= df.value %>">Click Here</a>
+                            <% } else { %>
+                                <%= df.value %>
+                            <% } %>                            
                             <br>
                         <% } %>
                     </div>
-                    <a href="/profile/edit"><button class="btn btn-secondary edit-btn">
+                    <a href="/profile/edit"><button class="btn btn-warning edit-btn">
                         <i class="fa-solid fa-pencil mr-2"></i>Edit</button>
                     </a>
                     <button class="btn btn-danger edit-btn" style="float: right;" onclick="deleteProfile()">
@@ -45,6 +64,37 @@
             </div>
         </div>
 
+        <!-- Change Password Modal -->
+        <div class="modal fade invite-modal" id="passwordChangeModal" tabindex="-1" role="dialog" aria-labelledby="passwordChangeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="passwordChangeModalLabel">Change Password</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                <form id="passwordChangeForm">
+                    <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                    </div>
+                    <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                    <label for="confirmNewPassword">Confirm New Password</label>
+                    <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Change Password</button>
+                </form>
+                </div>
+            </div>
+            </div>
+        </div>
+        
         <!-- My Groups Modal -->
         <div class="modal fade invite-modal" id="groupsModal" tabindex="-1" role="dialog" aria-labelledby="groupsModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -127,4 +177,63 @@
                 window.location.href='/profile/delete'
         });
     }
+</script>
+
+<!-- PAssword Change Script -->
+
+<script>
+    $('#passwordChangeForm').submit(async function(e) {
+        e.preventDefault();
+        var currentPassword = $('#currentPassword').val();
+        var newPassword = $('#newPassword').val();
+        var confirmNewPassword = $('#confirmNewPassword').val();
+
+        if(newPassword!==confirmNewPassword)
+        {
+            Swal.fire({
+                    title: 'Error!',
+                    text: 'Passwords Dont match',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                })
+        }
+        else
+        {
+            let response=await fetch('/profile/passwordChange',{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    currentPassword,newPassword
+                })
+            })
+            response=await response.json()
+            console.log(response);
+            if(response.msg=="success")
+                Swal.fire({
+                    title: 'Done!',
+                    text: 'Password Changed Successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+            })
+            else if(response.msg=="failure")
+                Swal.fire({
+                    title: 'Invalid Password!',
+                    text: 'Password change Failed!',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                })
+            else
+                Swal.fire({
+                    title: 'Server Error!',
+                    text: 'Something Went Wrong',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                })
+
+            $('#passwordChangeModal').modal('hide');
+            $('#passwordChangeForm')[0].reset();
+        }
+    });
 </script>
