@@ -83,7 +83,6 @@
                                     </div>
                                     <div class="user-details">
                                         <strong>Username:</strong> <%= user.userName %> <br>
-                                        <strong>User ID:</strong> <%= user.userId %> <br>
                                         <strong>Email:</strong> <%= user.userEmail %> <br>
                                         <strong>Roll:</strong> <%= user.userRoll %> <br>
                                         <strong>Department:</strong> <%= user.userDepartment %> <br>
@@ -116,7 +115,6 @@
 
 <script>
     const users = <%- JSON.stringify(users) %>;
-    console.log(users)
     const searchInput = document.getElementById('searchInput');
     const searchButton = document.getElementById('searchButton');
     const sortSelect=document.getElementById('sortSelect');

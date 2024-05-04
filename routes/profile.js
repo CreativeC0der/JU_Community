@@ -69,8 +69,14 @@ router.get('/create',async(req,res)=>{
 
 router.post('/create',upload.single('profileImage'),async(req,res)=>{
     try{
-        console.log(req.body);
-        let currDate = new Date().toISOString().replace('T', ' ').split('.')[0];
+        // UserID space check
+        if(req.body.userId.includes(" "))
+            throw Error;
+
+        // timestamp calculation
+        let timestamp = new Date().toISOString().replace('T', ' ').split('.')[0];
+        
+        // Upload File to DB
         let cloudFile={data:"default.jpg"}
         if(req.file)
         {
@@ -83,7 +89,7 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
             console.log(cloudFile);
         }
         
-        // Destructure object and dynamic fields
+        // Destructure and stringify object and dynamic fields
         let {userId,username,email,password,roll,department,bio,degree,passout,joinGroup,...dynamicFields}=req.body
         dfArr=[]
         for(key in dynamicFields)
@@ -104,7 +110,7 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
         const conn=await connPromise;
         const query = 'INSERT INTO users(timestamp, userId, userName, userEmail, userPassword, userRoll, userDepartment, bio, profileImage,degree,passout, dynamicFields) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         const [results, fields] = await conn.query(query, 
-                                    [currDate,
+                                    [timestamp,
                                     userId, 
                                     username, 
                                     email, 

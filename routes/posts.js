@@ -44,6 +44,7 @@ router.get('/edit',checkSessionValid,checkPostUser ,async(req,res)=>{
   const conn = await connPromise;
   const query = 'select * from posts where postId=?';
   const [[post]]=await conn.query(query,[req.query.postId])
+  console.log(post);
   res.render('editPost',{post});
 })
 
