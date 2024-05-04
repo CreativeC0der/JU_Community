@@ -33,7 +33,7 @@
                         <% }) %>
                     </h6>
                     <strong>Email:</strong> <%= member.userEmail %> <br>
-                    <% if (user.passout) { %>
+                    <% if (member.passout) { %>
                         <strong>Passout:</strong> <%= member.passout.toDateString() %>
                     <% } %>
                 </div>
