@@ -13,9 +13,10 @@
                     </div>
                     <div class="form-group">
                         <label for="group_id">Project ID:</label>
-                        <span class="text-muted mx-2">*GroupId cannot be changed once set*</span>
+                        <span class="text-muted mx-2">*ProjectID cannot be changed once set*</span>
                         <input type="text" class="form-control" id="group_id" name="group_id" required>
-                        <span id="duplicateGroupId" style="display: none; color: red;">This groupId is already taken.</span>
+                        <span id="duplicateGroupId" style="display: none; color: red;">This projectID is already taken.</span>
+                        <span id="groupIdSpaceCheck" style="display: none; color: red;">Space not allowed in Project ID</span>
                     </div>
                     <div class="form-group">
                         <label for="group_name">Project Name:</label>
@@ -40,10 +41,16 @@
     const inputValue = document.getElementById('group_id').value;
     console.log(inputValue);
     const duplicateGroupId = document.getElementById('duplicateGroupId');
+    const groupIdSpaceCheck=document.getElementById('groupIdSpaceCheck');
     if (groupIds.includes(inputValue.toLowerCase())) 
         duplicateGroupId.style.display = 'block';
     else 
         duplicateGroupId.style.display = 'none'; 
+
+    if(inputValue.includes(" "))
+        groupIdSpaceCheck.style.display='block';
+    else
+        groupIdSpaceCheck.style.display='none';
     });
 </script>
 

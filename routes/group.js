@@ -38,7 +38,10 @@ router.get('/create', checkSessionValid, checkAdmin, async (req, res, next) => {
 
 router.post('/create', checkSessionValid, checkAdmin, async (req, res) => {
     try{
-        console.log(req.body);
+        // GroupId space check
+        if (req.body.group_id.includes(" "))
+            throw Error;
+        
         const conn = await connPromise;
         await conn.query('insert into ju_groups(adminId,groupId,groupName,project) values(?,?,?,?)', [
             req.body.admin_id,
@@ -57,11 +60,9 @@ router.post('/create', checkSessionValid, checkAdmin, async (req, res) => {
 })
 
 router.get('/edit',checkSessionValid,checkAdmin,async(req,res)=>{
-    console.log(req.query.groupId);
     const conn = await connPromise;
     const query = 'select * from ju_groups where groupId=?';
     const [[group]]=await conn.query(query,[req.query.groupId])
-    console.log(group);
     res.render('editGroup',{group});
 })
 
@@ -81,7 +82,6 @@ router.post('/edit',checkSessionValid,checkAdmin,async (req,res)=>{
 
 router.get('/delete',checkSessionValid,checkAdmin,async (req,res)=>{
     try{
-        console.log(req.query);
         const conn=await connPromise;
         const query = 'DELETE FROM ju_groups WHERE groupId=?';
         const [results]=await conn.query(query,[req.query.groupId])

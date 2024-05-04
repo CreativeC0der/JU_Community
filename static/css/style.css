@@ -308,6 +308,7 @@ body {
   padding: 15px;
   border-radius: 8px;
   height: fit-content;
+  text-align: center;
 }
 .post-content{
   overflow-y: auto;
