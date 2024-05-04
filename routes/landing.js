@@ -37,6 +37,7 @@ router.get('/my-profile', checkSessionValid, async (req, res) => {
     const conn = await connPromise;
     [[user]] = await conn.query('select * from users where userId=?', [req.session.user.userId]);
     [myGroups] = await conn.query('select * from ju_groups where groupId in(select groupId from members where userId=?)', req.session.user.userId)
+    user['degree']=JSON.parse(user['degree'])
     user['dynamicFields']=JSON.parse(user['dynamicFields'])
     const sanitizedQuery = sanitizeHtml(JSON.stringify(req.query));
     res.render('myProfile', {
@@ -55,6 +56,7 @@ router.get('/view-profiles', checkSessionValid, async (req, res) => {
             'select * from ju_groups where groupId in (select groupId from members where userId=?)', 
             [user.userId]);
         user.groups = groups;
+        user['degree']=JSON.parse(user['degree'])
         user.dynamicFields=JSON.parse(user['dynamicFields'])
     }
     console.log(users);

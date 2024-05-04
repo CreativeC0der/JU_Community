@@ -49,7 +49,7 @@ router.get('/deny/:userId',checkSessionValid,checkAdmin,async (req,res)=>{
 
         query = 'DELETE FROM users WHERE userId=?';
         const [results]=await conn.query(query,[req.params.userId]);
-        ejs.renderFile(process.cwd()+'/views/pages/userMail.ejs',{status:'Denied',name:user.userName},(err,html)=>{
+        ejs.renderFile(process.cwd()+'/views/pages/userMail.ejs',{status:'Denied',name:user.userName,userId:user.userId},(err,html)=>{
             sendMail(user.userEmail,'JU Community Notification',html);
         })
         res.redirect('/admin/panel?approval=success');

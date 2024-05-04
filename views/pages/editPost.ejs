@@ -37,7 +37,7 @@
                 <div class="card">
                     <img id="imagePreview" class="image-preview" src="<%= post.postImage %>" alt=" No Image Chosen.... ">
                 </div>
-                <button type="submit" class="btn btn-primary float-right"><i class="fa-solid fa-floppy-disk mr-1"></i>Save Changes</button>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk mr-1"></i>Save Changes</button>
             </form>
         </div>
     </div>
@@ -91,8 +91,17 @@
             height: 300,                 // set editor height
             minHeight: 300,             // set minimum height of editor
             maxHeight: null,             // set maximum height of editor
-            focus: true                  // set focus to editable area after initializing summernote
+            focus: true,               // set focus to editable area after initializing summernote
+            toolbar: [
+                [ 'style', [ 'style' ] ],
+                [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
+                [ 'fontname', [ 'fontname' ] ],
+                [ 'fontsize', [ 'fontsize' ] ],
+                [ 'color', [ 'color' ] ],
+                [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
+                [ 'insert', [ 'link'] ],
+                [ 'view', [ 'undo', 'redo', 'fullscreen', 'help' ] ]
+            ]
         });
-        $('#postContent').summernote('pasteHTML',<%- JSON.stringify(post.postContent) %>);
     });
 </script>

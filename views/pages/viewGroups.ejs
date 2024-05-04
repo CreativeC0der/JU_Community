@@ -1,3 +1,11 @@
+<% function isValidHttpUrl(string) {
+    try {
+      const url = new URL(string);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch (err) {
+      return false;
+    }
+} %> 
 <%-include ('./header')%>
     <% admin1.dynamicFields=JSON.parse(admin1.dynamicFields) %>
     <% admin2.dynamicFields=JSON.parse(admin2.dynamicFields) %>
@@ -81,7 +89,11 @@
                             <strong>Bio:</strong> <%= admin1.bio %> <br>
                             <%for(df of admin1['dynamicFields']){%>
                                 <strong><%= df.field %>:</strong> 
-                                <%= df.value %>
+                                <% if (isValidHttpUrl(df.value)) { %>
+                                    <a href="<%= df.value %>">Click Here</a>
+                                <% } else { %>
+                                    <%= df.value %>
+                                <% } %>
                                 <br>
                             <% } %>
                         </div>
@@ -118,7 +130,11 @@
                             <strong>Bio:</strong> <%= admin2.bio %> <br>
                             <%for(df of admin2['dynamicFields']){%>
                                 <strong><%= df.field %>:</strong> 
-                                <%= df.value %>
+                                <% if (isValidHttpUrl(df.value)) { %>
+                                    <a href="<%= df.value %>">Click Here</a>
+                                <% } else { %>
+                                    <%= df.value %>
+                                <% } %>
                                 <br>
                             <% } %>
                         </div>

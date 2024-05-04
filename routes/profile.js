@@ -8,6 +8,32 @@ const ejs=require('ejs')
 const bcrypt=require('bcrypt')
 const { traffic } = require("cloudflare-r2.js");
 
+router.post("/passwordChange",checkSessionValid,async(req,res)=>{
+    try{
+        console.log(req.body);
+        const conn=await connPromise;
+        const [[user]]=await conn.query('SELECT * FROM users where userId=?',[req.session.user.userId]);
+        if(await bcrypt.compare(req.body.currentPassword,user.userPassword)){
+            newPassword=await bcrypt.hash(req.body.newPassword,10);
+            await conn.query('UPDATE users SET userPassword=? where userId=?',[newPassword,user.userId]);
+            res.json({
+                msg:"success"
+            })
+        }
+        else
+            res.json({
+                msg:"failure"
+            })
+    }
+    catch(err){
+        console.log(err);
+        res.json({
+            msg:"error"
+        })
+    }
+    
+})
+
 router.get('/passwordReset',async (req,res)=>{
     try{
         const conn=await connPromise;
@@ -43,8 +69,9 @@ router.get('/create',async(req,res)=>{
 
 router.post('/create',upload.single('profileImage'),async(req,res)=>{
     try{
+        console.log(req.body);
         let currDate = new Date().toISOString().replace('T', ' ').split('.')[0];
-        let cloudFile={data:"default.img"}
+        let cloudFile={data:"default.jpg"}
         if(req.file)
         {
             console.log("FILE UPLOADED");
@@ -68,6 +95,7 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
                 })
         }
         dynamicFields=JSON.stringify(dfArr);
+        degree=JSON.stringify(degree);
 
         // Salt password
         const passwordHash=await bcrypt.hash(password,10);
@@ -105,6 +133,7 @@ router.get('/edit',checkSessionValid,async (req,res)=>{
     const query='select * from users where userId=?'
     const [[user]]=await conn.query(query,[req.session.user.userId])
     user['dynamicFields']=JSON.parse(user['dynamicFields'])
+    user['degree']=JSON.parse(user['degree']);
     console.log(user);
     res.render('editProfile',{user})
 })
@@ -113,7 +142,7 @@ router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,re
     try{
         const conn=await connPromise;
         // Destructure object and dynamic fields
-        let {userId,username,email,password,roll,department,degree,passout,bio,...dynamicFields}=req.body
+        let {userId,username,email,roll,department,degree,passout,bio,...dynamicFields}=req.body
         dfArr=[]
         for(key in dynamicFields)
         {
@@ -124,6 +153,7 @@ router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,re
                 })
         }
         dynamicFields=JSON.stringify(dfArr);
+        degree=JSON.stringify(degree);
 
         // Upload new image
         if(req.file)
@@ -138,13 +168,10 @@ router.post('/edit',checkSessionValid,upload.single('profileImage'),async(req,re
             await conn.query('UPDATE users SET profileImage=? where userId=?',[process.env.PUBLIC_URL+cloudFile.data,userId])
         }
 
-        // Salt password
-        const passwordHash=await bcrypt.hash(password,10);
-
         // Update DB
-        const query = 'UPDATE users SET userName=?, userEmail=?, userPassword=?, userRoll=?, userDepartment=?, degree=?, passout=?, bio=?, dynamicFields=? where userId=?';
+        const query = 'UPDATE users SET userName=?, userEmail=?, userRoll=?, userDepartment=?, degree=?, passout=?, bio=?, dynamicFields=? where userId=?';
         const [results] = await conn.query(query, 
-        [username, email, passwordHash, roll, department, degree, passout, bio, dynamicFields,userId]);
+        [username, email, roll, department, degree, passout, bio, dynamicFields,userId]);
         console.log(results);
         res.redirect('/landing/my-profile?editProfile=success');
     }

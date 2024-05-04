@@ -15,9 +15,11 @@
             <div class="card-body" id="<%= resource.resourceId %>">
                 <div class="row">
                     <div class="col-8">
-                        <h5 class="card-title font-weight-bold"><%= resource.resourceHeading %></h5>
+                        <u><h5 class="card-title font-weight-bold"><%= resource.resourceHeading %></h5></u>
                         <p class="card-text"><%=resource.resourceDescription %></p>
-                        <a href="<%= resource.resourceLink %>" target="_blank">Click to get resource</a>
+                        <a href="<%= resource.resourceLink %>" target="_blank">
+                            Click Here to Access Resource <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                        </a>
                     </div>
                     <div class="col-4">
                         <% if (currUser.admin) { %>

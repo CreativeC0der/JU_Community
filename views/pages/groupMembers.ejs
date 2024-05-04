@@ -1,3 +1,11 @@
+<% function isValidHttpUrl(string) {
+    try {
+      const url = new URL(string);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch (err) {
+      return false;
+    }
+} %> 
 <div id="group_members" class="tab-pane">
     <!-- Button to Open Modal -->
     <% if (currUser.admin) { %>
@@ -12,22 +20,81 @@
     <% for(member of members) { %>
         <div class="card">
             <div class="card-body row" id="<%= member.userId %>">
-                <div class="col-8">
+                <div class="profile-picture col-2" style="margin-bottom: 0px;">
+                    <img src="<%= member.profileImage %>" alt="Profile Picture">
+                </div>
+                <div class="col-6" style="align-content: center;">
                     <h5 style="font-weight: 700;" class="card-title">
                         <%= member.userName %>
                     </h5>
-                    <h6><%= member.userDepartment %></h6>
+                    <h6>|
+                        <% member['degree'].forEach(degree => { %>
+                            <%= degree %> | 
+                        <% }) %>
+                    </h6>
+                    <strong>Email:</strong> <%= member.userEmail %> <br>
+                    <% if (user.passout) { %>
+                        <strong>Passout:</strong> <%= member.passout.toDateString() %>
+                    <% } %>
                 </div>
-                <div class="col-4">
+                <div class="col-4" style="align-content: center;">
+                    <div style="float: right;" class="mx-2 mt-2" >
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#userModal<%= member.userId %>">
+                            <i class="fa-solid fa-circle-info mr-2"></i>Details
+                        </button>
+                    </div>
                     <% if (currUser.admin) { %>
                         <div style="float: right;">
                             <a href="/members/delete?userId=<%= member.userId%>&groupId=<%= group.groupId %>">
                                 <button class="btn btn-danger btn-block my-2" 
                                     id="delete-member-button">
-                                    <i class="fa-solid fa-user-minus mr-2"></i>Remove Member</button>
+                                    <i class="fa-solid fa-user-minus mr-2"></i>Remove</button>
                             </a>
                         </div>
                     <% } %>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal fade invite-modal" id="userModal<%= member.userId %>" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="userModalLabel">User Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="profile-card">
+                            <h2 class="text-center mb-4"><i class="fa-regular fa-user mr-2 fa-sm"></i>User Profile</h2>
+                            <hr>
+                            <div class="profile-picture">
+                                <img src="<%= member.profileImage %>" alt="Profile Picture">
+                            </div>
+                            <div class="user-details">
+                                <strong>Username:</strong> <%= member.userName %> <br>
+                                <strong>User ID:</strong> <%= member.userId %> <br>
+                                <strong>Email:</strong> <%= member.userEmail %> <br>
+                                <strong>Roll:</strong> <%= member.userRoll %> <br>
+                                <strong>Department:</strong> <%= member.userDepartment %> <br>
+                                <strong>Bio:</strong> <%= member.bio %> <br>
+                                <% for (df of member['dynamicFields']) { %>
+                                    <strong><%= df.field %>:</strong> 
+                                    <% if (isValidHttpUrl(df.value)) { %>
+                                        <a href="<%= df.value %>">Click Here</a>
+                                    <% } else { %>
+                                        <%= df.value %>
+                                    <% } %>
+                                    <br>
+                                <% } %>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>

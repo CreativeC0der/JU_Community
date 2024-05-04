@@ -3,8 +3,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Homepage</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/css/bootstrap-multiselect.min.css"/>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -34,7 +35,8 @@
                                 <label for="userId">UserID:</label>
                                 <span class="text-muted mx-2">*UserID cannot be changed once set*</span> 
                                 <input type="text" class="form-control" id="userId" name="userId" required>
-                                <span id="duplicateUserId" style="display: none; color: red;">This UserID is already taken.</span>
+                                <span id="duplicateUserId" style="display: none; color: red;">*This UserID is already taken*</span>
+                                <span id="spaceWarning" style="display: none; color: red;">*Spaces are NOT allowed in userId*</span>
                             </div>
                             <div class="form-group">
                                 <label for="username">Name:</label>
@@ -58,7 +60,10 @@
                             </div>
                             <div class="form-group">
                                 <label for="degree">Degree:</label>
-                                <select name="degree" id="degree" class="custom-select">
+                                <span class="text-muted">*Select all of your Degrees*</span><br>
+                                <select name="degree" id="degree" class="custom-select" multiple>
+                                    <option value="B.Sc">B.Sc</option>
+                                    <option value="M.Sc">M.Sc</option>
                                     <option value="B.Tech">B.Tech</option>
                                     <option value="M.Tech">M.Tech</option>
                                     <option value="MCA">M.C.A</option>
@@ -73,7 +78,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="bio">Bio:</label>
-                                <textarea class="form-control" id="bio" name="bio" rows="3" required></textarea>
+                                <textarea class="form-control" id="bio" name="bio" style="min-height:100px" required></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="joinGroup">Join Project:</label>
@@ -85,7 +90,7 @@
                             </div>
 
                             <!-- Add more fields button -->
-                            <button type="button" class="btn btn-warning mb-3" id="addFieldBtn">
+                            <button type="button" class="btn btn-warning mb-3" id="addFieldBtn" onclick="addDynamicField()">
                                 <i class="fa-solid fa-plus mr-2"></i>Add More Fields
                             </button>
                             <!-- Dynamic fields container -->
@@ -104,15 +109,24 @@
         </div>
     </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js"></script>
 </body>
 </html>
 
 <script>
+
+    // Bootstrap MultiSelect
+    $(document).ready(function() {
+        $('#degree').multiselect({
+          includeSelectAllOption: false,
+        });
+    });
+
     // file size limit
     function checkFileSizeAndType() 
     {
@@ -176,11 +190,12 @@
                                 <i class="fa-solid fa-trash-can "></i>
                             </button>
                             <input type="text" class="form-control" id="dynamicFieldLabel${fieldCounter}" 
-                            name="${fieldCounter}" placeholder="Enter Label" style="font-weight: bold;" required>
+                            name="${fieldCounter}" placeholder="E.g. : My Github " style="font-weight: bold;" required>
                             <input type="text" class="form-control" id="dynamicFieldValue${fieldCounter}" 
-                            name="value${fieldCounter}" placeholder="Enter Value" required>
+                            name="value${fieldCounter}" placeholder="E.g. : https://gihub.com/coder" required>
                         </div>`;
         $("#dynamicFieldsContainer").append(fieldHtml);
+
     }
 
     // delete DF
@@ -188,21 +203,22 @@
         $("#dynamicField" + fieldIndex).remove();
     }
 
-    // Event listener for Add More Fields button
-    $("#addFieldBtn").click(function () {
-        addDynamicField();
-    });
-
     // duplicate userId warning
     document.getElementById('userId').addEventListener('input', (event) => {
-    const userIds = <%- JSON.stringify(userIds) %>;
-    const inputValue = document.getElementById('userId').value;
-    console.log(inputValue);
-    const duplicateUserIdSpan = document.getElementById('duplicateUserId');
-    if (userIds.includes(inputValue.toLowerCase())) 
-        duplicateUserIdSpan.style.display = 'block';
-    else 
-        duplicateUserIdSpan.style.display = 'none'; 
-    
-});
+        const userIds = <%- JSON.stringify(userIds) %>;
+        const inputValue = document.getElementById('userId').value;
+        console.log(inputValue);
+        const duplicateUserIdSpan = document.getElementById('duplicateUserId');
+        const spaceWarning=document.getElementById('spaceWarning');
+        if (userIds.includes(inputValue.toLowerCase())) 
+            duplicateUserIdSpan.style.display = 'block';
+        else 
+            duplicateUserIdSpan.style.display = 'none';
+
+        if (inputValue.includes(" "))
+            spaceWarning.style.display="block"
+        else
+            spaceWarning.style.display="none"
+    });
+
 </script>
