@@ -6,7 +6,7 @@ const multer=require('multer');
 // MUlter Upload
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'tmp/')
+        cb(null,'/tmp/')
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname)
@@ -73,8 +73,8 @@ function getSession() {
         saveUninitialized: true,
         store: sessionStore,
         cookie: {
-            maxAge: 1 * 60 * 60 * 1000,
-            secure:"auto"
+            maxAge: 2 * 60 * 60 * 1000,
+            secure: "auto"
         }
     })
     return newSession;
