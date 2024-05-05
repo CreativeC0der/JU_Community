@@ -48,7 +48,7 @@
                         <%for(df of user['dynamicFields']){%>
                             <strong><%= df.field %>:</strong>
                             <% if (isValidHttpUrl(df.value)) { %>
-                                <a href="<%= df.value %>">Click Here</a>
+                                <a href="<%= df.value %>" target="_blank">Click Here</a>
                             <% } else { %>
                                 <%= df.value %>
                             <% } %>                            

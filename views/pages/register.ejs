@@ -36,7 +36,7 @@
                                 <span class="text-muted mx-2">*UserID cannot be changed once set*</span> 
                                 <input type="text" class="form-control" id="userId" name="userId" required>
                                 <span id="duplicateUserId" style="display: none; color: red;">*This UserID is already taken*</span>
-                                <span id="spaceWarning" style="display: none; color: red;">*Spaces are NOT allowed in userId*</span>
+                                <span id="alphaWarning" style="display: none; color: red;">*Only Alphanumeric Characters Allowed*</span>
                             </div>
                             <div class="form-group">
                                 <label for="username">Name:</label>
@@ -209,16 +209,16 @@
         const inputValue = document.getElementById('userId').value;
         console.log(inputValue);
         const duplicateUserIdSpan = document.getElementById('duplicateUserId');
-        const spaceWarning=document.getElementById('spaceWarning');
+        const alphaWarning=document.getElementById('alphaWarning');
         if (userIds.includes(inputValue.toLowerCase())) 
             duplicateUserIdSpan.style.display = 'block';
         else 
             duplicateUserIdSpan.style.display = 'none';
 
-        if (inputValue.includes(" "))
-            spaceWarning.style.display="block"
+        if (!/^[a-zA-Z0-9]+$/.test(inputValue))
+            alphaWarning.style.display="block"
         else
-            spaceWarning.style.display="none"
+            alphaWarning.style.display="none"
     });
 
 </script>

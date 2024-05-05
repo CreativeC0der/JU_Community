@@ -34,7 +34,9 @@
                     </h6>
                     <strong>Email:</strong> <%= member.userEmail %> <br>
                     <% if (member.passout) { %>
-                        <strong>Passout:</strong> <%= member.passout.toDateString() %>
+                        <% let passoutArr=member.passout.toDateString().split(" ") %>
+                        <strong>Passout:</strong> 
+                        <%= `${passoutArr[1]}, ${passoutArr[3]}` %> 
                     <% } %>
                 </div>
                 <div class="col-4" style="align-content: center;">
@@ -81,7 +83,7 @@
                                 <% for (df of member['dynamicFields']) { %>
                                     <strong><%= df.field %>:</strong> 
                                     <% if (isValidHttpUrl(df.value)) { %>
-                                        <a href="<%= df.value %>">Click Here</a>
+                                        <a href="<%= df.value %>" target="_blank">Click Here</a>
                                     <% } else { %>
                                         <%= df.value %>
                                     <% } %>

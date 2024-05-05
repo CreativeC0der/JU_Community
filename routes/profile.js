@@ -69,14 +69,20 @@ router.get('/create',async(req,res)=>{
 
 router.post('/create',upload.single('profileImage'),async(req,res)=>{
     try{
-        // UserID space check
-        if(req.body.userId.includes(" "))
+        // UserID alphanumeric check
+        if(!/^[a-zA-Z0-9]+$/.test(req.body.userId))
             throw Error;
 
         // timestamp calculation
-        let timestamp = new Date().toISOString().replace('T', ' ').split('.')[0];
+        // Specify the timezone offset in minutes
+        const timeZoneOffset = 330; // IST Offset
+
+        // Get the current date and time adjusted for the timezone offset
+        const offsetInMilliseconds = timeZoneOffset * 60 * 1000; // Convert minutes to milliseconds
+        const adjustedDate = new Date(Date.now() + offsetInMilliseconds)
+        const currDateTime=adjustedDate.toISOString().replace('T',' ').split('.')[0];
         
-        // Upload File to DB
+        // Upload File to cloud
         let cloudFile={data:"default.jpg"}
         if(req.file)
         {
@@ -110,7 +116,7 @@ router.post('/create',upload.single('profileImage'),async(req,res)=>{
         const conn=await connPromise;
         const query = 'INSERT INTO users(timestamp, userId, userName, userEmail, userPassword, userRoll, userDepartment, bio, profileImage,degree,passout, dynamicFields) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         const [results, fields] = await conn.query(query, 
-                                    [timestamp,
+                                    [currDateTime,
                                     userId, 
                                     username, 
                                     email, 
@@ -200,5 +206,9 @@ router.get('/delete',checkSessionValid,async (req,res)=>{
         res.redirect(`/logout`);
     }
 })
+
+function isAlphanumeric(str) {
+    return /^[a-zA-Z0-9]+$/.test(str);
+}
 
 module.exports=router

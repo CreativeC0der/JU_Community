@@ -13,7 +13,13 @@ router.get('/create', checkSessionValid,checkGroupMember, async (req, res) => {
 
 router.post('/create', checkSessionValid, upload.single('postImage'), async (req, res) => {
   try{
-    let currDate = new Date().toISOString().replace('T', ' ').split('.')[0];
+    // Specify the timezone offset in minutes
+    const timeZoneOffset = 330; // IST Offset
+
+    // Get the current date and time adjusted for the timezone offset
+    const offsetInMilliseconds = timeZoneOffset * 60 * 1000; // Convert minutes to milliseconds
+    const adjustedDate = new Date(Date.now() + offsetInMilliseconds)
+    const currDateTime=adjustedDate.toISOString().replace('T',' ').split('.')[0];
     
     [cloudFile]=await new traffic()
     .bucketName(process.env.BUCKET)
@@ -23,7 +29,7 @@ router.post('/create', checkSessionValid, upload.single('postImage'), async (req
     const conn = await connPromise;
     const query='insert into posts(timestamp,postId,postHeading,postContent,postImage,groupId,userId) values(?,?,?,?,?,?,?)';
     const [results] = await conn.query(query,
-                          [currDate,
+                          [currDateTime,
                           crypto.randomUUID(), 
                           req.body.postHeading, 
                           req.body.postContent, 
@@ -44,7 +50,9 @@ router.get('/edit',checkSessionValid,checkPostUser ,async(req,res)=>{
   const conn = await connPromise;
   const query = 'select * from posts where postId=?';
   const [[post]]=await conn.query(query,[req.query.postId])
+  console.log("GOTTTT");
   console.log(post);
+  console.log(post.timestamp);
   res.render('editPost',{post});
 })
 

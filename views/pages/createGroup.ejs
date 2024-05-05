@@ -16,7 +16,7 @@
                         <span class="text-muted mx-2">*ProjectID cannot be changed once set*</span>
                         <input type="text" class="form-control" id="group_id" name="group_id" required>
                         <span id="duplicateGroupId" style="display: none; color: red;">This projectID is already taken.</span>
-                        <span id="groupIdSpaceCheck" style="display: none; color: red;">Space not allowed in Project ID</span>
+                        <span id="alphaWarning" style="display: none; color: red;">*Only Alphanumeric Characters Allowed*</span>
                     </div>
                     <div class="form-group">
                         <label for="group_name">Project Name:</label>
@@ -47,10 +47,10 @@
     else 
         duplicateGroupId.style.display = 'none'; 
 
-    if(inputValue.includes(" "))
-        groupIdSpaceCheck.style.display='block';
+    if (!/^[a-zA-Z0-9]+$/.test(inputValue))
+        alphaWarning.style.display="block"
     else
-        groupIdSpaceCheck.style.display='none';
+        alphaWarning.style.display="none"
     });
 </script>
 

@@ -46,7 +46,10 @@
                                 </div>
                             <% } %>
                             <% if (user.passout) { %>
-                                <div class="member-info"><strong>Passout:</strong> <%= user.passout.toDateString() %> </div>
+                                <% let passoutArr=user.passout.toDateString().split(" ") %>
+                                <div class="member-info"><strong>Passout:</strong> 
+                                    <%= `${passoutArr[1]}, ${passoutArr[3]}` %> 
+                                </div>
                             <% } %>
                         </div>
                         <div class="col-4">
@@ -90,7 +93,7 @@
                                         <%for(df of user['dynamicFields']){%>
                                             <strong><%= df.field %>:</strong> 
                                             <% if (isValidHttpUrl(df.value)) { %>
-                                                <a href="<%= df.value %>">Click Here</a>
+                                                <a href="<%= df.value %>" target="_blank">Click Here</a>
                                             <% } else { %>
                                                 <%= df.value %>
                                             <% } %>

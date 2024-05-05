@@ -12,7 +12,10 @@
     <% for(const post of posts ) { %>
         <div class="card">
             <div class="card-body" id="<%= post.postId %>">
-                <span class="text-muted">Posted By <strong><%= post.userName %></strong> on <%= post.timestamp.toDateString() %></span>
+                <span class="text-muted">Posted By <strong>
+                    <%= post.userName %></strong> on <%= post.timestamp.toLocaleString("en-us",{
+                        timeZone:"Asia/Kolkata"
+                    }) %></span>
                 <div class="row" style="margin-left: 0px;margin-right: 0px;">
                     <div class="post-header my-md-3 col-8">
                         <h5 class="font-weight-bold mb-0">
