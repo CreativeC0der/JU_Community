@@ -129,6 +129,14 @@ body {
   color: #fff;
 }
 
+.nav-tabs .nav-item {
+  margin-inline: 5px;
+  background-color: white;
+  border: 1px solid #007bff;
+  border-radius: 5px;
+  border-bottom: none;
+}
+
 .tab-content {
   border-top: none;
   padding: 20px;

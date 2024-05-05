@@ -163,15 +163,17 @@
     // Function to add dynamic fields
     function addDynamicField() {
         fieldCounter++;
-        let fieldHtml = `<div class="form-group" id="dynamicField${fieldCounter}">
-                            <label for="${fieldCounter}">Dynamic Field:</label>
+        let fieldHtml = `<div class="form-group" id="dynamicField${fieldCounter}">  
+                            <label for="${fieldCounter}">
+                                Dynamic Field:
+                            </label>
                             <button type="button" class="btn btn-danger btn-sm float-right" onclick="deleteDynamicField(${fieldCounter})">
                                 <i class="fa-solid fa-trash-can "></i>
                             </button>
                             <input type="text" class="form-control" id="dynamicFieldLabel${fieldCounter}" 
-                            name="${fieldCounter}" placeholder="Enter Label" style="font-weight: bold;" required>
+                            name="${fieldCounter}" placeholder="E.g. : My Github " style="font-weight: bold;" required>
                             <input type="text" class="form-control" id="dynamicFieldValue${fieldCounter}" 
-                            name="value${fieldCounter}" placeholder="Enter Value" required>
+                            name="value${fieldCounter}" placeholder="E.g. : https://gihub.com/coder" required>
                         </div>`;
         $("#dynamicFieldsContainer").append(fieldHtml);
     }

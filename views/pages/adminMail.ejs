@@ -54,11 +54,14 @@
         <p><strong>User:</strong><%= username %></p>
         <p><strong>Email:</strong><%= email %></p>
         <p><strong>Department:</strong><%= department %></p>
-        <p><strong>Time:</strong><%= new Date().toDateString() %></p>
+        <%  const timeZoneOffset = 330; 
+        const offsetInMilliseconds = timeZoneOffset * 60 * 1000;
+        const adjustedDate = new Date(Date.now() + offsetInMilliseconds)%>
+        <p><strong>Time:</strong><%= adjustedDate.toISOString().replace('T',' ') %></p>
     </div>
     <p>A user has attempted to sign in. Please review the details above.</p>
     <p>You can access the admin panel 
-        <a href="https://ju-community.vercel.app/admin/panel" style="color: white;"class="btn">here</a>
+        <a href="https://ju-community.vercel.app/admin/panel" class="btn">here</a>
     </p>
 </div>
 </body>

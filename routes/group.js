@@ -39,7 +39,7 @@ router.get('/create', checkSessionValid, checkAdmin, async (req, res, next) => {
 router.post('/create', checkSessionValid, checkAdmin, async (req, res) => {
     try{
         // GroupId space check
-        if (req.body.group_id.includes(" "))
+        if(!/^[a-zA-Z0-9]+$/.test(req.body.group_id))
             throw Error;
         
         const conn = await connPromise;
